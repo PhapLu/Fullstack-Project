@@ -38,10 +38,6 @@ const UserOTPVerificationSchema = new Schema(
             type: Date,
             default: Date.now,
         },
-        referralCode:{
-            type: String,
-            default: ''
-        }
     },
     {
         timestamps: true,
