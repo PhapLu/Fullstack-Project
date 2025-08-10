@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { AuthFailureError, BadRequestError, ForbiddenError, NotFoundError } from '../core/error.response.js'
+import { AuthFailureError, BadRequestError } from '../core/error.response.js'
 import User from '../models/user.model.js';
 
 export const verifyToken = (req, res, next) => {

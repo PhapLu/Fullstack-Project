@@ -11,8 +11,8 @@ const UserSchema = new Schema(
         password: { type: String, default: '' },
         role: {
             type: String,
-            enum: ["member", "talent", "admin"],
-            default: "member",
+            enum: ["customer", "shipper", "vendor", "admin"],
+            default: "customer",
         },
         avatar: {
             type: String,

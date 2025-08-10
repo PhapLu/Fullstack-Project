@@ -2,16 +2,16 @@ import AccessControl from "accesscontrol"
 const ac = new AccessControl()
 
 const roles = () => {
-  ac.grant("member").deleteOwn("profile").updateOwn("profile").readOwn("profile").createOwn("profile")
+  ac.grant("customer").deleteOwn("customer").updateOwn("customer").readOwn("customer").createOwn("customer")
 
-  ac.grant("talent").extend("member")
+  ac.grant("vendor").extend("customer")
 
   ac.grant("admin")
-    .extend("talent")
-    .updateAny("profile")
-    .deleteAny("profile")
-    .createAny("profile")
-    .readAny("profile")
+    .extend("vendor")
+    .updateAny("customer")
+    .deleteAny("customer")
+    .createAny("customer")
+    .readAny("customer")
 
   return ac
 }
