@@ -1,51 +1,86 @@
-import mongoose from "mongoose"
-const Schema = mongoose.Schema
+import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-const DOCUMENT_NAME = 'User'
-const COLLECTION_NAME = "Users"
+const DOCUMENT_NAME = "User";
+const COLLECTION_NAME = "Users";
+
+const CustomerProfileSchema = new Schema(
+    {
+        name: { type: String, required: true, trim: true, minlength: 5 },
+        address: { type: String, required: true, trim: true, minlength: 5 },
+    },
+    { _id: false }
+);
+
+const VendorProfileSchema = new Schema(
+    {
+        businessName: { type: String, required: true, trim: true, minlength: 5 },
+        businessAddress: { type: String, required: true, trim: true, minlength: 5 },
+    },
+    { _id: false }
+);
+
+const ShipperProfileSchema = new Schema(
+    {
+        assignedHub: { type: Schema.Types.ObjectId, ref: "DistributionHub", required: true },
+    },
+    { _id: false }
+);
 
 const UserSchema = new Schema(
     {
-        fullName: { type: String, required: true, trim: true },
-        email: { type: String, required: true, trim: true, unique: true },
-        password: { type: String, default: '' },
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+        },
+        passwordHash: { type: String, required: true },
         role: {
             type: String,
-            enum: ["customer", "shipper", "vendor", "admin"],
+            enum: ["customer", "vendor", "shipper", "admin"],
+            required: true,
             default: "customer",
+            index: true,
         },
         avatar: {
             type: String,
+            required: true,
             default: "/uploads/pastal_system_default_avatar.png",
         },
-        bg: {
-            type: String,
-            default: "/uploads/pastal_system_default_background2.png",
-        },
+        email: { type: String, trim: true, lowercase: true },
+        fullName: { type: String, trim: true },
+        bg: { type: String, default: "/uploads/pastal_system_default_background2.png" },
         phone: { type: String },
         address: { type: String, default: "" },
         country: { type: String, default: "Vietnam" },
-        bio: {
-            type: String,
-            default: "",
-            maxlength: [200, "Bio cannot exceed 200 characters"],
-        },
-    }, {
-    timestamps: true,
-    collection: COLLECTION_NAME,
-})
+        bio: { type: String, default: "", maxlength: [200, "Bio cannot exceed 200 characters"] },
+        customerProfile: { type: CustomerProfileSchema, required: function () { return this.role === "customer"; } },
+        vendorProfile: { type: VendorProfileSchema, required: function () { return this.role === "vendor"; } },
+        shipperProfile: { type: ShipperProfileSchema, required: function () { return this.role === "shipper"; } },
+        verificationExpiry: { type: Date },
+    },
+    { timestamps: true, collection: COLLECTION_NAME }
+);
 
-// Middleware to set the verificationExpiry field to 30 minutes in the future
 UserSchema.pre("save", function (next) {
     if (this.isNew || this.isModified("verificationExpiry")) {
-        this.verificationExpiry = new Date(Date.now() + 30 * 60 * 1000) // 30 minutes
+        this.verificationExpiry = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
     }
-    next()
-})
+    next();
+});
 
-// Indexing for searching
-UserSchema.index({ fullName: 'text', stageName: 'text', email: 'text', bio: 'text' })
-UserSchema.index({ domainName: 1 })
+UserSchema.index({ fullName: "text", email: "text", bio: "text" });
 
-const User = mongoose.model(DOCUMENT_NAME, UserSchema)
-export default User
+UserSchema.index(
+    { "vendorProfile.businessName": 1 },
+    { unique: true, partialFilterExpression: { role: "vendor", "vendorProfile.businessName": { $exists: true } } }
+);
+
+UserSchema.index(
+    { "vendorProfile.businessAddress": 1 },
+    { unique: true, partialFilterExpression: { role: "vendor", "vendorProfile.businessAddress": { $exists: true } } }
+);
+
+const User = mongoose.model(DOCUMENT_NAME, UserSchema);
+export default User;
