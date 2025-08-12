@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.get('/readUserProfile/:profileDomainName', asyncHandler(userController.readUserProfile))
 router.get('/me', asyncHandler(userController.me))
+router.get('/readData', asyncHandler(userController.readData))
 
 //authentication
 router.use(verifyToken)

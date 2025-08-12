@@ -1,29 +1,15 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./pages/layouts/Layout";
 import ProfileLayout from "./pages/profile/profileLayout/ProfileLayout";
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const routes = [
     {
         path: "",
         element: <Layout />,
         children: [
-            // {
-            //     path: "",
-            //     element: <ExploreLayout />,
-            //     children: [
-            //         {
-            //             path: "/",
-            //             element: (
-            //                 <ExploreCommissionServices
-            //                     showCommissionServices={true}
-            //                 />
-            //             ),
-            //         },
-            //     ],
-            // },
             {
-                path: "/users/:user-id",
+                path: "",
                 element: <ProfileLayout />,
             },
         ],
@@ -31,8 +17,7 @@ const routes = [
 ];
 
 const router = createBrowserRouter(routes);
-const queryClient = new QueryClient(
-);
+const queryClient = new QueryClient();
 
 function App() {
     return (
