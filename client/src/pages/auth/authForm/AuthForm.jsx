@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
-import '../../css_utils/css_utils.css'
+import '../../../assets/css/base.css'
 import "../authForm/AuthForm.css";
 
 const AuthForm = () => {

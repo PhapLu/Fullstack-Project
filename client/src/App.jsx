@@ -7,7 +7,7 @@ import AuthForm from "./pages/auth/authForm/AuthForm";
 
 const routes = [
     {
-        path: "",
+        path: "", 
         element: <Layout />,
         children: [
             {
@@ -15,7 +15,7 @@ const routes = [
             },
         ],
     },
-    
+
     {
         path: "auth/:mode/:role",
         element: <AuthLayout />, 

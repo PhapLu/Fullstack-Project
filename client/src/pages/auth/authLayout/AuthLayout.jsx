@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
-import '../../css_utils/css_utils.css'
+import '../../../assets/css/base.css'
 import "../authLayout/AuthLayout.css";
 import logo from '../../../assets/logo.png'
 import c1 from '../../../assets/customer_img/customer-1.png'
