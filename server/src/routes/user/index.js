@@ -2,14 +2,17 @@ import express from "express"
 import userController from "../../controllers/user.controller.js"
 import { asyncHandler } from "../../auth/checkAuth.js"
 import { verifyToken } from "../../middlewares/jwt.middelware.js"
+import { uploadDisk } from "../../configs/multer.config.js"
 
 const router = express.Router()
 
-router.get('/readUserProfile/:profileDomainName', asyncHandler(userController.readUserProfile))
+router.get('/readUserProfile/:userId', asyncHandler(userController.readUserProfile))
 router.get('/me', asyncHandler(userController.me))
-router.get('/readData', asyncHandler(userController.readData))
 
-//authentication
+//Authentication
 router.use(verifyToken)
+
+router.patch('/updateUserProfile', asyncHandler(userController.updateUserProfile))
+router.patch('/updateProfilePicture', uploadDisk.single('file'), asyncHandler(userController.updateProfilePicture))
 
 export default router

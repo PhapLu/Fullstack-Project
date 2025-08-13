@@ -2,10 +2,24 @@ import UserService from '../services/user.service.js'
 import { SuccessResponse } from "../core/success.response.js"
 
 class UserController {
-    readData = async (req, res, next) => {
+    readUserProfile = async (req, res, next) => {
         return new SuccessResponse({
-            message: 'Read user data successfully',
-            metadata: await UserService.readData(req)
+            message: 'Read user profile successfully',
+            metadata: await UserService.readUserProfile(req)
+        }).send(res)
+    }
+
+    updateUserProfile = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'User profile updated successfully',
+            metadata: await UserService.updateUserProfile(req)
+        }).send(res)
+    }
+
+    updateProfilePicture = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Profile picture updated successfully',
+            metadata: await UserService.updateProfilePicture(req)
         }).send(res)
     }
 }
