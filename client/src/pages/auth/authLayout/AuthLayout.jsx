@@ -1,4 +1,5 @@
-import React from "react";
+/* Gia Hy-s4053650 */
+import React, { useEffect, useRef } from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 import '../../../assets/css/base.css'
 import "../authLayout/AuthLayout.css";
@@ -29,30 +30,71 @@ const AuthLayout = () => {
   const { role } = useParams();
   const imgs = ROLE_IMAGES[role] || ROLE_IMAGES.customer;
 
+  const c1Ref = useRef(null);
+  const c2Ref = useRef(null);
+  const c3Ref = useRef(null);
+
+  useEffect(() => {
+  const start = Date.now();
+  const items = [
+    { el: c1Ref.current, moveX: 36, moveY: 72, scaleRange: 0.060, speed: 0.72, phase: 0.10 },
+    { el: c2Ref.current, moveX: 30, moveY: 60, scaleRange: 0.055, speed: 0.74, phase: 1.70 },
+    { el: c3Ref.current, moveX: 26, moveY: 52, scaleRange: 0.050, speed: 0.76, phase: 3.00 },
+  ];
+
+  let frame;
+  const animate = () => {
+    const t = (Date.now() - start) / 1000;
+    items.forEach(({ el, moveX, moveY, scaleRange, speed, phase }) => {
+      if (!el) return;
+      const offsetX = Math.sin(t * speed + phase) * moveX;
+      const offsetY = Math.cos(t * speed + phase) * moveY;
+      const scale = 1 + Math.sin(t * speed + phase) * scaleRange;
+      el.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    });
+    frame = requestAnimationFrame(animate);
+  };
+
+  animate();
+  return () => cancelAnimationFrame(frame);
+}, []);
+
   return (
-    <div className="auth-wrap">
-      <aside className="auth-left">
-        <header className="auth-brand">
-        {/* add NavLink to landing page */}
-          <img className="auth-logo" src={logo} alt="Logo" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
-          <span className="auth-name">Bloomart</span>
-        </header>
+    <>
+      <div ref={c1Ref} className="bg-circle circle1" />
+      <div ref={c2Ref} className="bg-circle circle2" />
+      <div ref={c3Ref} className="bg-circle circle3" />
+      
+      <div className="auth__wrap">
+        <aside className="auth__left">
+          <header className="auth__brand">
+              <NavLink 
+                to="/" 
+                style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
+              >
+                <img className="auth__logo" src={logo} alt="Logo" />
+                <span className="auth__name">Bloomart</span>
+              </NavLink>
+           </header>
 
-        <div className="auth-tagline">
-          <p>Enjoy your shopping as a</p>
-          <h3>{ROLE_TITLE[role] || "Customer"}</h3>
-        </div>
+          <div className="auth__tagline">
+            <p>Enjoy your shopping as a</p>
+            <h2>{ROLE_TITLE[role] || "Customer"}</h2>
+          </div>
 
-        {/* swap images per role if you want */}
-        <img className="auth-img auth-img1" src={imgs[0]} alt={`${role}-1`} loading="eager" style={{ width: "500px", height: "500px", objectFit: "cover" }} />
-        <img className="auth-img auth-img2" src={imgs[1]} alt={`${role}-2`} loading="lazy" style={{ width: "500px", height: "500px", objectFit: "cover" }} />
-        <img className="auth-img auth-img3" src={imgs[2]} alt={`${role}-3`} loading="lazy" style={{ width: "500px", height: "500px", objectFit: "cover" }} />
-      </aside>
+          {/* swap images per role if you want */}
+          <div className="auth__img">
+            <img className="img1" src={imgs[2]} alt={`${role}-1`} loading="eager" />
+            <img className="img2" src={imgs[1]} alt={`${role}-2`} loading="lazy" />
+            <img className="img3" src={imgs[0]} alt={`${role}-3`} loading="lazy" />
+          </div>
+        </aside>
 
-      <main className="auth-right">
-        <Outlet />
-      </main>
-    </div>
+        <main className="auth__right">
+          <Outlet />
+        </main>
+      </div>
+    </>
   );
 };
 

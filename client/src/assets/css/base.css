@@ -1,3 +1,18 @@
+/* Gia Hy-s4053650 */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&display=swap');
+
+
+:root {
+  --primary-color: #007bff;
+  --text-color: #253D4E;
+  --bg-color: #F0F7FF;
+  --accent: #f59e0b;
+}
+
+html, body { height: 100%; }
+
 *,
 *:before,
 *:after {
@@ -29,8 +44,11 @@ button {
 }
 body {
   margin: 20px 4%;
-  min-height: 100vh;
+  overflow-x: hidden;       /* chặn scroll ngang */
+  overflow-y: hidden;
+  min-height: 100dvh;
   font-weight: 400;
   font-size: 16px;
   line-height: 1;
+  font-family: 'Poppins', sans-serif;
 }
