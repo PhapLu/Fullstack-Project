@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 import Footer from '../../components/footer/Footer.jsx';
 import Header from '../../components/header/Header.jsx';
+import "../../assets/css/base.css";
 
 export default function Layout() {
     return (

@@ -31,14 +31,13 @@ const AuthLayout = () => {
   const imgs = ROLE_IMAGES[role] || ROLE_IMAGES.customer;
 
   const c1Ref = useRef(null);
-  const c2Ref = useRef(null);
   const c3Ref = useRef(null);
 
   useEffect(() => {
   const start = Date.now();
   const items = [
     { el: c1Ref.current, moveX: 36, moveY: 72, scaleRange: 0.060, speed: 0.72, phase: 0.10 },
-    { el: c2Ref.current, moveX: 30, moveY: 60, scaleRange: 0.055, speed: 0.74, phase: 1.70 },
+  
     { el: c3Ref.current, moveX: 26, moveY: 52, scaleRange: 0.050, speed: 0.76, phase: 3.00 },
   ];
 
@@ -62,7 +61,6 @@ const AuthLayout = () => {
   return (
     <>
       <div ref={c1Ref} className="bg-circle circle1" />
-      <div ref={c2Ref} className="bg-circle circle2" />
       <div ref={c3Ref} className="bg-circle circle3" />
       
       <div className="auth__wrap">

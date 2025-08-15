@@ -8,7 +8,7 @@
   --primary-color: #007bff;
   --hover-btn: #0054ad;
   --text-color: #253D4E;
-  --bg-color: #F0F7FF;
+  --bg-color: #fdfeff;
   --accent: #f59e0b;
   --hover-accent: #a56800;
   --border-color: #CED4DA;
@@ -46,7 +46,8 @@ button {
   border: 0;
 }
 body {
-  margin: 30px 4%;
+  background-color: var(--bg-color);
+  margin: 10px 4%;
   overflow-x: hidden;       /* chặn scroll ngang */
   overflow-y: hidden;
   min-height: 100dvh;

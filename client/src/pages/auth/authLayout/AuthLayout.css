@@ -1,8 +1,7 @@
 /* Gia Hy-s4053650 */
 body {
-    background-color: var(--bg-color);
+  background-color: var(--bg-color);
 }
-
 .bg-circle {
   position: absolute;
   border-radius: 50%;
@@ -47,7 +46,8 @@ body {
     overflow: visible;
 }
 .auth__right {
-    height: 690px;
+  margin-top: 20px;
+    height: 680px;
     flex: 4;
     background-color: white;
     border-radius: 20px;
