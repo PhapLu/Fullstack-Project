@@ -82,5 +82,6 @@ UserSchema.index(
     { unique: true, partialFilterExpression: { role: "vendor", "vendorProfile.businessAddress": { $exists: true } } }
 );
 
-const User = mongoose.model(DOCUMENT_NAME, UserSchema);
+const User =
+  mongoose.models[DOCUMENT_NAME] || mongoose.model(DOCUMENT_NAME, UserSchema);
 export default User;
