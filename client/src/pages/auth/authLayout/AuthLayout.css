@@ -47,7 +47,7 @@ body {
     overflow: visible;
 }
 .auth__right {
-    height: 710px;
+    height: 690px;
     flex: 4;
     background-color: white;
     border-radius: 20px;
@@ -110,7 +110,7 @@ body {
 .auth__img .img2{
   width: 350px;
   height: 350px;
-  left: 12%;
+  left: 16%;
   top: 55%;
   transform: rotate(-6deg);
 }

@@ -46,7 +46,7 @@ button {
   border: 0;
 }
 body {
-  margin: 20px 4%;
+  margin: 30px 4%;
   overflow-x: hidden;       /* chặn scroll ngang */
   overflow-y: hidden;
   min-height: 100dvh;
