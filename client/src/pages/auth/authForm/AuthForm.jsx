@@ -108,7 +108,7 @@ const AuthForm = () => {
                 .map((r, i) => (
                   <span key={r}>
                     {i > 0 && " / "}
-                    <Link className="link link-muted" to={`/auth/${mode}/${r}`}>
+                    <Link className="link-mode" to={`/auth/${mode}/${r}`}>
                       {cap(r)}
                     </Link>
                   </span>

@@ -6,9 +6,12 @@
 
 :root {
   --primary-color: #007bff;
+  --hover-btn: #0054ad;
   --text-color: #253D4E;
   --bg-color: #F0F7FF;
   --accent: #f59e0b;
+  --hover-accent: #a56800;
+  --border-color: #CED4DA;
 }
 
 html, body { height: 100%; }

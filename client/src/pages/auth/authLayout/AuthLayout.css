@@ -42,13 +42,13 @@ body {
 .auth__left {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex: 6;
     position: relative;
     overflow: visible;
 }
 .auth__right {
-    margin-bottom: 3%;
-    flex: 1;
+    height: 710px;
+    flex: 4;
     background-color: white;
     border-radius: 20px;
     z-index: 1;
