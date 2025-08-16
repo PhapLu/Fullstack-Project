@@ -56,11 +56,6 @@ body {
   transition: background-color 0.25s ease;
 }
 
-.header__social a:hover {
-  background: var(--primary-color);
-  color: #fff;
-}
-
 /* Auth buttons */
 .header__auth {
   display: flex;

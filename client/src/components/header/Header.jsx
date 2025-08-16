@@ -4,6 +4,7 @@ import logo from '../../assets/logo.png'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faInstagram  } from '@fortawesome/free-brands-svg-icons'
 
 library.add(fas);
 
@@ -24,10 +25,10 @@ export default function Header() {
           <Link to="/contact">Contact us</Link>
           <div className="header__social">
             <a href="#"><i className="facebook" />
-              
+              <FontAwesomeIcon icon={faFacebook} size="2x" style={{ color: "#007bff" }} />
             </a>
             <a href="#"><i className="instagram" />
-
+              <FontAwesomeIcon icon={faInstagram} size="2x" style={{ color: "#007bff" }} />
             </a>
           </div>
         </nav>

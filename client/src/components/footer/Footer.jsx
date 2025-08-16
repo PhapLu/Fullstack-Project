@@ -1,16 +1,24 @@
 /* Gia Hy-s4053650 */
 import "./Footer.css";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import logo from '../../assets/logo.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFacebook, faInstagram  } from '@fortawesome/free-brands-svg-icons'
 
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer__grid">
         <div>
-          <div className="footer__brand">
-            <div className="footer__logo">B</div>
-            <span className="footer__name">Bloomart</span>
-          </div>
+          <div className="auth__brand">
+              <NavLink 
+                to="/" 
+                style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
+              >
+                <img className="auth__logo" src={logo} alt="Logo" />
+                <span className="auth__name">Bloomart</span>
+              </NavLink>
+        </div>
           <ul className="footer__contact">
             <li><strong>Address:</strong> 702 Nguyen Van Linh, Dist 7, HCMC 70000</li>
             <li><strong>Call us:</strong> (+91) - 540-025-124553</li>
@@ -57,7 +65,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div>
+        <div className="footer__payment">
           <h4>Install App</h4>
           <p>From App Store or Google Play</p>
           <div className="footer__badges">
@@ -72,7 +80,7 @@ export default function Footer() {
       </div>
 
       <div className="footer__bottom">
-        <div className="footer__copy">© 2025, <b>Bloomart</b> All rights reserved</div>
+        <div className="footer__copy">© 2025, <b className="auth__name">Bloomart</b> All rights reserved</div>
         <div className="footer__phones">
           <div className="footer__phone">
             <span className="footer__phoneNum">1900 - 6666</span>
@@ -84,7 +92,11 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer__social">
-          
+          <span>Follow Us:
+                  <FontAwesomeIcon icon={faFacebook} size="2x" style={{ color: "#007bff" }} />
+                  <FontAwesomeIcon icon={faInstagram} size="2x" style={{ color: "#007bff" }} />
+          </span>
+          <small>Up to 15% discount on your first subscribe</small>
         </div>
       </div>
     </footer>
