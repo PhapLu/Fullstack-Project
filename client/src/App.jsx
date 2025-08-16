@@ -16,7 +16,7 @@ const routes = [
         element: <Layout />,
         children: [
             {
-                path: "",
+                path: "/profile",
                 element: <ProfileLayout />,
             },
         ],
