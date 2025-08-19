@@ -1,35 +1,32 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getOrdersByCustomer,
   getOrdersByVendor,
   getOrdersByHub,
   assignOrderToHub,
   updateOrderStatus,
-  getMyOrders, // alias cho FE hiện tại
-} from "../../controllers/orders/order.controller.js";
+  getMyOrders,
+  getOrderById,      // phải tồn tại trong controller
+  createOrders       // hoặc createOrder: SỬA TÊN CHO KHỚP EXPORT THẬT
+} from '../../controllers/orders/order.controller.js';
 
 const router = Router();
 
-// ALIAS cho FE đang gọi /api/orders/me
-router.get("/me", getMyOrders);
+// alias FE: GET /api/orders/me
+router.get('/me', getMyOrders);
 
-// 1) getOrdersByCustomer(customerId)
-router.get("/customer/:customerId", getOrdersByCustomer);
+// tạo đơn (nếu dùng)
+router.post('/', createOrders);
 
-// 2) getOrdersByVendor(vendorId)
-router.get("/vendor/:vendorId", getOrdersByVendor);
+// tra cứu theo thực thể
+router.get('/customer/:customerId', getOrdersByCustomer);
+router.get('/vendor/:vendorId', getOrdersByVendor);
+router.get('/hub/:hubId', getOrdersByHub);
 
-// 3) getOrdersByHub(hubId)
-router.get("/hub/:hubId", getOrdersByHub);
+// thao tác đơn
+router.post('/:orderId/assign-hub', assignOrderToHub);
+router.patch('/:orderId/status', updateOrderStatus);
 
-// 4) assignOrderToHub(orderId, hubId)
-router.post("/:orderId/assign-hub", assignOrderToHub);
-
-// 5) updateOrderStatus(orderId, shipperId, status)
-router.patch("/:orderId/status", updateOrderStatus);
-
-router.get("/:id", getOrderById);
-router.post("/", createOrders);
-router.get("/me", getMyOrders);
+router.get('/:id', getOrderById);
 
 export default router;
