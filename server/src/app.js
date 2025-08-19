@@ -16,11 +16,9 @@ import configureSocket from './configs/socket.config.js';
 import SocketServices from './services/socket.service.js';
 // import sanitizeInputs from './middlewares/sanitize.middleware.js';
 // import { globalLimiter, blockChecker } from './configs/rateLimit.config.js';
-import orderRoutes from './routes/order/order.route.js';
+import orderRoutes from './routes/orders/order.routes.js';
 
 const app = express();
-
-app.use('/api/orders', orderRoutes);
 
 // Trust proxy
 app.set('trust proxy', 1);
@@ -98,6 +96,8 @@ process.on('SIGINT', async () => {
 		process.exit(0);
 	});
 });
+
+app.use('/api/orders', orderRoutes);
 
 export default server;
 

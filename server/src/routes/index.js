@@ -1,7 +1,7 @@
 import express from 'express'
 import authRoute from './auth/index.js'
 import userRoute from './user/index.js'
-import orderRoute from './order/order.route.js'; 
+import orderRoute from './orders/order.routes.js'; 
 
 const router = express.Router()
 
