@@ -1,7 +1,7 @@
 import express from "express";
 import DistributionHubController from "../../controllers/distributionHub.controller.js";
 import { asyncHandler } from "../../auth/checkAuth.js";
-import { verifyToken } from "../../middlewares/jwt.middelware.js";
+import { verifyToken } from "../../middlewares/jwt.middleware.js";
 import dotenv from 'dotenv'
 dotenv.config()
 
