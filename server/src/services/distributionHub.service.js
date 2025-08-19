@@ -1,7 +1,7 @@
-import { AuthFailureError, BadRequestError, NotFoundError } from "../core/error.response"
-import DistributionHub from "../models/distributionHub.model"
-import Order from "../models/order.model";
-import User from "../models/user.model";
+import { AuthFailureError, BadRequestError, NotFoundError } from "../core/error.response.js"
+import DistributionHub from "../models/distributionHub.model.js"
+import Order from "../models/order.model.js";
+import User from "../models/user.model.js";
 
 class DistributionHubService {
     //-------------------CRUD----------------------------------------------------
@@ -61,6 +61,16 @@ class DistributionHubService {
         // 3. Return distributionHub data
         return{
             distributionHub,
+        }
+    }
+
+    static readDistributionHubs = async(req) => {
+        // 1. Get all distributionHubs
+        const distributionHubs = await DistributionHub.find()
+
+        // 2. Return distributionHubs data
+        return {
+            distributionHubs,
         }
     }
 

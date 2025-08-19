@@ -16,6 +16,13 @@ class DistributionHubController {
         }).send(res)
     }
 
+    readDistributionHubs = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Read DistributionHubs successfully',
+            metadata: await DistributionHubService.readDistributionHubs(req)
+        }).send(res)
+    }
+
     updateDistributionHub = async (req, res, next) => {
         return new SuccessResponse({
             message: 'DistributionHub updated successfully',

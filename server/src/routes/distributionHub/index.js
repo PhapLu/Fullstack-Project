@@ -7,6 +7,8 @@ dotenv.config()
 
 const router = express.Router();
 
+router.post("/readDistributionHubs", asyncHandler(DistributionHubController.readDistributionHubs));
+
 router.use(verifyToken)
 
 router.post("/readDistributionHub/:distributionHubId", asyncHandler(DistributionHubController.readDistributionHub));
