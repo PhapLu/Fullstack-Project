@@ -4,6 +4,8 @@ import ProfileLayout from "./pages/profile/profileLayout/ProfileLayout";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";
 import AuthForm from "./pages/auth/authForm/AuthForm";
+import LandingPage from "./pages/landingPage/landingPage";
+import Filter from "./components/filter/filter";
 const routes = [
     {
         path: "",
@@ -11,7 +13,7 @@ const routes = [
         children: [
             {
                 path: "",
-                element: <ProfileLayout />,
+                element: <LandingPage />,
             },
         ],
     },
@@ -20,7 +22,7 @@ const routes = [
         element: <AuthLayout />,
          children: [
             {
-                path: "",
+                path: "/auth/:mode/:role",
                 element: <AuthForm />,
             },
         ],

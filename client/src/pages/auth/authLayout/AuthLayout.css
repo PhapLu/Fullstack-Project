@@ -9,7 +9,6 @@ body {
   filter: blur(50px);
   z-index: 0;
   will-change: transform;
-  
 }
 
 .bg-circle.circle1 {
