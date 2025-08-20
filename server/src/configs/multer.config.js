@@ -1,4 +1,5 @@
 import multer from "multer";
+import path from "path";
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB in bytes
 
@@ -11,6 +12,14 @@ const uploadDisk = multer({
             cb(null, `${Date.now()}-${file.originalname}`);
         },
     }),
+    limits: { fileSize: MAX_FILE_SIZE - 1 },
+    fileFilter: (req, file, cb) => {
+        const allowed = /jpeg|jpg|png|gif|webp/;
+        const ext = path.extname(file.originalname).toLowerCase();
+        const mimeOk = /^image\/(jpeg|png|gif|webp)$/.test(file.mimetype);
+        if (allowed.test(ext) && mimeOk) return cb(null, true);
+        cb(new Error('Only image files are allowed'));
+    }
 });
 
 const uploadMemory = multer({

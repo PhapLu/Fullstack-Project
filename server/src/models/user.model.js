@@ -40,7 +40,6 @@ const UserSchema = new Schema(
             type: String,
             enum: ["customer", "vendor", "shipper", "admin"],
             required: true,
-            default: "customer",
             index: true,
         },
         avatar: {
