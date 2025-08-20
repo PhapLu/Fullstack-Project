@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import configureSocket from "./configs/socket.config.js";
 import SocketServices from "./services/socket.service.js";
+import "./db/init.mongodb.js";
 // import sanitizeInputs from './middlewares/sanitize.middleware.js';
 // import { globalLimiter, blockChecker } from './configs/rateLimit.config.js';
 
