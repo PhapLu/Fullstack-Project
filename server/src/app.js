@@ -11,14 +11,14 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
-import router from './routes/index.js';
 import configureSocket from './configs/socket.config.js';
 import SocketServices from './services/socket.service.js';
 // import sanitizeInputs from './middlewares/sanitize.middleware.js';
 // import { globalLimiter, blockChecker } from './configs/rateLimit.config.js';
-import orderRoutes from './routes/orders/order.routes.js';
 
 const app = express();
+
+import router from './routes/index.js';
 
 app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3001'], credentials: true }));
 app.use(express.json());
@@ -26,9 +26,6 @@ app.use(cookieParser());
 
 // Healthcheck
 app.get('/healthz', (req, res) => res.json({ ok: true }));
-
-// ✅ Mount routes
-app.use('/api/orders', orderRoutes);
 
 // 404 handler (đặt sau cùng)
 app.use((req, res) => {

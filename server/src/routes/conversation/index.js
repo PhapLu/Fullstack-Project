@@ -1,5 +1,5 @@
 import express from 'express'
-import { asyncHandler } from '../../helpers/asyncHandler.js'
+import { asyncHandler } from '../../auth/checkAuth.js'
 import conversationController from '../../controllers/conversation.controller.js'
 import { uploadFields } from '../../configs/multer.config.js'
 import { verifyToken } from '../../middlewares/jwt.middleware.js'
