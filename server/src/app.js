@@ -26,8 +26,8 @@ app.use(cookieParser());
 
 // Healthcheck
 app.get('/healthz', (req, res) => res.json({ ok: true }));
-
-// 404 handler (đặt sau cùng)
+app.use('', router)
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({ status: 'error', code: 404, message: 'Not Found Route' });
 });
