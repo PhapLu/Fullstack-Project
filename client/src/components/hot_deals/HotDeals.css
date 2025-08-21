@@ -1,4 +1,5 @@
 .hotdeals.container {
+  margin: 3% 0;
   margin-inline: auto; 
 }
 
@@ -16,7 +17,8 @@
 .hotdeals__countdown{
   display:flex; 
   align-items:center; 
-  gap:10px; color:#6b7280;
+  gap:10px; 
+  color:#6b7280;
   font-weight:600;
 }
 .hotdeals__countdown .clock{

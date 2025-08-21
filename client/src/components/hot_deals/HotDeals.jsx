@@ -9,6 +9,7 @@ import sale_3 from '../../assets/hot_deals_imgs/sale 3.jpg'
 import sale_4 from '../../assets/hot_deals_imgs/sale 4.jpg'
 import sale_5 from '../../assets/hot_deals_imgs/sale 5.jpg'
 import sale_6 from '../../assets/hot_deals_imgs/sale 6.jpg'
+import { Link } from "react-router-dom";
 
 // demo data – đổi thành data thật của bạn
 const items = [
@@ -57,7 +58,7 @@ export default function HotDeals() {
   });
 
   return (
-    <section className="hotdeals container">
+    <section className="hotdeals container" id="deals">
       <header className="hotdeals__head">
         <h2>Hot Deals</h2>
         <div className="hotdeals__countdown">
@@ -69,17 +70,21 @@ export default function HotDeals() {
       <div className="hotdeals__viewport">
 
         <div className="hotdeals__rail" ref={railRef}>
+        {/* Link tới product/id ( Product Details ) */}
           {items.map((p) => (
-            <article className="deal-card" key={p.id}>
-              <div className="deal-card__thumb">
-                <img src={p.img} alt="" />
-              </div>
-              <div className="deal-card__bottom">
-                <FontAwesomeIcon icon={faFire} />
-                <span className="price">{p.price}</span>
-              </div>
-            </article>
+            <Link to={`/product/${p.id}`} className="deal-card" key={p.id}>
+                <article >
+                  <div className="deal-card__thumb">
+                    <img src={p.img} alt="" />
+                  </div>
+                  <div className="deal-card__bottom">
+                    <FontAwesomeIcon icon={faFire} />
+                    <span className="price">{p.price}</span>
+                  </div>
+                </article>
+            </Link>
           ))}
+          
         </div>
       </div>
     </section>

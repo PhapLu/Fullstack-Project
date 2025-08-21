@@ -16,7 +16,9 @@
   --surface:#ffffff;
   --shadow:0 10px 30px rgba(15, 23, 42, 0.08);
 }
-
+html {
+  scroll-behavior: smooth;
+}
 html, body { height: 100%; }
 
 *,

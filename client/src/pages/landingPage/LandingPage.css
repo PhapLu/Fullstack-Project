@@ -8,6 +8,40 @@ h1,h2{ color: var(--text); font-family: 'Poppins', system-ui, sans-serif; }
 h1{ font-size: clamp(28px, 4vw, 48px); line-height: 1.1; font-weight: 700; }
 h2{ font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; }
 
+.about {
+  margin: 40px 0;
+}
+
+.about h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.about-card {
+  padding: 80px;
+  border-radius: 12px;
+   background: linear-gradient(135deg, #f0f7ff, #d0e8ff, #d8f4f5);
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.about-card h3 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.about-card p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
 
 
 

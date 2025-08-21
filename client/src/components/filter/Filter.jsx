@@ -1,6 +1,6 @@
 import React from "react";
 import "./Filter.css";
-import { NavLink } from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
 import { faFire } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -25,25 +25,25 @@ const Filter = () => {
       <ul className="nav-links">
         <li>
           <span> <FontAwesomeIcon icon={faFire} /> </span>
-          <NavLink to="/deals">Deals</NavLink>
+          <HashLink smooth to="/#deals">Deals</HashLink>
         </li>
         <li>
-          <NavLink to="/" end>Home</NavLink>
+          <HashLink smooth  to="/#top" end>Home</HashLink>
         </li>
         <li>
-          <NavLink to="/categories">Categories</NavLink>
+          <HashLink smooth to="/#categories">Categories</HashLink>
         </li>
         <li>
-          <NavLink to="/mall">Malls</NavLink>
+          <HashLink smooth to="/#mall">Malls</HashLink>
         </li>
         <li>
-          <NavLink to="/mega-menu">Mega menu</NavLink>
+          <HashLink smooth to="/#popular">Mega menu</HashLink>
         </li>
         <li>
-          <NavLink to="/about">About</NavLink>
+          <HashLink smooth to="/#about">About</HashLink>
         </li>
         <li>
-          <NavLink to="/contact">Contact</NavLink>
+          <HashLink smooth to="/#contact">Contact</HashLink>
         </li>
       </ul>
     </nav>

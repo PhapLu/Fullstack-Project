@@ -7,7 +7,7 @@ import { faFacebook, faInstagram  } from '@fortawesome/free-brands-svg-icons'
 
 export default function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer" id="contact">
       <div className="footer__grid">
         <div>
           <div className="auth__brand">

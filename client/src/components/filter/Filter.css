@@ -1,8 +1,11 @@
 .filter-nav {
     display: flex;
+    position: sticky;
+    top: 137px;
+    z-index: 10000;
     align-items: center;
     background: #fff;
-    padding: 10px 20px;
+    padding: 10px 4%;
     border-bottom: 1px solid var(--border-color);
     font-family: "Poppins", sans-serif;
 }
