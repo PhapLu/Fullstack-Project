@@ -1,0 +1,172 @@
+/* Footer.css */
+/* Gia Hy-s4053650 */
+
+.footer {
+  background-color: #fff;
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
+  color: #253D4E;
+  border-top: 1px solid #eee;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.footer__logo {
+  width: 40px;
+  height: 40px;
+  background: #007bff;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.footer__contact {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.footer__contact li {
+  margin-bottom: 8px;
+}
+
+.footer h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer ul li {
+  margin-bottom: 8px;
+}
+
+.footer ul li a,
+.footer ul li span {
+  text-decoration: none;
+  color: #253D4E;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.footer ul li a:hover,
+.footer ul li span:hover {
+  color: #007bff;
+}
+
+.footer__badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.footer__badge {
+  background: #000;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+
+.footer__cards {
+  display: flex;
+  gap: 8px;
+}
+
+.footer__cards span {
+  background: #f5f5f5;
+  padding: 5px 8px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  font-size: 0.85rem;
+}
+
+.footer__phones {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.footer__phone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.footer__phone span {
+  font-size: 1.3rem;
+}
+
+.footer__phoneNum {
+  font-weight: bold;
+  color: #007bff;
+  font-size: 1rem;
+}
+
+.footer__social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.footer__social span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.footer__payment p {
+  margin-bottom: 8px;
+}
+
+.footer__social a {
+  width: 28px;
+  height: 28px;
+  background: #007bff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.footer__social a:hover {
+  background: #0054ad;
+}
+
+.footer__copy b {
+  font-size: 0.9rem;
+}

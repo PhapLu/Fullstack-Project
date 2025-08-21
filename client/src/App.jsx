@@ -19,12 +19,10 @@ const routes = [
 const router = createBrowserRouter(routes);
 const queryClient = new QueryClient();
 
-function App() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-        </QueryClientProvider>
-    );
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
-
-export default App;

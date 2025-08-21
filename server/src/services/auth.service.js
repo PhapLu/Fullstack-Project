@@ -9,8 +9,6 @@ import { AuthFailureError, BadRequestError } from "../core/error.response.js"
 import { sendOtpEmail } from "../configs/brevo.config.js"
 import { isValidPassword, isAllowedEmail } from "../models/repositories/auth.repo.js" 
 import Conversation from "../models/conversation.model.js"
-import Notification from "../models/notification.model.js"
-import mongoose from "mongoose"
 
 class AuthService {
     //-------------------CRUD----------------------------------------------------
@@ -36,7 +34,7 @@ class AuthService {
         // 3. Check unseen conversations
         const userId = user._id;
           
-        const [filteredUnSeenConversations, unSeenNotifications] = await Promise.all([
+        const [filteredUnSeenConversations] = await Promise.all([
             // Conversations with at least 1 message
             Conversation.find({
                 members: { $elemMatch: { user: userId } },
@@ -57,18 +55,11 @@ class AuthService {
                         );
                     })
                 ),
-
-            // Notifications
-            Notification.find({
-                receiverId: new mongoose.Types.ObjectId(userId),
-                isSeen: false,
-            }).lean(),
         ]);
         const userData = user.toObject();
         delete userData.pinCode;
     
         userData.unSeenConversations = filteredUnSeenConversations;
-        userData.unSeenNotifications = unSeenNotifications;
     
         return {
             code: 200,

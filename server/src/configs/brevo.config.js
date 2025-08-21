@@ -60,11 +60,11 @@ export async function verifyEmailTransport() {
 async function sendEmail({ to, subject, html, replyTo = FROM_EMAIL }) {
     try {
         const info = await transporter.sendMail({
-        from: `${FROM_NAME} <${FROM_EMAIL}>`,
-        to,
-        subject,
-        html,
-        replyTo,
+            from: `${FROM_NAME} <${FROM_EMAIL}>`,
+            to,
+            subject,
+            html,
+            replyTo,
         });
         logOk("Email sent via Brevo", { to, subject, id: info.messageId });
         return info;
