@@ -50,7 +50,6 @@ button {
 }
 body {
   background-color: var(--bg-color);
-  margin: 10px 4%;
   overflow-x: hidden;      
   min-height: 100dvh;
   font-weight: 400;

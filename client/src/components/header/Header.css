@@ -1,7 +1,6 @@
-body {
-    margin: 10px 4%;
-}
+
 .header {
+  padding: 0 4%;
   background: var(--bg-color);
   position: sticky;
   top: 0;

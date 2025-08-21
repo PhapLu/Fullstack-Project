@@ -1,0 +1,109 @@
+.hotdeals.container {
+  margin-inline: auto; 
+}
+
+.hotdeals__head{
+  display:flex; 
+  align-items:center; 
+  gap:18px; 
+  margin: 12px 0 14px;
+}
+.hotdeals__head h2{
+  font-size: 28px; 
+  font-weight: 700; 
+  color: var(--text);
+}
+.hotdeals__countdown{
+  display:flex; 
+  align-items:center; 
+  gap:10px; color:#6b7280;
+  font-weight:600;
+}
+.hotdeals__countdown .clock{
+  color:#111827; 
+  background:#1118270d; 
+  padding:6px 10px; 
+  border-radius:8px;
+  letter-spacing: .5px;
+}
+
+/* viewport + buttons */
+.hotdeals__viewport{
+  position: relative;
+}
+.nav-btn{
+  position:absolute; 
+  top:50%; 
+  transform:translateY(-50%);
+  width:36px; 
+  height:36px; 
+  border:0; 
+  border-radius:999px;
+  background:#fff; 
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  display:grid; 
+  place-items:center; 
+  cursor:pointer; z-index:2;
+}
+.nav-btn.left{ left:-6px; }
+.nav-btn.right{ right:-6px; }
+
+.nav-btn.disabled { 
+  opacity:.5; 
+  pointer-events:none; 
+}
+
+/* rail (carousel) */
+.hotdeals__rail{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 1fr); 
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 6px 6px 6px 6px;
+  scroll-padding-left: 6px;
+}
+.hotdeals__rail::-webkit-scrollbar{ 
+  height: 8px; 
+}
+.hotdeals__rail::-webkit-scrollbar-thumb { 
+  background:#e5e7eb; 
+  border-radius: 8px; 
+}
+
+/* card */
+.deal-card{
+  scroll-snap-align: start;
+  box-shadow: 0 6px 16px rgba(0,0,0,.04);
+  display:flex; flex-direction:column;
+}
+
+.deal-card__thumb{
+  background: #111827;
+  aspect-ratio: 4 / 3;        
+  display:grid; 
+  place-items:center;
+}
+.deal-card__thumb img{
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  border-bottom: 1px solid #eef2f7;
+}
+
+.deal-card__bottom{
+  display:flex; align-items:center; gap:8px;
+  padding: 16px 14px;
+  color:#f59e0b;
+  background: #fff;
+}
+.deal-card__bottom .price{
+  color:#111827; font-weight:700;
+}
+
+/* responsive */
+@media (max-width: 640px){
+  .hotdeals__rail{ grid-auto-columns: 78%; }
+  .nav-btn.left{ left: -2px; } .nav-btn.right{ right: -2px; }
+}
