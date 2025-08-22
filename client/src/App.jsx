@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import OrderList from "./pages/orders/OrderList";
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";
 import AuthForm from "./pages/auth/authForm/AuthForm";
+import VendorProfile from "./pages/profile/profileLayout/vendorProfile/VendorProfile"
 
 const routes = [
     {
@@ -13,7 +14,7 @@ const routes = [
         children: [ 
             {
                 path: "",
-                element: <ProfileLayout />,
+                element: <VendorProfile />,
             },
 
             {
