@@ -1,18 +1,6 @@
 import { useMemo, useState } from "react";
 import api from "../../utils/api";
 
-/**
- * OrderTester – trang thử tạo đơn hàng.
- * - Quản lý cart đơn giản (add/remove/sửa qty)
- * - Chọn Random Distribution Hub ở FE (hoặc nhập tay)
- * - Gọi POST tới endpoint tạo Order (config qua .env)
- *
- * ENV gợi ý:
- *  VITE_API_BASE_URL=http://localhost:5000
- *  VITE_ORDER_ENDPOINT=/api/orders
- *
- * Mặc định endpoint = `${VITE_API_BASE_URL}${VITE_ORDER_ENDPOINT || '/api/orders'}`
- */
 export default function OrderTester() {
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
   const ORDER_EP =

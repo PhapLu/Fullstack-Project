@@ -2,18 +2,36 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./pages/layouts/Layout";
 import ProfileLayout from "./pages/profile/profileLayout/ProfileLayout";
 import { QueryClient, QueryClientProvider } from 'react-query';
+import OrderList from "./pages/orders/OrderList";
+import AuthLayout from "./pages/auth/authLayout/AuthLayout";
+import AuthForm from "./pages/auth/authForm/AuthForm";
 
 const routes = [
     {
         path: "",
         element: <Layout />,
-        children: [
+        children: [ 
             {
                 path: "",
                 element: <ProfileLayout />,
             },
+
+            {
+              path: '/orders',
+              element: <OrderList/>
+            }
         ],
     },
+    {
+        path: '/auth/:mode/:role',
+        element: <AuthLayout />,
+         children: [
+            {
+                path: "/auth/:mode/:role",
+                element: <AuthForm />,
+            },
+        ],
+    }
 ];
 
 const router = createBrowserRouter(routes);
