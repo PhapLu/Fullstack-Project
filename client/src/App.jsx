@@ -6,6 +6,7 @@ import AuthLayout from "./pages/auth/authLayout/AuthLayout";
 import AuthForm from "./pages/auth/authForm/AuthForm";
 import LandingPage from "./pages/landingPage/landingPage";
 import Filter from "./components/filter/filter";
+import DistributionHub from "./pages/distributionHub/DistributionHub";
 const routes = [
     {
         path: "",
@@ -15,6 +16,11 @@ const routes = [
                 path: "",
                 element: <LandingPage />,
             },
+            {
+                path: "/distributionHub",
+                element: <DistributionHub />,
+            },
+
         ],
     },
     {

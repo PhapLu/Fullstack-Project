@@ -7,20 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Filter = () => {
   return (
     <nav className="filter-nav">
-      {/* Dropdown All categories */}
-      <div className="dropdown">
-        <button className="dropdown-btn">
-          All categories <span className="arrow">▼</span>
-        </button>
-        <ul className="dropdown-menu">
-          <li>Electronics</li>
-          <li>Fashion</li>
-          <li>Home & Garden</li>
-          <li>Sports</li>
-          <li>Books</li>
-        </ul>
-      </div>
-
       {/* Menu items */}
       <ul className="nav-links">
         <li>
