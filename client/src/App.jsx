@@ -7,11 +7,17 @@ import AuthForm from "./pages/auth/authForm/AuthForm";
 import LandingPage from "./pages/landingPage/landingPage";
 import Filter from "./components/filter/filter";
 import DistributionHub from "./pages/distributionHub/DistributionHub";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import OrderList from "./pages/orders/OrderList";
+import AuthLayout from "./pages/auth/authLayout/AuthLayout";
+import AuthForm from "./pages/auth/authForm/AuthForm";
+import VendorProfile from "./pages/profile/profileLayout/vendorProfile/VendorProfile"
+
 const routes = [
     {
         path: "",
         element: <Layout />,
-        children: [
+        children: [ 
             {
                 path: "",
                 element: <LandingPage />,
@@ -20,7 +26,15 @@ const routes = [
                 path: "/distributionHub",
                 element: <DistributionHub />,
             },
+            {
+                path: '/profile',
+                element: <VendorProfile />,
+            },
 
+            {
+              path: '/orders',
+              element: <OrderList/>
+            }
         ],
     },
     {
