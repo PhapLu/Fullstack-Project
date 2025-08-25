@@ -9,6 +9,7 @@ import MyCart from "./pages/orders/MyCart/MyCart.jsx";
 import { CartProvider } from "./store/cart/CartContext.jsx";
 import ProductDetail from "./pages/product/ProductDetail.jsx";
 import CustomerProfile from "./pages/profile/CustomerProfile/CustomerProfile.jsx";
+import ShipperProfile from "./pages/profile/ShipperProfile/ShipperProfile.jsx";
 
 const routes = [
   {
@@ -18,7 +19,8 @@ const routes = [
       { index: true, element: <ProfileLayout /> },
       { path: "myCart", element: <MyCart /> },
       { path: "products/:id", element: <ProductDetail /> },
-      { path: "profile", element: <Profile /> },
+      { path: "CustomerProfile", element: <CustomerProfile /> },
+      { path: "ShipperProfile", element: <ShipperProfile /> }
     ],
   },
   {
