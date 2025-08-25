@@ -1,7 +1,7 @@
 /* Gia Hy-s4053650 */
 import React, { useEffect, useRef } from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
-import '../../../assets/css/base.css'
+
 import "../authLayout/AuthLayout.css";
 import logo from '../../../assets/logo.png'
 import c1 from '../../../assets/customer_img/customer-1.png'
@@ -34,12 +34,21 @@ const AuthLayout = () => {
   const c3Ref = useRef(null);
 
   useEffect(() => {
+  document.body.style.overflowY = "hidden";
+  return () => {
+    document.body.style.overflowY = "auto"; // reset unmount
+  };
+}, []);
+
+
+  useEffect(() => {
   const start = Date.now();
   const items = [
     { el: c1Ref.current, moveX: 36, moveY: 72, scaleRange: 0.060, speed: 0.72, phase: 0.10 },
   
     { el: c3Ref.current, moveX: 26, moveY: 52, scaleRange: 0.050, speed: 0.76, phase: 3.00 },
   ];
+  
 
   let frame;
   const animate = () => {

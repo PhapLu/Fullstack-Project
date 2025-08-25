@@ -2,6 +2,7 @@
 body {
   background-color: var(--bg-color);
 }
+
 .bg-circle {
   position: absolute;
   border-radius: 50%;
@@ -9,7 +10,6 @@ body {
   filter: blur(50px);
   z-index: 0;
   will-change: transform;
-  
 }
 
 .bg-circle.circle1 {
@@ -35,6 +35,7 @@ body {
 
 
 .auth__wrap {
+   padding: 10px 4%;
     display: flex;
     min-height: 100dvh;
 }

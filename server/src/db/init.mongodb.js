@@ -3,7 +3,6 @@ dotenv.config()
 
 import mongoose from 'mongoose'
 const connectString = process.env.NODE_ENV=='production' ? process.env.MONGODB_CONNECTION_STRING : process.env.MONGODB_LOCAL_CONNECTION_STRING
-console.log(connectString)
 class Database {
     constructor() {
         this.connect();

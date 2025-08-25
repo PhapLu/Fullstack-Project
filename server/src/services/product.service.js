@@ -48,9 +48,9 @@ class ProductService {
                 id: product._id,
                 name: product.name,
                 price: product.price,
-                image: product.image,
+                image: product.images,
                 description: product.description,
-                vendor: product.vendor
+                vendor: product.vendorId
             }
         }
     }
@@ -101,9 +101,9 @@ class ProductService {
                 id: p._id,
                 name: p.name,
                 price: p.price,
-                image: p.image,
+                image: p.images,
                 description: p.description,
-                vendor: p.vendor
+                vendor: p.vendorId
             }))
         };
     }
@@ -121,12 +121,12 @@ class ProductService {
         if (!product) throw new NotFoundError("Product not found")
 
         // 3. Ownership check
-        if (String(product.vendor) !== String(user._id)) {
+        if (String(product.vendorId) !== String(user._id)) {
             throw new AuthFailureError("You are not allowed to delete this product");
         }
 
         // 4. Delete image (best-effort)
-        await safeDeleteImage(product.image);
+        await safeDeleteImage(product.images);
 
         // 5. Delete doc
         await Product.deleteOne({ _id: productId });
@@ -150,7 +150,7 @@ class ProductService {
         if (!product) throw new NotFoundError("Product not found");
 
         // 3. Ownership check
-        if (String(product.vendor) !== String(user._id)) {
+        if (String(product.vendorId) !== String(user._id)) {
             throw new AuthFailureError("You are not allowed to modify this product");
         }
 
@@ -172,8 +172,8 @@ class ProductService {
         // 5. Handle image replacement
         if (newImageFile) {
             const newUrl = filePublicUrl(newImageFile);
-            await safeDeleteImage(product.image);
-            product.image = newUrl;
+            await safeDeleteImage(product.images);
+            product.images = newUrl;
         }
 
         // 6. Apply name last (to keep original if not provided)
@@ -188,7 +188,7 @@ class ProductService {
                 id: product._id,
                 name: product.name,
                 price: product.price,
-                image: product.image,
+                image: product.images,
                 description: product.description
             }
         };

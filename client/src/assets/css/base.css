@@ -12,8 +12,13 @@
   --accent: #f59e0b;
   --hover-accent: #a56800;
   --border-color: #CED4DA;
+  --muted:#667085;
+  --surface:#ffffff;
+  --shadow:0 10px 30px rgba(15, 23, 42, 0.08);
 }
-
+html {
+  scroll-behavior: smooth;
+}
 html, body { height: 100%; }
 
 *,
@@ -47,9 +52,7 @@ button {
 }
 body {
   background-color: var(--bg-color);
-  margin: 10px 4%;
-  overflow-x: hidden;       /* chặn scroll ngang */
-  overflow-y: hidden;
+  overflow-x: hidden;      
   min-height: 100dvh;
   font-weight: 400;
   font-size: 16px;

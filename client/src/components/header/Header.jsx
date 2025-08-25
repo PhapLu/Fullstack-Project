@@ -1,15 +1,17 @@
 /* Gia Hy-s4053650 */
 import { Link, NavLink } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
+
+import "./Header.css";
+
 import logo from '../../assets/logo.png'
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram  } from '@fortawesome/free-brands-svg-icons'
 
 library.add(fas);
-
-import "./Header.css";
-
 
 export default function Header() {
   return (
@@ -20,9 +22,9 @@ export default function Header() {
           <span>│</span>
           <Link to="/auth/signup/shipper">Become a shipper</Link>
           <span>│</span>
-          <Link to="/about">About us</Link>
+          <HashLink smooth to="/#about">About us</HashLink>
           <span>│</span>
-          <Link to="/contact">Contact us</Link>
+          <HashLink smooth to="/#contact">Contact us</HashLink>
           <div className="header__social">
             <a href="#"><i className="facebook" />
               <FontAwesomeIcon icon={faFacebook} size="2x" style={{ color: "#007bff" }} />
