@@ -59,3 +59,12 @@ body {
   line-height: 1;
   font-family: 'Poppins', sans-serif;
 }
+
+/* Unfreeze scroll (global fix) */
+html, body {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-y: auto !important;
+  overscroll-behavior: auto !important;
+}
+main { overflow: visible !important; } 

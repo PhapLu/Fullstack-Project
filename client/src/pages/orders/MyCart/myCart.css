@@ -1,0 +1,79 @@
+.hover-card {
+    transition: box-shadow .2s ease, transform .2s ease;
+  }
+  .hover-card:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .12) !important;
+    transform: translateY(-2px);
+  }
+  
+  .product-thumb {
+    outline: 3px solid transparent;
+    transition: outline-color .2s ease;
+  }
+  .product-thumb:hover,
+  .product-thumb:focus {
+    outline-color: #3b82f6; /* blue-500 */
+  }
+
+  .product-link { text-decoration: none; color: inherit; }
+  .product-link:hover .product-title { text-decoration: underline; }
+
+  
+  .btn-qty {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    padding: 0;
+    line-height: 1;
+  }
+  
+  .input-coupon .form-control {
+    border-right: 0;
+  }
+  .input-coupon .btn {
+    border-left: 0;
+  }
+  .input-coupon .form-control:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+  }
+  .input-coupon .form-control,
+  .input-coupon .btn {
+    border-radius: 12px;
+  }
+  .input-coupon .btn {
+    font-weight: 600;
+  }
+
+.coupon-row{
+    display: grid;
+    grid-template-columns: 1fr auto;  
+    align-items: center;
+    gap: 0;
+  }
+  
+  .coupon-row .form-control,
+  .coupon-row .btn{
+    height: 44px;
+    margin: 0 !important;
+    box-shadow: none;
+  }
+  
+  .coupon-input{
+    min-width: 0;                     
+    border-right: 0 !important;
+    border-radius: 12px 0 0 12px !important;
+  }
+  
+  .coupon-btn{
+    width: auto !important;          
+    white-space: nowrap;
+    padding-inline: 18px;
+    border-left: 0 !important;
+    border-radius: 0 12px 12px 0 !important;
+    display: inline-flex !important;   
+    align-items: center;
+    justify-content: center;
+    position: static !important;       
+  }
+  
