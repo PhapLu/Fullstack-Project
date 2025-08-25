@@ -14,7 +14,7 @@ const Filter = () => {
           <HashLink smooth to="/#deals">Deals</HashLink>
         </li>
         <li>
-          <HashLink smooth  to="/#top" end>Home</HashLink>
+          <HashLink smooth  to="/#top">Home</HashLink>
         </li>
         <li>
           <HashLink smooth to="/#categories">Categories</HashLink>

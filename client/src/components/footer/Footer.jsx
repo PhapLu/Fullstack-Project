@@ -1,6 +1,6 @@
 /* Gia Hy-s4053650 */
 import "./Footer.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from '../../assets/logo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook, faInstagram  } from '@fortawesome/free-brands-svg-icons'
@@ -11,13 +11,13 @@ export default function Footer() {
       <div className="footer__grid">
         <div>
           <div className="auth__brand">
-              <NavLink 
+              <Link 
                 to="/" 
                 style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
               >
                 <img className="auth__logo" src={logo} alt="Logo" />
                 <span className="auth__name">Bloomart</span>
-              </NavLink>
+              </Link>
         </div>
           <ul className="footer__contact">
             <li><strong>Address:</strong> 702 Nguyen Van Linh, Dist 7, HCMC 70000</li>
