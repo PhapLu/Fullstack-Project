@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 
-import styles from "../authLayout/AuthLayout.module.scss";   // switched to CSS module
+import styles from "./AuthLayout.module.scss";   // switched to CSS module
 import logo from '../../../assets/logo.png'
 import c1 from '../../../assets/customer_img/customer-1.png'
 import c2 from '../../../assets/customer_img/customer-2.png'
@@ -29,45 +29,8 @@ const AuthLayout = () => {
   const { role } = useParams();
   const imgs = ROLE_IMAGES[role] || ROLE_IMAGES.customer;
 
-  const c1Ref = useRef(null);
-  const c3Ref = useRef(null);
-
-  useEffect(() => {
-    document.body.style.overflowY = "hidden";
-    return () => {
-      document.body.style.overflowY = "auto"; // reset unmount
-    };
-  }, []);
-
-  useEffect(() => {
-    const start = Date.now();
-    const items = [
-      { el: c1Ref.current, moveX: 36, moveY: 72, scaleRange: 0.060, speed: 0.72, phase: 0.10 },
-      { el: c3Ref.current, moveX: 26, moveY: 52, scaleRange: 0.050, speed: 0.76, phase: 3.00 },
-    ];
-
-    let frame;
-    const animate = () => {
-      const t = (Date.now() - start) / 1000;
-      items.forEach(({ el, moveX, moveY, scaleRange, speed, phase }) => {
-        if (!el) return;
-        const offsetX = Math.sin(t * speed + phase) * moveX;
-        const offsetY = Math.cos(t * speed + phase) * moveY;
-        const scale = 1 + Math.sin(t * speed + phase) * scaleRange;
-        el.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-      });
-      frame = requestAnimationFrame(animate);
-    };
-
-    animate();
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
   return (
     <>
-      <div ref={c1Ref} className={`${styles["bg-circle"]} ${styles.circle1}`} />
-      <div ref={c3Ref} className={`${styles["bg-circle"]} ${styles.circle3}`} />
-      
       <div className={styles["auth__wrap"]}>
         <aside className={styles["auth__left"]}>
           <header className={styles["auth__brand"]}>

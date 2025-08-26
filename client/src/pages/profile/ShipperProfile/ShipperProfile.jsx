@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import "./ShipperProfile.css";
+import styles from "./ShipperProfile.module.scss";
 
 const STORAGE_USER = "bm_shipper_user";
 const STORAGE_AVATAR = "bm_shipper_avatar";
@@ -90,14 +90,18 @@ export default function ShipperProfile() {
   };
 
   return (
-    <div className="profile-page white">
+    <div className={`${styles["profile-page"]} ${styles.white}`}>
       <div className="container-xl py-4">
-        <div className="text-center hero-name mb-2">
+        <div className={`text-center mb-2 ${styles["hero-name"]}`}>
           {(user.firstName || "User") + " " + (user.lastName || "Name")}
         </div>
 
         <div className="text-center mb-3">
-          <div className="avatar-hero mx-auto" role="img" aria-label="User avatar">
+          <div
+            className={`${styles["avatar-hero"]} mx-auto`}
+            role="img"
+            aria-label="User avatar"
+          >
             {avatar ? (
               <img src={avatar} alt="" />
             ) : (
@@ -110,7 +114,7 @@ export default function ShipperProfile() {
             )}
             <button
               type="button"
-              className="avatar-pen-btn"
+              className={styles["avatar-pen-btn"]}
               onClick={onPickAvatar}
               aria-label="Change avatar"
               title="Change avatar"
@@ -121,38 +125,38 @@ export default function ShipperProfile() {
               ref={fileRef}
               type="file"
               accept="image/*"
-              className="visually-hidden"
+              className={styles["visually-hidden"]}
               onChange={onFile}
             />
           </div>
         </div>
 
-        <div className="sheet-tab">Profile</div>
-        <div className="profile-sheet">
+        <div className={styles["sheet-tab"]}>Profile</div>
+        <div className={styles["profile-sheet"]}>
           {/* Contact Name */}
-          <div className="sheet-row">
-            <div className="label">Contact Name:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Contact Name:</div>
 
-            <div className="col-2">
-              <div className="sub">First name</div>
+            <div className={styles["col-2"]}>
+              <div className={styles["sub"]}>First name</div>
               {!editing ? (
-                <div className="value">{user.firstName}</div>
+                <div className={styles["value"]}>{user.firstName}</div>
               ) : (
                 <input
-                  className="form-control form-control-sm"
+                  className={`form-control form-control-sm ${styles["form-control-sm"]}`}
                   value={form.firstName}
                   onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                 />
               )}
             </div>
 
-            <div className="col-2">
-              <div className="sub">Last name</div>
+            <div className={styles["col-2"]}>
+              <div className={styles["sub"]}>Last name</div>
               {!editing ? (
-                <div className="value">{user.lastName}</div>
+                <div className={styles["value"]}>{user.lastName}</div>
               ) : (
                 <input
-                  className="form-control form-control-sm"
+                  className={`form-control form-control-sm ${styles["form-control-sm"]}`}
                   value={form.lastName}
                   onChange={(e) => setForm({ ...form, lastName: e.target.value })}
                 />
@@ -161,13 +165,13 @@ export default function ShipperProfile() {
           </div>
 
           {/* Contact Number */}
-          <div className="sheet-row">
-            <div className="label">Contact Number:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Contact Number:</div>
             {!editing ? (
-              <div className="value">{user.phone}</div>
+              <div className={styles["value"]}>{user.phone}</div>
             ) : (
               <input
-                className="form-control form-control-sm w-auto"
+                className={`form-control form-control-sm w-auto ${styles["form-control-sm"]}`}
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
               />
@@ -175,10 +179,10 @@ export default function ShipperProfile() {
           </div>
 
           {/* Gender */}
-          <div className="sheet-row">
-            <div className="label">Gender</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Gender</div>
             {!editing ? (
-              <div className="value radios">
+              <div className={`${styles["value"]} ${styles["radios"]}`}>
                 <label>
                   <input type="radio" checked={user.gender === "male"} readOnly /> Male
                 </label>
@@ -190,7 +194,7 @@ export default function ShipperProfile() {
                 </label>
               </div>
             ) : (
-              <div className="value radios">
+              <div className={`${styles["value"]} ${styles["radios"]}`}>
                 <label>
                   <input
                     type="radio"
@@ -223,16 +227,16 @@ export default function ShipperProfile() {
           </div>
 
           {/* Date of Birth */}
-          <div className="sheet-row">
-            <div className="label">Date of Birth</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Date of Birth</div>
             {!editing ? (
-              <div className="value">
+              <div className={styles["value"]}>
                 {user.dob ? new Date(user.dob).toLocaleDateString("vi-VN") : "dd/mm/yyyy"}
               </div>
             ) : (
               <input
                 type="date"
-                className="form-control form-control-sm w-auto"
+                className={`form-control form-control-sm w-auto ${styles["form-control-sm"]}`}
                 value={form.dob}
                 onChange={(e) => setForm({ ...form, dob: e.target.value })}
               />
@@ -240,13 +244,13 @@ export default function ShipperProfile() {
           </div>
 
           {/* Distribution Hub */}
-          <div className="sheet-row">
-            <div className="label">Distribution Hub:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Distribution Hub:</div>
             {!editing ? (
-              <div className="value">{user.address?.hubName || "—"}</div>
+              <div className={styles["value"]}>{user.address?.hubName || "—"}</div>
             ) : (
               <input
-                className="form-control form-control-sm"
+                className={`form-control form-control-sm ${styles["form-control-sm"]}`}
                 value={form.address?.hubName || ""}
                 onChange={(e) =>
                   setForm({
@@ -259,13 +263,13 @@ export default function ShipperProfile() {
           </div>
 
           {/* Zip/Postal code */}
-          <div className="sheet-row">
-            <div className="label">Zip/Postal code:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Zip/Postal code:</div>
             {!editing ? (
-              <div className="value">{user.address?.zip || ""}</div>
+              <div className={styles["value"]}>{user.address?.zip || ""}</div>
             ) : (
               <input
-                className="form-control form-control-sm w-auto"
+                className={`form-control form-control-sm w-auto ${styles["form-control-sm"]}`}
                 value={form.address?.zip || ""}
                 onChange={(e) =>
                   setForm({
@@ -277,7 +281,7 @@ export default function ShipperProfile() {
             )}
           </div>
 
-          <div className="actions-bottom d-flex justify-content-end">
+          <div className={`${styles["actions-bottom"]} d-flex justify-content-end`}>
             {!editing ? (
               <button className="btn btn-outline-primary" onClick={startEdit}>
                 Edit information

@@ -1,38 +1,7 @@
-/* Gia Hy-s4053650 */
 body {
   background-color: var(--bg-color);
+  overflow-y: hidden;
 }
-
-.bg-circle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(166, 191, 242, 0.66);
-  filter: blur(50px);
-  z-index: 0;
-  will-change: transform;
-}
-
-.bg-circle.circle1 {
-  width: 450px;
-  height: 450px;
-  top: -100px;
-  left: -100px;
-}
-
-.bg-circle.circle2 {
-  width: 450px;
-  height: 450px;
-  bottom: 100px;
-  right: 50px;
-}
-
-.bg-circle.circle3 {
-  width: 350px;
-  height: 350px;
-  top: 450px;
-  left: 500px;
-}
-
 
 .auth__wrap {
    padding: 2% 4%;

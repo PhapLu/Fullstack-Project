@@ -22,6 +22,12 @@
   gap: 8px;
 }
 
+.auth__name {
+  font-size: 35px;
+    font-family: 'Lobster Two', cursive;
+    color: var(--primary-color);
+}
+
 .auth__header h2 {
   font-size: 22px;
   font-weight: 700;

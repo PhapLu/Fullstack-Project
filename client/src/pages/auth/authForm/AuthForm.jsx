@@ -3,7 +3,7 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import logo from '../../../assets/logo.png'
-import styles from "../authForm/AuthForm.module.scss";   // switched to CSS module
+import styles from "./AuthForm.module.scss";   // switched to CSS module
 import { faEnvelope, faEye, faEyeSlash, faLock, faLocationDot, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
