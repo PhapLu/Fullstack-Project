@@ -69,11 +69,35 @@
   bottom:-48px; display:flex; gap:8px;
 }
 
-.company{ display:flex; flex-direction:column; gap:8px; width:100%; }
-.company-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-.company-name{ font:600 20px/1.2 Inter, system-ui, sans-serif; }
-.company-input{ width:min(520px, 70vw); }
-.company-actions{ display:flex; gap:8px; }
+.companyRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.company-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.company-edit {
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--primary-color);
+}
+
+.companyEditBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.company-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
 
 /* Tabs & CTA */
 .tabs-bar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:20px; padding-inline:6px; }
@@ -234,4 +258,39 @@
 .pill{
   display:inline-block; padding:8px 12px; border-radius:10px;
   background:#f1f5f9; border:1px solid var(--border);
+}
+
+
+.profileHeader {
+  display: flex;              /* 👈 cho nằm ngang */
+  align-items: center;        /* căn giữa theo trục dọc */
+  gap: 24px;                  /* khoảng cách giữa avatar và block tên */
+  margin-bottom: 24px;
+}
+
+.companyBlock {
+  display: flex;
+  flex-direction: column;     /* label trên, input dưới */
+  gap: 6px;
+  flex: 1;                    /* cho block này chiếm phần còn lại */
+}
+
+.company-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.company-input {
+  font-size: 18px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 320px;
+}
+.company-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(10, 122, 255, 0.1);
 }
