@@ -1,11 +1,7 @@
-/* Gia Hy-s4053650 */
-body {
-  background-color: var(--bg-color);
-}
 .auth__wrap {
    padding: 2% 4%;
     display: flex;
-    min-height: 100dvh;
+    height: 100vh;
 }
 .auth__left {
     display: flex;
