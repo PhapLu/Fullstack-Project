@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../../../store/cart/CartContext.jsx";
 import { vnd } from "../../../utils/currency.js";
-import "./myCart.css"; 
+import styles from "./MyCart.module.scss";   // switched to CSS module
 
 export default function MyCart() {
   const { items, setQty, removeItem, clear, subtotal, addItem } = useCart();
   const [coupon, setCoupon] = useState("");
-
 
   const delivery = items.length ? 30000 : 0;
   const discount = coupon.trim() ? 50000 : 0;
@@ -24,20 +23,20 @@ export default function MyCart() {
           ) : (
             <div className="vstack gap-3">
               {items.map((p) => (
-                <div key={p.id} className="card p-3 shadow-sm hover-card rounded-4 border-0">
+                <div key={p.id} className={`card p-3 shadow-sm rounded-4 border-0 ${styles["hover-card"]}`}>
                   <div className="d-flex gap-3 align-items-center">
-                    <Link to={`/products/${p.id}`} className="product-link" aria-label={`View ${p.name}`}>
+                    <Link to={`/products/${p.id}`} className={styles["product-link"]} aria-label={`View ${p.name}`}>
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="rounded product-thumb"
+                        className={`rounded ${styles["product-thumb"]}`}
                         style={{ width: 96, height: 96, objectFit: "cover" }}
                       />
                     </Link>
 
                     <div className="flex-grow-1">
-                      <Link to={`/products/${p.id}`} className="product-link">
-                        <div className="fw-semibold product-title">{p.name}</div>
+                      <Link to={`/products/${p.id}`} className={styles["product-link"]}>
+                        <div className={`fw-semibold ${styles["product-title"]}`}>{p.name}</div>
                       </Link>
                       {p.classification && (
                         <div className="text-muted small">{p.classification}</div>
@@ -47,7 +46,7 @@ export default function MyCart() {
 
                     <div className="d-flex align-items-center gap-2">
                       <button
-                        className="btn btn-outline-secondary btn-sm btn-qty"
+                        className={`btn btn-outline-secondary btn-sm ${styles["btn-qty"]}`}
                         onClick={() => setQty(p.id, Math.max(1, (p.qty || 1) - 1))}
                         disabled={p.qty <= 1}
                         aria-label="Decrease quantity"
@@ -56,7 +55,7 @@ export default function MyCart() {
                       </button>
                       <span className="px-2">{p.qty}</span>
                       <button
-                        className="btn btn-outline-secondary btn-sm btn-qty"
+                        className={`btn btn-outline-secondary btn-sm ${styles["btn-qty"]}`}
                         onClick={() =>
                           setQty(p.id, Math.min((p.qty || 1) + 1, p.stock || Infinity))
                         }
@@ -92,18 +91,18 @@ export default function MyCart() {
         {/* RIGHT */}
         <div className="col-lg-4">
           {/* Coupon box — inline input + button */}
-          <div className="card p-3 mb-3 shadow-sm hover-card rounded-4 border-0">
+          <div className={`card p-3 mb-3 shadow-sm rounded-4 border-0 ${styles["hover-card"]}`}>
             <div className="fw-semibold mb-2">Coupon</div>
 
-            <div className="coupon-row">
+            <div className={styles["coupon-row"]}>
               <input
-                className="form-control coupon-input"
+                className={`form-control ${styles["coupon-input"]}`}
                 placeholder="Coupon code"
                 value={coupon}
                 onChange={(e) => setCoupon(e.target.value)}
                 aria-label="Coupon code"
               />
-              <button type="button" className="btn btn-primary fw-semibold coupon-btn">
+              <button type="button" className={`btn btn-primary fw-semibold ${styles["coupon-btn"]}`}>
                 Apply now
               </button>
             </div>
@@ -112,7 +111,7 @@ export default function MyCart() {
           </div>
 
           {/* Order summary */}
-          <div className="card p-3 shadow-sm hover-card rounded-4 border-0">
+          <div className={`card p-3 shadow-sm rounded-4 border-0 ${styles["hover-card"]}`}>
             <div className="fw-semibold mb-3">Your Order ({items.length} items)</div>
             <div className="d-flex justify-content-between">
               <span>Subtotal</span><span>{vnd(subtotal)}</span>

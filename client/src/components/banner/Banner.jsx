@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import '../banner/Banner.css'
-import { useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import styles from '../banner/Banner.module.scss';   // changed to CSS module
 import camBanner from "../../assets/banner_imgs/camera.png";
 import headPhone from "../../assets/banner_imgs/headphone.png";
 import shoes_sport from "../../assets/banner_imgs/shoes_sport.png"
@@ -34,7 +33,7 @@ const Banner = () => {
   const next = () => setIdx((i) => (i + 1) % slides.length);
   const prev = () => setIdx((i) => (i - 1 + slides.length) % slides.length);
 
-  // Auto-play (tuỳ chọn)
+  // Auto-play
   useEffect(() => {
     const t = setInterval(next, 6000);
     return () => clearInterval(t);
@@ -43,27 +42,27 @@ const Banner = () => {
   const s = slides[idx];
 
   return (
-    <section className="banner container">
-      <button className="banner-arrow left" onClick={prev} aria-label="Previous">‹</button>
+    <section className={`${styles.banner} ${styles.container}`}>
+      <button className={`${styles["banner-arrow"]} ${styles.left}`} onClick={prev} aria-label="Previous">‹</button>
 
-      <div className="banner-card fade" style={{ background: s.bg }}>
-        <div className="banner-copy">
+      <div className={`${styles["banner-card"]} ${styles.fade}`} style={{ background: s.bg }}>
+        <div className={styles["banner-copy"]}>
           <h1>{s.title}</h1>
           <p>{s.desc}</p>
         </div>
-        <div className="banner-media">
+        <div className={styles["banner-media"]}>
           <img key={s.id} src={s.img} alt="hero" />
         </div>
       </div>
 
-      <button className="banner-arrow right" onClick={next} aria-label="Next">›</button>
+      <button className={`${styles["banner-arrow"]} ${styles.right}`} onClick={next} aria-label="Next">›</button>
 
       {/* Dots */}
-      <div className="banner-dots" role="tablist" aria-label="slides">
+      <div className={styles["banner-dots"]} role="tablist" aria-label="slides">
         {slides.map((_, i) => (
           <button
             key={i}
-            className={`dot ${i === idx ? "active" : ""}`}
+            className={`${styles.dot} ${i === idx ? styles.active : ""}`}
             onClick={() => setIdx(i)}
             aria-selected={i === idx}
             aria-label={`Go to slide ${i + 1}`}

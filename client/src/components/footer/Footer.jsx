@@ -1,5 +1,5 @@
 /* Gia Hy-s4053650 */
-import "./Footer.css";
+import styles from "./Footer.module.scss";   // switched to CSS module
 import { Link } from "react-router-dom";
 import logo from '../../assets/logo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,19 +7,19 @@ import { faFacebook, faInstagram  } from '@fortawesome/free-brands-svg-icons'
 
 export default function Footer() {
   return (
-    <footer className="footer" id="contact">
-      <div className="footer__grid">
+    <footer className={styles.footer} id="contact">
+      <div className={styles.footer__grid}>
         <div>
-          <div className="auth__brand">
+          <div className={styles.auth__brand}>
               <Link 
                 to="/" 
                 style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
               >
-                <img className="auth__logo" src={logo} alt="Logo" />
-                <span className="auth__name">Bloomart</span>
+                <img className={styles.auth__logo} src={logo} alt="Logo" />
+                <span className={styles.auth__name}>Bloomart</span>
               </Link>
         </div>
-          <ul className="footer__contact">
+          <ul className={styles.footer__contact}>
             <li><strong>Address:</strong> 702 Nguyen Van Linh, Dist 7, HCMC 70000</li>
             <li><strong>Call us:</strong> (+91) - 540-025-124553</li>
             <li><strong>Email:</strong> group4rmit@Bloo.com</li>
@@ -65,33 +65,33 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="footer__payment">
+        <div className={styles.footer__payment}>
           <h4>Install App</h4>
           <p>From App Store or Google Play</p>
-          <div className="footer__badges">
-            <div className="footer__badge">App Store</div>
-            <div className="footer__badge">Google Play</div>
+          <div className={styles.footer__badges}>
+            <div className={styles.footer__badge}>App Store</div>
+            <div className={styles.footer__badge}>Google Play</div>
           </div>
           <p>Secured Payment Gateways</p>
-          <div className="footer__cards">
+          <div className={styles.footer__cards}>
             <span>VISA</span><span>Mastercard</span><span>Maestro</span><span>Amex</span>
           </div>
         </div>
       </div>
 
-      <div className="footer__bottom">
-        <div className="footer__copy">© 2025, <b className="auth__name">Bloomart</b> All rights reserved</div>
-        <div className="footer__phones">
-          <div className="footer__phone">
-            <span className="footer__phoneNum">1900 - 6666</span>
+      <div className={styles.footer__bottom}>
+        <div className={styles.footer__copy}>© 2025, <b className={styles.auth__name}>Bloomart</b> All rights reserved</div>
+        <div className={styles.footer__phones}>
+          <div className={styles.footer__phone}>
+            <span className={styles.footer__phoneNum}>1900 - 6666</span>
             <small>Working 8:00 - 22:00</small>
           </div>
-          <div className="footer__phone">
-            <span className="footer__phoneNum">1900 - 8888</span>
+          <div className={styles.footer__phone}>
+            <span className={styles.footer__phoneNum}>1900 - 8888</span>
             <small>24/7 Support Center</small>
           </div>
         </div>
-        <div className="footer__social">
+        <div className={styles.footer__social}>
           <span>Follow Us:
                   <FontAwesomeIcon icon={faFacebook} size="2x" style={{ color: "#007bff" }} />
                   <FontAwesomeIcon icon={faInstagram} size="2x" style={{ color: "#007bff" }} />

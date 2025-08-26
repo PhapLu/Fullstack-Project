@@ -1,5 +1,5 @@
 /* Footer.css */
-/* Gia Hy-s4053650 */
+
 
 .footer {
   background-color: #fff;
@@ -7,6 +7,21 @@
   font-family: 'Poppins', sans-serif;
   color: #253D4E;
   border-top: 1px solid #eee;
+}
+
+.auth__brand{
+    display: flex;
+    align-items: center;
+}
+.auth__logo {
+   width: 60px;
+    height: 60px;
+    object-fit: cover
+}
+.auth__name {
+  font-size: 35px;
+    font-family: "Lobster Two", cursive;
+    color: var(--primary-color)
 }
 
 .footer__grid {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./DistributionHub.css";
+import styles from "./DistributionHub.module.scss";   // switched to CSS module
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 const mockOrders = [
@@ -24,47 +24,59 @@ export default function DistributionHub() {
 
   const cancelOrder = (id) => {
     // TODO: xử lý sau (API, confirm, v.v.)
-    // ví dụ: setOrders(list => list.map(o => o.id === id ? {...o, status:"cancelled"} : o));
     console.log("cancel", id);
   };
 
   return (
-    <section className="hub container">
-      <header className="hub__head">
-        <h1>DISTRIBUTION HUB: <span className="loc">Location</span></h1>
-        <p>See all active orders assigned to you and update the current status accordingly</p>
+    <section className={`${styles.hub} ${styles.container}`}>
+      <header className={styles.hub__head}>
+        <h1>
+          DISTRIBUTION HUB: <span className={styles.loc}>Location</span>
+        </h1>
+        <p>
+          See all active orders assigned to you and update the current status accordingly
+        </p>
       </header>
 
-      <div className="hub__grid">
+      <div className={styles.hub__grid}>
         {orders.map((o) => (
-          <article className="order-card" key={o.id}>
+          <article className={styles["order-card"]} key={o.id}>
             {/* left block: route + price */}
-            <div className="order-card__top">
-              <div className="route">
-                <FaMapMarkerAlt className="pin" />
-                <div className="route__text">
-                  <div className="from">From: <p>{o.from}</p></div>
-                  <div>To: <span>{o.to}</span></div>
+            <div className={styles["order-card__top"]}>
+              <div className={styles.route}>
+                <FaMapMarkerAlt className={styles.pin} />
+                <div className={styles.route__text}>
+                  <div className={styles.from}>
+                    From: <p>{o.from}</p>
+                  </div>
+                  <div>
+                    To: <span>{o.to}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="price">
+              <div className={styles.price}>
                 <span>Price</span>
                 <strong>{o.price}</strong>
               </div>
 
-              <div className={`status-badge ${o.status}`}>
-                {o.status === "active" ? "Active" :
-                 o.status === "delivered" ? "Delivered" : "Cancelled"}
+              <div
+                className={`${styles["status-badge"]} ${styles[o.status]}`}
+              >
+                {o.status === "active"
+                  ? "Active"
+                  : o.status === "delivered"
+                  ? "Delivered"
+                  : "Cancelled"}
               </div>
             </div>
 
-            <div className="order-card__bottom">
-              <div className="order-no">No.{o.id}</div>
+            <div className={styles["order-card__bottom"]}>
+              <div className={styles["order-no"]}>No.{o.id}</div>
 
-              <div className="actions">
+              <div className={styles.actions}>
                 <button
-                  className="actions_mark"
+                  className={styles.actions_mark}
                   disabled={o.status !== "active"}
                   onClick={() => markDelivered(o.id)}
                 >
@@ -72,7 +84,7 @@ export default function DistributionHub() {
                 </button>
 
                 <button
-                  className="actions_cancle"
+                  className={styles.actions_cancle}
                   onClick={() => cancelOrder(o.id)}
                 >
                   Cancel

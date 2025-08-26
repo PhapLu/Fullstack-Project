@@ -1,5 +1,5 @@
 import React from 'react';
-import '../categories/Categories.css'
+import styles from '../categories/Categories.module.scss';   // switched to module
 
 import babies from "../../assets/features_imgs/babies.png";
 import beauty from "../../assets/features_imgs/beauty.png";
@@ -19,38 +19,42 @@ import watch from "../../assets/features_imgs/watch.png";
 import women from "../../assets/features_imgs/women.png";
 
 const categories = [
-  { img: men,     tone: "tone-1" },
-  { img: camera,      tone: "tone-2" },
-  { img: beauty,      tone: "tone-3" },
-  { img: babies,        tone: "tone-4" },
-  { img: hand_bag,         tone: "tone-5" },
-  { img: watch,       tone: "tone-6" },
+  { img: men,        tone: "tone-1" },
+  { img: camera,     tone: "tone-2" },
+  { img: beauty,     tone: "tone-3" },
+  { img: babies,     tone: "tone-4" },
+  { img: hand_bag,   tone: "tone-5" },
+  { img: watch,      tone: "tone-6" },
   { img: kettle,     tone: "tone-7" },
-  { img: books,       tone: "tone-8" },
-  { img: electrics,       tone: "tone-9" },
-  { img: women,     tone: "tone-10"},
-  { img: shoes,       tone: "tone-11"},
-  { img: jewelry,     tone: "tone-12"},
-  { img: fruits,      tone: "tone-13"},
-  { img: sport,        tone: "tone-14"},
-  { img: high_heels,       tone: "tone-15"},
-  { img: headphone,   tone: "tone-16"},
+  { img: books,      tone: "tone-8" },
+  { img: electrics,  tone: "tone-9" },
+  { img: women,      tone: "tone-10"},
+  { img: shoes,      tone: "tone-11"},
+  { img: jewelry,    tone: "tone-12"},
+  { img: fruits,     tone: "tone-13"},
+  { img: sport,      tone: "tone-14"},
+  { img: high_heels, tone: "tone-15"},
+  { img: headphone,  tone: "tone-16"},
 ];
 
 const Categories = () => {
     return (
         <div>
-            <section className="categories container" id="categories">
+            <section className={`${styles.categories} ${styles.container}`} id="categories">
                 <h2>Featured Categories</h2>
 
-                <div className="categories-grid">
-                {categories.map((c, i) => (
-                    <a key={i} className={`cat-card ${c.tone}`} href="#">
-                    <div className="cat-thumb">
+                <div className={styles["categories-grid"]}>
+                  {categories.map((c, i) => (
+                    <a 
+                      key={i} 
+                      className={`${styles["cat-card"]} ${styles[c.tone]}`} 
+                      href="#"
+                    >
+                      <div className={styles["cat-thumb"]}>
                         <img src={c.img} alt={c.title} loading="lazy" />
-                    </div>
+                      </div>
                     </a>
-                ))}
+                  ))}
                 </div>
             </section>
         </div>

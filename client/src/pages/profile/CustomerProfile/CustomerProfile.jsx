@@ -1,6 +1,18 @@
 // src/pages/profile/Profile.jsx
 import { useRef, useState, useEffect } from "react";
-import "./CustomerProfile.css";
+import styles from "./CustomerProfile.module.scss";
+
+const STORAGE_USER = "profile-user";
+const STORAGE_AVATAR = "profile-avatar";
+
+const DEFAULT_USER = {
+  firstName: "",
+  lastName: "",
+  phone: "",
+  gender: "other",
+  dob: "",
+  address: { country: "", city: "", district: "", ward: "", street: "", zip: "" },
+};
 
 export default function Profile() {
   // ===== User & Avatar ======
@@ -61,15 +73,15 @@ export default function Profile() {
   };
 
   return (
-    <div className="profile-page white">
+    <div className={`${styles["profile-page"]} ${styles.white}`}>
       <div className="container-xl py-4">
-        <div className="text-center hero-name mb-2">
+        <div className={`text-center mb-2 ${styles["hero-name"]}`}>
           {(user.firstName || "User") + " " + (user.lastName || "Name")}
         </div>
 
         {/* Avatar*/}
         <div className="text-center mb-3">
-          <div className="avatar-hero mx-auto" role="img" aria-label="User avatar">
+          <div className={`${styles["avatar-hero"]} mx-auto`} role="img" aria-label="User avatar">
             {avatar ? (
               <img src={avatar} alt="" />
             ) : (
@@ -83,7 +95,7 @@ export default function Profile() {
 
             <button
               type="button"
-              className="avatar-pen-btn"
+              className={styles["avatar-pen-btn"]}
               onClick={onPickAvatar}
               aria-label="Change avatar"
               title="Change avatar"
@@ -94,22 +106,22 @@ export default function Profile() {
               ref={fileRef}
               type="file"
               accept="image/*"
-              className="visually-hidden"
+              className={styles["visually-hidden"]}
               onChange={onFile}
             />
           </div>
         </div>
 
-        <div className="sheet-tab">Profile</div>
-        <div className="profile-sheet">
+        <div className={styles["sheet-tab"]}>Profile</div>
+        <div className={styles["profile-sheet"]}>
           {/* === Contact Name === */}
-          <div className="sheet-row">
-            <div className="label">Contact Name:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Contact Name:</div>
 
-            <div className="col-2">
-              <div className="sub">First name</div>
+            <div className={styles["col-2"]}>
+              <div className={styles["sub"]}>First name</div>
               {!editing ? (
-                <div className="value">{user.firstName}</div>
+                <div className={styles["value"]}>{user.firstName}</div>
               ) : (
                 <input
                   className="form-control form-control-sm"
@@ -121,10 +133,10 @@ export default function Profile() {
               )}
             </div>
 
-            <div className="col-2">
-              <div className="sub">Last name</div>
+            <div className={styles["col-2"]}>
+              <div className={styles["sub"]}>Last name</div>
               {!editing ? (
-                <div className="value">{user.lastName}</div>
+                <div className={styles["value"]}>{user.lastName}</div>
               ) : (
                 <input
                   className="form-control form-control-sm"
@@ -138,10 +150,10 @@ export default function Profile() {
           </div>
 
           {/* === Contact Number === */}
-          <div className="sheet-row">
-            <div className="label">Contact Number:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Contact Number:</div>
             {!editing ? (
-              <div className="value">{user.phone}</div>
+              <div className={styles["value"]}>{user.phone}</div>
             ) : (
               <input
                 className="form-control form-control-sm w-auto"
@@ -154,33 +166,29 @@ export default function Profile() {
           </div>
 
           {/* === Gender === */}
-          <div className="sheet-row">
-            <div className="label">Gender</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Gender</div>
             {!editing ? (
-              <div className="value radios">
+              <div className={`${styles["value"]} ${styles["radios"]}`}>
                 <label>
-                  <input type="radio" checked={user.gender === "male"} readOnly />{" "}
-                  Male
+                  <input type="radio" checked={user.gender === "male"} readOnly /> Male
                 </label>
                 <label>
-                  <input type="radio" checked={user.gender === "female"} readOnly />{" "}
-                  Female
+                  <input type="radio" checked={user.gender === "female"} readOnly /> Female
                 </label>
                 <label>
-                  <input type="radio" checked={user.gender === "other"} readOnly />{" "}
-                  Other
+                  <input type="radio" checked={user.gender === "other"} readOnly /> Other
                 </label>
               </div>
             ) : (
-              <div className="value radios">
+              <div className={`${styles["value"]} ${styles["radios"]}`}>
                 <label>
                   <input
                     type="radio"
                     name="gender"
                     checked={form.gender === "male"}
                     onChange={() => setForm({ ...form, gender: "male" })}
-                  />{" "}
-                  Male
+                  /> Male
                 </label>
                 <label>
                   <input
@@ -188,8 +196,7 @@ export default function Profile() {
                     name="gender"
                     checked={form.gender === "female"}
                     onChange={() => setForm({ ...form, gender: "female" })}
-                  />{" "}
-                  Female
+                  /> Female
                 </label>
                 <label>
                   <input
@@ -197,18 +204,17 @@ export default function Profile() {
                     name="gender"
                     checked={form.gender === "other"}
                     onChange={() => setForm({ ...form, gender: "other" })}
-                  />{" "}
-                  Other
+                  /> Other
                 </label>
               </div>
             )}
           </div>
 
           {/* === DOB === */}
-          <div className="sheet-row">
-            <div className="label">Date of Birth</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Date of Birth</div>
             {!editing ? (
-              <div className="value">
+              <div className={styles["value"]}>
                 {user.dob
                   ? new Date(user.dob).toLocaleDateString("vi-VN")
                   : "dd/mm/yyyy"}
@@ -224,13 +230,13 @@ export default function Profile() {
           </div>
 
           {/* === Address === */}
-          <div className="sheet-row">
-            <div className="label">Address:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Address:</div>
 
-            <div className="col-2">
-              <div className="sub">Country:</div>
+            <div className={styles["col-2"]}>
+              <div className={styles["sub"]}>Country:</div>
               {!editing ? (
-                <div className="value">{user.address.country}</div>
+                <div className={styles["value"]}>{user.address.country}</div>
               ) : (
                 <input
                   className="form-control form-control-sm"
@@ -245,10 +251,10 @@ export default function Profile() {
               )}
             </div>
 
-            <div className="col-2">
-              <div className="sub">City:</div>
+            <div className={styles["col-2"]}>
+              <div className={styles["sub"]}>City:</div>
               {!editing ? (
-                <div className="value">{user.address.city}</div>
+                <div className={styles["value"]}>{user.address.city}</div>
               ) : (
                 <input
                   className="form-control form-control-sm"
@@ -263,10 +269,10 @@ export default function Profile() {
               )}
             </div>
 
-            <div className="col-2 offset">
-              <div className="sub">District:</div>
+            <div className={`${styles["col-2"]} ${styles["offset"]}`}>
+              <div className={styles["sub"]}>District:</div>
               {!editing ? (
-                <div className="value">{user.address.district}</div>
+                <div className={styles["value"]}>{user.address.district}</div>
               ) : (
                 <input
                   className="form-control form-control-sm"
@@ -281,10 +287,10 @@ export default function Profile() {
               )}
             </div>
 
-            <div className="col-2">
-              <div className="sub">Ward:</div>
+            <div className={styles["col-2"]}>
+              <div className={styles["sub"]}>Ward:</div>
               {!editing ? (
-                <div className="value">{user.address.ward}</div>
+                <div className={styles["value"]}>{user.address.ward}</div>
               ) : (
                 <input
                   className="form-control form-control-sm"
@@ -299,10 +305,10 @@ export default function Profile() {
               )}
             </div>
 
-            <div className="col-4 offset">
-              <div className="sub">Address:</div>
+            <div className={`${styles["col-4"]} ${styles["offset"]}`}>
+              <div className={styles["sub"]}>Address:</div>
               {!editing ? (
-                <div className="value">{user.address.street}</div>
+                <div className={styles["value"]}>{user.address.street}</div>
               ) : (
                 <input
                   className="form-control form-control-sm"
@@ -319,10 +325,10 @@ export default function Profile() {
           </div>
 
           {/* === Zip === */}
-          <div className="sheet-row">
-            <div className="label">Zip/Postal code:</div>
+          <div className={styles["sheet-row"]}>
+            <div className={styles["label"]}>Zip/Postal code:</div>
             {!editing ? (
-              <div className="value">{user.address.zip}</div>
+              <div className={styles["value"]}>{user.address.zip}</div>
             ) : (
               <input
                 className="form-control form-control-sm w-auto"
@@ -337,7 +343,7 @@ export default function Profile() {
             )}
           </div>
 
-          <div className="actions-bottom d-flex justify-content-end">
+          <div className={`d-flex justify-content-end ${styles["actions-bottom"]}`}>
             {!editing ? (
               <button className="btn btn-outline-primary" onClick={startEdit}>
                 Edit information

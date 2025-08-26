@@ -57,6 +57,20 @@
 }
 
 /* Auth buttons */
+.auth__brand{
+    display: flex;
+    align-items: center;
+}
+.auth__logo {
+   width: 60px;
+    height: 60px;
+    object-fit: cover
+}
+.auth__name {
+  font-size: 35px;
+    font-family: "Lobster Two", cursive;
+    color: var(--primary-color)
+}
 .header__auth {
   display: flex;
   align-items: center;

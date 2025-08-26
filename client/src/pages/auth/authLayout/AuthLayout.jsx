@@ -1,8 +1,7 @@
-/* Gia Hy-s4053650 */
 import React, { useEffect, useRef } from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 
-import "../authLayout/AuthLayout.css";
+import styles from "../authLayout/AuthLayout.module.scss";   // switched to CSS module
 import logo from '../../../assets/logo.png'
 import c1 from '../../../assets/customer_img/customer-1.png'
 import c2 from '../../../assets/customer_img/customer-2.png'
@@ -34,70 +33,67 @@ const AuthLayout = () => {
   const c3Ref = useRef(null);
 
   useEffect(() => {
-  document.body.style.overflowY = "hidden";
-  return () => {
-    document.body.style.overflowY = "auto"; // reset unmount
-  };
-}, []);
-
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "auto"; // reset unmount
+    };
+  }, []);
 
   useEffect(() => {
-  const start = Date.now();
-  const items = [
-    { el: c1Ref.current, moveX: 36, moveY: 72, scaleRange: 0.060, speed: 0.72, phase: 0.10 },
-  
-    { el: c3Ref.current, moveX: 26, moveY: 52, scaleRange: 0.050, speed: 0.76, phase: 3.00 },
-  ];
-  
+    const start = Date.now();
+    const items = [
+      { el: c1Ref.current, moveX: 36, moveY: 72, scaleRange: 0.060, speed: 0.72, phase: 0.10 },
+      { el: c3Ref.current, moveX: 26, moveY: 52, scaleRange: 0.050, speed: 0.76, phase: 3.00 },
+    ];
 
-  let frame;
-  const animate = () => {
-    const t = (Date.now() - start) / 1000;
-    items.forEach(({ el, moveX, moveY, scaleRange, speed, phase }) => {
-      if (!el) return;
-      const offsetX = Math.sin(t * speed + phase) * moveX;
-      const offsetY = Math.cos(t * speed + phase) * moveY;
-      const scale = 1 + Math.sin(t * speed + phase) * scaleRange;
-      el.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-    });
-    frame = requestAnimationFrame(animate);
-  };
+    let frame;
+    const animate = () => {
+      const t = (Date.now() - start) / 1000;
+      items.forEach(({ el, moveX, moveY, scaleRange, speed, phase }) => {
+        if (!el) return;
+        const offsetX = Math.sin(t * speed + phase) * moveX;
+        const offsetY = Math.cos(t * speed + phase) * moveY;
+        const scale = 1 + Math.sin(t * speed + phase) * scaleRange;
+        el.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      });
+      frame = requestAnimationFrame(animate);
+    };
 
-  animate();
-  return () => cancelAnimationFrame(frame);
-}, []);
+    animate();
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <>
-      <div ref={c1Ref} className="bg-circle circle1" />
-      <div ref={c3Ref} className="bg-circle circle3" />
+      <div ref={c1Ref} className={`${styles["bg-circle"]} ${styles.circle1}`} />
+      <div ref={c3Ref} className={`${styles["bg-circle"]} ${styles.circle3}`} />
       
-      <div className="auth__wrap">
-        <aside className="auth__left">
-          <header className="auth__brand">
+      <div className={styles["auth__wrap"]}>
+        <aside className={styles["auth__left"]}>
+          <header className={styles["auth__brand"]}>
               <NavLink 
                 to="/" 
                 style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
               >
-                <img className="auth__logo" src={logo} alt="Logo" />
-                <span className="auth__name">Bloomart</span>
+                <img className={styles["auth__logo"]} src={logo} alt="Logo" />
+                <span className={styles["auth__name"]}>Bloomart</span>
               </NavLink>
            </header>
 
-          <div className="auth__tagline">
+          <div className={styles["auth__tagline"]}>
             <p>Enjoy your shopping as a</p>
             <h2>{ROLE_TITLE[role] || "Customer"}</h2>
           </div>
 
           {/* swap images per role if you want */}
-          <div className="auth__img">
-            <img className="img1" src={imgs[2]} alt={`${role}-1`} loading="eager" />
-            <img className="img2" src={imgs[1]} alt={`${role}-2`} loading="lazy" />
-            <img className="img3" src={imgs[0]} alt={`${role}-3`} loading="lazy" />
+          <div className={styles["auth__img"]}>
+            <img className={styles.img1} src={imgs[2]} alt={`${role}-1`} loading="eager" />
+            <img className={styles.img2} src={imgs[1]} alt={`${role}-2`} loading="lazy" />
+            <img className={styles.img3} src={imgs[0]} alt={`${role}-3`} loading="lazy" />
           </div>
         </aside>
 
-        <main className="auth__right">
+        <main className={styles["auth__right"]}>
           <Outlet />
         </main>
       </div>

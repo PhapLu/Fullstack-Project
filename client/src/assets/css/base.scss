@@ -5,6 +5,7 @@
 
 
 :root {
+  --sticky-offset: 150px;
   --primary-color: #007bff;
   --hover-btn: #0054ad;
   --text-color: #253D4E;
@@ -18,6 +19,7 @@
 }
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--sticky-offset, 150px);
 }
 html, body { height: 100%; }
 
@@ -61,10 +63,10 @@ body {
 }
 
 /* Unfreeze scroll (global fix) */
-html, body {
+/* html, body {
   height: auto !important;
   min-height: 100% !important;
   overflow-y: auto !important;
   overscroll-behavior: auto !important;
 }
-main { overflow: visible !important; } 
+main { overflow: visible !important; }  */

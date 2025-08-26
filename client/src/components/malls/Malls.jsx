@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
-import "./Malls.css";
+import styles from "./Malls.module.scss";   // switched to CSS module
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -19,7 +19,7 @@ const BRANDS = [
   { name: "CoolMate", img: coolmate },
   { name: "Adidas",   img: adidas },
   { name: "Comfort",  img: comfort },
-  { name: "Longway",   img: longway },
+  { name: "Longway",  img: longway },
   { name: "Eyeware",  img: eyeware },
   { name: "Locknlock",img: locknlock },
 ];
@@ -58,29 +58,29 @@ export default function Malls() {
   }, [page]);
 
   return (
-    <section className="mall container" id="mall">
+    <section className={`${styles.mall} ${styles.container}`} id="mall">
       <h2>Malls</h2>
 
-      <div className="mall__layout">
+      <div className={styles.mall__layout}>
         {/* Poster */}
-        <aside className="mall__poster">
-          <img src= {poster_sale} alt="Super Sale" />
+        <aside className={styles.mall__poster}>
+          <img src={poster_sale} alt="Super Sale" />
         </aside>
 
         {/* Carousel brand */}
-        <div className="mall__carousel">
-          <div className="mall__viewport">
-            <div className="mall__rail" ref={rail} style={{ width: `${pages.length * 100}%` }}>
+        <div className={styles.mall__carousel}>
+          <div className={styles.mall__viewport}>
+            <div className={styles.mall__rail} ref={rail} style={{ width: `${pages.length * 100}%` }}>
               {pages.map((group, idx) => (
-                <div className="mall__page" key={idx} style={{ width: `${100 / pages.length}%` }}>
-                  <div className="mall__grid">
-                  {/* Link to pages: shops/malls */}
+                <div className={styles.mall__page} key={idx} style={{ width: `${100 / pages.length}%` }}>
+                  <div className={styles.mall__grid}>
+                    {/* Link to pages: shops/malls */}
                     {group.map((b, i) => (
-                      <article className="brand-card" key={b.name + i}>
-                        <div className="brand-thumb">
+                      <article className={styles["brand-card"]} key={b.name + i}>
+                        <div className={styles["brand-thumb"]}>
                           <img src={b.img} alt={b.name} />
                         </div>
-                        <div className="brand-chip">{b.name}</div>
+                        <div className={styles["brand-chip"]}>{b.name}</div>
                       </article>
                     ))}
                   </div>
@@ -88,22 +88,25 @@ export default function Malls() {
               ))}
             </div>
 
-            <button className={`mall-nav left ${page === 0 ? "disabled" : ""}`} onClick={prev}>
+            <button
+              className={`${styles["mall-nav"]} ${styles.left} ${page === 0 ? styles.disabled : ""}`}
+              onClick={prev}
+            >
               <FontAwesomeIcon icon={faChevronLeft} />
             </button>
             <button
-              className={`mall-nav right ${page === pages.length - 1 ? "disabled" : ""}`}
+              className={`${styles["mall-nav"]} ${styles.right} ${page === pages.length - 1 ? styles.disabled : ""}`}
               onClick={next}
             >
               <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
 
-          <div className="mall__dots">
+          <div className={styles.mall__dots}>
             {pages.map((_, i) => (
               <button
                 key={i}
-                className={`dot ${page === i ? "active" : ""}`}
+                className={`${styles.dot} ${page === i ? styles.active : ""}`}
                 onClick={() => toPage(i)}
                 aria-label={`Go to page ${i + 1}`}
               />
