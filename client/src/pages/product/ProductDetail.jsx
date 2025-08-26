@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./ProductDetail.scss";
+import styles from "./ProductDetail.module.scss";
 
 export default function ProductDetail() {
 
@@ -43,10 +43,10 @@ export default function ProductDetail() {
   );
 
   return (
-    <div className="container py-4 reviews-page">
+    <div className={"container py-4 " + styles["reviews-page"]}>
       <h2 className="mb-4 text-uppercase fw-bold">Product Feedback</h2>
 
-      <form className="card border-0 shadow-sm p-3 mb-4 rounded-4" onSubmit={submitNew}>
+      <form className={"card border-0 shadow-sm p-3 mb-4 rounded-4 " + styles["rounded-4"]} onSubmit={submitNew}>
         <div className="d-flex gap-3">
           <div className="rounded-circle bg-secondary flex-shrink-0" style={{ width: 48, height: 48 }} aria-hidden />
           <div className="flex-grow-1">
