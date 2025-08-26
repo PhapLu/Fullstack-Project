@@ -1,71 +1,75 @@
 /* Gia Hy-s4053650 */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&display=swap");
 
 :root {
-  --sticky-offset: 150px;
-  --primary-color: #007bff;
-  --hover-btn: #0054ad;
-  --text-color: #253D4E;
-  --bg-color: #fdfeff;
-  --accent: #f59e0b;
-  --hover-accent: #a56800;
-  --border-color: #CED4DA;
-  --muted:#667085;
-  --surface:#ffffff;
-  --shadow:0 10px 30px rgba(15, 23, 42, 0.08);
+    --sticky-offset: 150px;
+    --primary-color: #007bff;
+    --hover-btn: #0054ad;
+    --text-color: #253d4e;
+    --bg-color: #fdfeff;
+    --accent: #f59e0b;
+    --hover-accent: #a56800;
+    --border-color: #ced4da;
+    --muted: #667085;
+    --surface: #ffffff;
+    --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: var(--sticky-offset, 150px);
+    font-size: 62.5%;
+    line-height: 1.6rem;
+    // font-family: "Roboto", sans-serif;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--sticky-offset, 150px);
 }
-html, body { height: 100vh; }
+html,
+body {
+    height: 100vh;
+}
 
 *,
 *:before,
 *:after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 * {
-  margin: 0;
-  padding: 0;
-  font: inherit;
+    margin: 0;
+    padding: 0;
+    font: inherit;
 }
 img,
 picture,
 svg,
 video {
-  display: block;
-  max-width: 100%;
+    display: block;
+    max-width: 100%;
 }
 input,
 select,
 textarea {
-  background-color: transparent;
-  outline: none;
+    background-color: transparent;
+    outline: none;
 }
 button {
-  cursor: pointer;
-  background-color: transparent;
-  outline: none;
-  border: 0;
-}
-body {
-  background-color: var(--bg-color);
-  overflow-x: hidden;      
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1;
-  font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    background-color: transparent;
+    outline: none;
+    border: 0;
 }
 
-/* Unfreeze scroll (global fix) */
-/* html, body {
-  height: auto !important;
-  min-height: 100% !important;
-  overflow-y: auto !important;
-  overscroll-behavior: auto !important;
+body {
+    margin: 0;
+    text-overflow: ellipsis;
+    scroll-behavior: smooth;
+    background-color: var(--bg-color);
+    overflow-x: hidden;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1;
+    font-family: "Poppins", sans-serif;
+    scrollbar-width: thin;
+    width: 100%;
+    font-weight: 400;
 }
-main { overflow: visible !important; }  */

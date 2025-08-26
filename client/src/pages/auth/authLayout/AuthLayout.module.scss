@@ -1,7 +1,11 @@
 .auth__wrap {
-   padding: 2% 4%;
+    padding: 2% 4%;
     display: flex;
-    height: 100vh;
+	width: 100%;
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
 }
 .auth__left {
     display: flex;
@@ -18,7 +22,7 @@
     box-shadow: 0px 0px 30px 15px rgba(0, 0, 0, 0.25);
 }
 .auth__brand {
-   z-index: 5;
+    z-index: 5;
     display: flex;
     align-items: center;
 }
@@ -29,7 +33,7 @@
 }
 .auth__name {
     font-size: 35px;
-    font-family: 'Lobster Two', cursive;
+    font-family: "Lobster Two", cursive;
     color: var(--primary-color);
 }
 .auth__tagline {
@@ -46,43 +50,43 @@
 }
 .auth__tagline h2 {
     font-size: 40px;
-    font-family: 'Lobster Two', cursive;
+    font-family: "Lobster Two", cursive;
     color: var(--primary-color);
 }
 .auth__img {
     position: absolute;
-    inset: 0;            /* top:0; right:0; bottom:0; left:0 */
-    pointer-events: none;/* tránh bắt click */
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    pointer-events: none; /* tránh bắt click */
     z-index: 2;
 }
-.auth__img img{
-  position: absolute;  /* bây giờ top/left/bottom mới hoạt động đúng */
-  display: block;
-  max-width: none;
-  object-fit: cover;   /* áp trên img mới có tác dụng */
+.auth__img img {
+    position: absolute; /* bây giờ top/left/bottom mới hoạt động đúng */
+    display: block;
+    max-width: none;
+    object-fit: cover; /* áp trên img mới có tác dụng */
 }
-.auth__img .img1{
-  width: 350px;
-  height: 350px;
-  left: 20%;
-  top: 40%;
-  transform: translate(-50%, -50%) rotate(-5deg);
+.auth__img .img1 {
+    width: 350px;
+    height: 350px;
+    left: 20%;
+    top: 40%;
+    transform: translate(-50%, -50%) rotate(-5deg);
 }
 
 /* Cụm icon/phụ kiện phía trên trái */
-.auth__img .img2{
-  width: 350px;
-  height: 350px;
-  left: 16%;
-  top: 55%;
-  transform: rotate(-6deg);
+.auth__img .img2 {
+    width: 350px;
+    height: 350px;
+    left: 16%;
+    top: 55%;
+    transform: rotate(-6deg);
 }
 
 /* Cart + hộp quà ở dưới trái */
-.auth__img .img3{
-  width: 350px;
-  height: 350px;
-  left: 65%;
-  top: 25%;
-  transform: rotate(3deg);
+.auth__img .img3 {
+    width: 350px;
+    height: 350px;
+    left: 65%;
+    top: 25%;
+    transform: rotate(3deg);
 }
