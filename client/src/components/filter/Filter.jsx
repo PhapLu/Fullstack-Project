@@ -1,20 +1,20 @@
 import React from "react";
-import "./Filter.css";
+import styles from "./Filter.module.scss";   // changed to CSS module
 import { HashLink } from 'react-router-hash-link';
 import { faFire } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Filter = () => {
   return (
-    <nav className="filter-nav">
+    <nav className={styles["filter-nav"]} id="filter-nav">
       {/* Menu items */}
-      <ul className="nav-links">
+      <div className={styles["nav-links"]}>
         <li>
           <span> <FontAwesomeIcon icon={faFire} /> </span>
           <HashLink smooth to="/#deals">Deals</HashLink>
         </li>
         <li>
-          <HashLink smooth  to="/#top">Home</HashLink>
+          <HashLink smooth to="/#top">Home</HashLink>
         </li>
         <li>
           <HashLink smooth to="/#categories">Categories</HashLink>
@@ -31,7 +31,7 @@ const Filter = () => {
         <li>
           <HashLink smooth to="/#contact">Contact</HashLink>
         </li>
-      </ul>
+      </div>
     </nav>
   );
 };

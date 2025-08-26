@@ -1,23 +1,20 @@
 /* Gia Hy-s4053650 */
 import { Link, NavLink } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-
-import "./Header.css";
-
 import logo from '../../assets/logo.png'
-
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram  } from '@fortawesome/free-brands-svg-icons'
+import styles from "./Header.module.scss";   // switched to CSS module
 
 library.add(fas);
 
 export default function Header() {
   return (
-    <header className="header">
-      <div className="header__top">
-        <nav className="header__links">
+    <header className={styles.header} id="site-header">
+      <div className={styles.header__top}>
+        <nav className={styles.header__links}>
           <Link to="/auth/signup/vendor">Become a vendor</Link>
           <span>│</span>
           <Link to="/auth/signup/shipper">Become a shipper</Link>
@@ -25,7 +22,7 @@ export default function Header() {
           <HashLink smooth to="/#about">About us</HashLink>
           <span>│</span>
           <HashLink smooth to="/#contact">Contact us</HashLink>
-          <div className="header__social">
+          <div className={styles.header__social}>
             <a href="#"><i className="facebook" />
               <FontAwesomeIcon icon={faFacebook} size="2x" style={{ color: "#007bff" }} />
             </a>
@@ -35,28 +32,28 @@ export default function Header() {
           </div>
         </nav>
 
-        <nav className="header__auth">
-          <Link to="/auth/signin/customer" className="header__link--signin">Sign In</Link>
+        <nav className={styles.header__auth}>
+          <Link to="/auth/signin/customer" className={styles["header__link--signin"]}>Sign In</Link>
           <span>│</span>
-          <Link to="/auth/signup/customer" className="header__link--signup">Sign Up</Link>
+          <Link to="/auth/signup/customer" className={styles["header__link--signup"]}>Sign Up</Link>
         </nav>
       </div>
 
-      <div className="header__searchRow">
-        <div className="auth__brand">
+      <div className={styles.header__searchRow}>
+        <div className={styles.auth__brand}>
               <NavLink 
                 to="/" 
                 style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
               >
-                <img className="auth__logo" src={logo} alt="Logo" />
-                <span className="auth__name">Bloomart</span>
+                <img className={styles.auth__logo} src={logo} alt="Logo" />
+                <span className={styles.auth__name}>Bloomart</span>
               </NavLink>
         </div>
 
-        <div className="header__search">
+        <div className={styles.header__search}>
           <input placeholder="Search for items..." />
           
-            <button aria-label="search" className="header__searchBtn">
+            <button aria-label="search" className={styles.header__searchBtn}>
               {/* search icon */}
               <FontAwesomeIcon
                 icon={['fas', 'magnifying-glass']}
@@ -65,12 +62,11 @@ export default function Header() {
             </button>
         </div>
 
-
           <NavLink
             to="/"
             style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
           >
-            <button className="header__cart" aria-label="cart">
+            <button className={styles.header__cart} aria-label="cart">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
                 <path d="M6 6h15l-2 9H8L6 6Z" stroke="#0F172A" strokeWidth="1.8" />
                 <circle cx="9" cy="20" r="1.6" fill="#0F172A"/>

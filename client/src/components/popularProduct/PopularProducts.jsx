@@ -1,5 +1,5 @@
 import React from "react";
-import "./PopularProducts.css";
+import styles from "./PopularProducts.module.scss";   // switched to CSS module
 import { Link } from "react-router-dom";
 
 const products = [
@@ -10,7 +10,7 @@ const products = [
   { id: 5,  img: "/images/popular/p5.jpg",  title: "Wireless Earbuds 50H",          desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
   { id: 6,  img: "/images/popular/p6.jpg",  title: "Super Sale Bundle",             desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
   { id: 7,  img: "/images/popular/p7.jpg",  title: "Reboxy Sandals",                desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 8,  img: "/images/popular/p8.jpg",  title: "2-mode Wireless Mouse",      desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
+  { id: 8,  img: "/images/popular/p8.jpg",  title: "2-mode Wireless Mouse",         desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
   { id: 9,  img: "/images/popular/p9.jpg",  title: "Glow Your Skin Serum",          desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
   { id: 10, img: "/images/popular/p10.jpg", title: "PediaSure for Kids",            desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
   { id: 11, img: "/images/popular/p11.jpg", title: "New Arrival Special Bag",       desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
@@ -25,25 +25,25 @@ const products = [
 
 export default function PopularProducts() {
   return (
-    <section className="popular container" id="popular">
+    <section className={`${styles.popular} ${styles.container}`} id="popular">
       <h2>Popular Products</h2>
 
-      <div className="popular-grid">
+      <div className={styles["popular-grid"]}>
         {/* Link to product:id */}
-            {products.map(p => (
-                <Link to={`/product/${p.id}`} key={p.id} className="pop-card">
-                    <article>
-                        <div className="thumb">
-                            <img src={p.img} alt={p.title} loading="lazy" />
-                        </div>
-                        <div className="info">
-                            <h3 title={p.title}>{p.title}</h3>
-                            <p className="desc" title={p.desc}>{p.desc}</p>
-                            <span className="price-link">{p.price}</span>
-                        </div>
-                    </article>
-                </Link>
-            ))}
+        {products.map(p => (
+          <Link to={`/product/${p.id}`} key={p.id} className={styles["pop-card"]}>
+            <article>
+              <div className={styles.thumb}>
+                <img src={p.img} alt={p.title} loading="lazy" />
+              </div>
+              <div className={styles.info}>
+                <h3 title={p.title}>{p.title}</h3>
+                <p className={styles.desc} title={p.desc}>{p.desc}</p>
+                <span className={styles["price-link"]}>{p.price}</span>
+              </div>
+            </article>
+          </Link>
+        ))}
       </div>
     </section>
   );

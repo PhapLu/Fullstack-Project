@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./HotDeals.css";
+import styles from "./HotDeals.module.scss";   // switched to CSS module
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFire } from "@fortawesome/free-solid-svg-icons";
 
@@ -45,9 +45,7 @@ export default function HotDeals() {
   const updateEnds = () => {
     const el = railRef.current;
     if (!el) return;
-
   };
-
 
   useEffect(() => {
     updateEnds();
@@ -58,33 +56,31 @@ export default function HotDeals() {
   });
 
   return (
-    <section className="hotdeals container" id="deals">
-      <header className="hotdeals__head">
+    <section className={`${styles.hotdeals} ${styles.container}`} id="deals">
+      <header className={styles.hotdeals__head}>
         <h2>Hot Deals</h2>
-        <div className="hotdeals__countdown">
+        <div className={styles.hotdeals__countdown}>
           <span>Countdown time</span>
-          <strong className="clock">{clock}</strong>
+          <strong className={styles.clock}>{clock}</strong>
         </div>
       </header>
 
-      <div className="hotdeals__viewport">
-
-        <div className="hotdeals__rail" ref={railRef}>
-        {/* Link tới product/id ( Product Details ) */}
+      <div className={styles.hotdeals__viewport}>
+        <div className={styles.hotdeals__rail} ref={railRef}>
+          {/* Link tới product/id ( Product Details ) */}
           {items.map((p) => (
-            <Link to={`/product/${p.id}`} className="deal-card" key={p.id}>
-                <article >
-                  <div className="deal-card__thumb">
-                    <img src={p.img} alt="" />
-                  </div>
-                  <div className="deal-card__bottom">
-                    <FontAwesomeIcon icon={faFire} />
-                    <span className="price">{p.price}</span>
-                  </div>
-                </article>
+            <Link to={`/product/${p.id}`} className={styles["deal-card"]} key={p.id}>
+              <article>
+                <div className={styles["deal-card__thumb"]}>
+                  <img src={p.img} alt="" />
+                </div>
+                <div className={styles["deal-card__bottom"]}>
+                  <FontAwesomeIcon icon={faFire} />
+                  <span className={styles.price}>{p.price}</span>
+                </div>
+              </article>
             </Link>
           ))}
-          
         </div>
       </div>
     </section>

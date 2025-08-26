@@ -1,12 +1,12 @@
 import { useState } from "react";
-import "./ProductDetail.css";
+import "./ProductDetail.scss";
 
 export default function ProductDetail() {
 
   // Form state
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
-
+  
   const submitNew = (e) => {
     e.preventDefault();
     if (!comment.trim()) return;

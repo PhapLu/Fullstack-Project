@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Layout from "./pages/layouts/Layout";
 import LandingPage from "./pages/landingPage/landingPage";
-import Filter from "./components/filter/filter";
 import DistributionHub from "./pages/distributionHub/DistributionHub";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";
@@ -33,7 +32,7 @@ const routes = [
             },
 
             {
-            path: "orders",
+            path: "/orders",
             element: <OrdersLayout />,
             children: [
               { index: true, element: <Navigate to="shipper" replace /> },
