@@ -12,6 +12,7 @@ import OrderSuccess from "./pages/orders/OrderSuccess";
 import ShipperOrders from "./pages/orders/ShipperOrders";
 import OrderTester from "./pages/orders/OrderTester";
 import { CartProvider } from "./store/cart/CartContext";
+import ShipperProfile from "./pages/profile/ShipperProfile/ShipperProfile.jsx";
 
 const routes = [
     {
