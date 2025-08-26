@@ -1,26 +1,37 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Layout from "./pages/layouts/Layout";
-import ProfileLayout from "./pages/profile/profileLayout/ProfileLayout";
 import { QueryClient, QueryClientProvider } from 'react-query';
-import OrderList from "./pages/orders/OrderList";
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";
 import AuthForm from "./pages/auth/authForm/AuthForm";
 import VendorProfile from "./pages/profile/profileLayout/vendorProfile/VendorProfile"
+import OrdersLayout from "./pages/orders/OrdersLayout";
+import OrderSuccess from "./pages/orders/OrderSuccess";
+import ShipperOrders from "./pages/orders/ShipperOrders";
+import OrderTester from "./pages/orders/OrderTester";
 
 const routes = [
     {
         path: "",
         element: <Layout />,
         children: [ 
-            {
-                path: "",
-                element: <VendorProfile />,
-            },
+            // {
+            //     path: "",
+            //     element: <VendorProfile />,
+            // },
 
             {
-              path: '/orders',
-              element: <OrderList/>
-            }
+            path: "orders",
+            element: <OrdersLayout />,
+            children: [
+              { index: true, element: <Navigate to="shipper" replace /> },
+
+              { path: "success/:id", element: <OrderSuccess /> },
+
+              { path: "shipper", element: <ShipperOrders /> },
+
+              { path: "test", element: <OrderTester /> },
+            ],
+          },
         ],
     },
     {
