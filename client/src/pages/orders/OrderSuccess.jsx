@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { fetchOrderById } from '../store/slices/orderSlices';
+import { fetchOrderById } from '../../store/slices/orderSlices';
 
 export default function OrderSuccess() {
   const { id } = useParams();
@@ -13,7 +13,7 @@ export default function OrderSuccess() {
 
   return (
     <div>
-      <h1>Order placed 🎉</h1>
+      <h1>Order placed</h1>
       {!order ? 'Loading…' : (
         <>
           <p>Order: {order._id} — {order.status}</p>

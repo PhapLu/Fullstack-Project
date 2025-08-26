@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import api from "../../utils/api";
 
 export default function OrderTester() {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5173";
   const ORDER_EP =
     import.meta.env.VITE_ORDER_ENDPOINT ||
     "/api/orders"; // đổi nếu BE khác: vd '/orders/create'
