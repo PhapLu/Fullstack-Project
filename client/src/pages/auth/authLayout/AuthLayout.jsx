@@ -64,10 +64,7 @@ const AuthLayout = () => {
   }, []);
 
   return (
-    <>
-      <div ref={c1Ref} className={`${styles["bg-circle"]} ${styles.circle1}`} />
-      <div ref={c3Ref} className={`${styles["bg-circle"]} ${styles.circle3}`} />
-      
+    <>  
       <div className={styles["auth__wrap"]}>
         <aside className={styles["auth__left"]}>
           <header className={styles["auth__brand"]}>
