@@ -1,12 +1,7 @@
-body {
-  background-color: var(--bg-color);
-  overflow-y: hidden;
-}
-
 .auth__wrap {
    padding: 2% 4%;
     display: flex;
-    min-height: 100dvh;
+    height: 100vh;
 }
 .auth__left {
     display: flex;
@@ -16,7 +11,6 @@ body {
     overflow: visible;
 }
 .auth__right {
-    margin-top: 20px;
     flex: 4;
     background-color: white;
     border-radius: 20px;

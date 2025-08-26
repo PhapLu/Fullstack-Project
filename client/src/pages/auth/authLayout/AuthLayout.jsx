@@ -30,7 +30,7 @@ const AuthLayout = () => {
   const imgs = ROLE_IMAGES[role] || ROLE_IMAGES.customer;
 
   return (
-    <>
+    <>  
       <div className={styles["auth__wrap"]}>
         <aside className={styles["auth__left"]}>
           <header className={styles["auth__brand"]}>
