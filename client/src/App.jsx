@@ -5,13 +5,13 @@ import DistributionHub from "./pages/distributionHub/DistributionHub";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";
 import AuthForm from "./pages/auth/authForm/AuthForm";
-import VendorProfile from "./pages/profile/profileLayout/vendorProfile/VendorProfile"
+import VendorProfile from "./pages/profile/vendorProfile/VendorProfile.jsx"
 import OrdersLayout from "./pages/orders/OrdersLayout";
 import OrderSuccess from "./pages/orders/OrderSuccess";
-import ShipperOrders from "./pages/orders/ShipperOrders";
-import OrderTester from "./pages/orders/OrderTester";
 import { CartProvider } from "./store/cart/CartContext";
 import ShipperProfile from "./pages/profile/ShipperProfile/ShipperProfile.jsx";
+import CheckoutPage from "./pages/orders/CheckoutPage.jsx";
+import VendorDashboard from "./pages/vendorDashboard/VendorDashboard.jsx"
 
 const routes = [
     {
@@ -19,29 +19,36 @@ const routes = [
         element: <Layout />,
         children: [ 
             {
-                path: "",
+                path: "/",
                 element: <LandingPage />,
             },
             {
                 path: "/distributionHub",
-                element: <DistributionHub />,
+                element: <DistributionHub />, 
             },
             {
-                path: '/profile',
+                path: "/distributionHub/:id",
+                element: <DistributionHub />, 
+            },
+            // http://localhost:5173/distributionHub/A002?role=shipper
+            // http://localhost:5173/distributionHub/A002?role=customer
+            {
+                path: '/vendorprofile',
                 element: <VendorProfile />,
             },
-
+            {
+                path: '/vendordashboard',
+                element: <VendorDashboard />,
+            },
             {
             path: "/orders",
             element: <OrdersLayout />,
             children: [
               { index: true, element: <Navigate to="shipper" replace /> },
 
-              { path: "success/:id", element: <OrderSuccess /> },
+              { path: "success", element: <OrderSuccess /> },
 
-              { path: "shipper", element: <ShipperOrders /> },
-
-              { path: "test", element: <OrderTester /> },
+              { path: "checkout", element: <CheckoutPage /> },
             ],
           },
         ],
