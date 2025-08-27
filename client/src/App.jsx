@@ -11,6 +11,7 @@ import OrderSuccess from "./pages/orders/OrderSuccess";
 import { CartProvider } from "./store/cart/CartContext";
 import ShipperProfile from "./pages/profile/ShipperProfile/ShipperProfile.jsx";
 import CheckoutPage from "./pages/orders/CheckoutPage.jsx";
+import VendorDashboard from "./pages/vendorDashboard/VendorDashboard.jsx"
 
 const routes = [
     {
@@ -29,7 +30,10 @@ const routes = [
                 path: '/vendorprofile',
                 element: <VendorProfile />,
             },
-
+            {
+                path: '/vendordashboard',
+                element: <VendorDashboard />,
+            },
             {
             path: "/orders",
             element: <OrdersLayout />,
