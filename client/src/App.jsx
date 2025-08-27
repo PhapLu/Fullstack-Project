@@ -24,8 +24,14 @@ const routes = [
             },
             {
                 path: "/distributionHub",
-                element: <DistributionHub />,
+                element: <DistributionHub />, 
             },
+            {
+                path: "/distributionHub/:id",
+                element: <DistributionHub />, 
+            },
+            // http://localhost:5173/distributionHub/A002?role=shipper
+            // http://localhost:5173/distributionHub/A002?role=customer
             {
                 path: '/vendorprofile',
                 element: <VendorProfile />,

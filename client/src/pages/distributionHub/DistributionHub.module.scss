@@ -314,3 +314,71 @@
   border-radius: 10px;
   margin-bottom: 10px;
 }
+
+/* timeline on detail page */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.step {
+  background: #f5f7fb;
+  border: 1px solid #e6edf3;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 600;
+}
+.step.done {
+  background: #e7f8ef;
+  border-color: #b7f0cf;
+  color: #166534;
+}
+
+/* payment summary */
+.summary {
+  display: grid;
+  gap: 8px;
+  border: 1px solid #eef3fb;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fbfdff;
+}
+.summary > div {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.summary hr {
+  border: none; border-top: 1px dashed #e6edf3; margin: 6px 0;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.step {
+  background: #f5f7fb;
+  border: 1px solid #e6edf3;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 600;
+}
+.step.done {
+  background: #e7f8ef;
+  border-color: #b7f0cf;
+  color: #166534;
+}
+
+.summary {
+  display: grid;
+  gap: 8px;
+  border: 1px solid #eef3fb;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fbfdff;
+}
+.summary > div { display:flex; justify-content:space-between; align-items:center; }
+.summary hr { border:none; border-top:1px dashed #e6edf3; margin:6px 0; }
