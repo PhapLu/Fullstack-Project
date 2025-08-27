@@ -1,0 +1,6 @@
+2025-08-27 10:59:10::error::/api/hubs::7196d5b0-e993-4091-9de8-c875f229138e::handler-error::{"status":404,"message":"Not Found Route"}
+2025-08-27 10:59:10::error::/api/hubs::4b8a0be8-2f69-41fc-9786-d4c867239100::handler-error::{"status":404,"message":"Not Found Route"}
+2025-08-27 10:59:13::error::/api/hubs::d2274f3f-8d8b-4ff4-9248-a6a2ef64a575::handler-error::{"status":404,"message":"Not Found Route"}
+2025-08-27 10:59:13::error::/api/hubs::650aff45-8a9d-412e-9d3a-2faff558141a::handler-error::{"status":404,"message":"Not Found Route"}
+2025-08-27 10:59:18::error::/api/hubs::af22edce-9bdb-4b9a-a1f9-6ac02e7ad604::handler-error::{"status":404,"message":"Not Found Route"}
+2025-08-27 10:59:18::error::/api/hubs::211e4fe5-75ef-465f-a841-99d1b9feae1c::handler-error::{"status":404,"message":"Not Found Route"}

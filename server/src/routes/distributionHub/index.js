@@ -7,14 +7,14 @@ dotenv.config();
 
 const router = express.Router();
 
-router.post(
+router.get(
   "/readDistributionHubs",
   asyncHandler(DistributionHubController.readDistributionHubs)
 );
 
 router.use(verifyToken);
 
-router.post(
+router.get(
   "/readDistributionHub/:distributionHubId",
   asyncHandler(DistributionHubController.readDistributionHub)
 );
@@ -22,11 +22,11 @@ router.post(
   "/createDistributionHub",
   asyncHandler(DistributionHubController.createDistributionHub)
 );
-router.post(
+router.patch(
   "/updateDistributionHub/:distributionHubId",
   asyncHandler(DistributionHubController.updateDistributionHub)
 );
-router.post(
+router.delete(
   "/deleteDistributionHub/:distributionHubId",
   asyncHandler(DistributionHubController.deleteDistributionHub)
 );

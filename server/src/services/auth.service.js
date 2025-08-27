@@ -9,6 +9,7 @@ import { AuthFailureError, BadRequestError } from "../core/error.response.js"
 import { sendOtpEmail } from "../configs/brevo.config.js"
 import { isValidPassword, isAllowedEmail } from "../models/repositories/auth.repo.js" 
 import Conversation from "../models/conversation.model.js"
+import DistributionHub from "../models/distributionHub.model.js"
 
 class AuthService {
     //-------------------CRUD----------------------------------------------------
