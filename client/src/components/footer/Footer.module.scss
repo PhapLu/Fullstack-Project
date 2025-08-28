@@ -1,6 +1,4 @@
 /* Footer.css */
-
-
 .footer {
   background-color: #fff;
   padding: 40px 20px;
@@ -184,4 +182,26 @@
 
 .footer__copy b {
   font-size: 0.9rem;
+}
+
+/* ====== Responsive ====== */
+/* ====== Tablet (<= 1024px) ====== */
+@media (max-width: 1024px) {
+  .footer {
+    display: none;
+  }
+}
+
+/* ====== Mobile (<= 768px) ====== */
+@media (max-width: 768px) {
+  .footer {
+    display: none;
+  }
+}
+
+/* ====== Small Mobile (<= 480px) ====== */
+@media (max-width: 480px) {
+  .footer {
+    display: none;
+  }
 }

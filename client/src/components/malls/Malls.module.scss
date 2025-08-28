@@ -111,11 +111,78 @@
 .mall__dots .dot.active{ background:#0b74ff; }
 
 /* responsive */
-@media (max-width: 992px){
-  .mall__layout{ grid-template-columns: 1fr; }
-  .mall__poster{ max-width: 420px; }
+/* Tablet (<= 1024px): stack layout, soften sizes */
+@media (max-width: 1024px) {
+  .mall h2 { font-size: 22px; }                 /* smaller heading */
+
+  .mall__layout {
+    grid-template-columns: 1fr;                 /* poster above, carousel below */
+    gap: 18px;
+  }
+
+  .mall__poster {
+    display: none;                             /* allow full width poster */
+  }
+   .brand-card {
+    transform: scale(0.9);
+  }
+
+  /* keep 4 brands per row inside each page on tablet */
+  .mall__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* place nav buttons at sides (centered vertically) on tablet */
+  .mall-nav {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+  }
+  .mall-nav.left  { left: 10px;  transform: translateY(-50%); }
+  .mall-nav.right { right: 10px; transform: translateY(-50%); }
+  .mall__dots { margin-top: 18px; }
 }
-@media (max-width: 640px){
-  .mall__grid{ grid-template-columns: repeat(3, 1fr); }
-  .brand-chip{ width: 86%; }
+
+/* Mobile (<= 768px): tighter grid, hide poster for space */
+@media (max-width: 768px) {
+  .mall h2 { font-size: 20px; }
+
+  .mall__poster { display: none; }              /* hide poster on mobile */
+
+  .mall__grid {
+    grid-template-columns: repeat(3, 1fr);      /* 3 per row */
+    gap: 14px;
+  }
+
+  .brand-chip {
+    width: 84%;
+    font-size: 13px;
+    padding: 7px 10px;
+  }
+
+  /* slightly smaller dots/buttons spacing */
+  .mall__dots { margin-top: 16px; }
+}
+
+/* Small mobile (<= 520px): 2 per row, compact chips */
+@media (max-width: 520px) {
+  .mall h2 { font-size: 18px; }
+
+  .mall__grid {
+    grid-template-columns: repeat(2, 1fr);      /* 2 per row */
+    gap: 12px;
+  }
+
+  .brand-chip {
+    width: 88%;
+    font-size: 12px;
+    padding: 6px 9px;
+  }
+
+  /* optional: reduce shadows for performance on tiny devices */
+  .mall__poster,
+  .brand-card { box-shadow: 0 6px 14px rgba(0,0,0,.08); }
 }

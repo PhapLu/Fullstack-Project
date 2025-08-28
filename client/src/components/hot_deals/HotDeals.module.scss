@@ -105,7 +105,59 @@
 }
 
 /* responsive */
-@media (max-width: 640px){
-  .hotdeals__rail{ grid-auto-columns: 78%; }
-  .nav-btn.left{ left: -2px; } .nav-btn.right{ right: -2px; }
+/* Tablet (<= 1024px) */
+@media (max-width: 1024px) {
+  .hotdeals__head h2 {
+    font-size: 24px;  
+  }
+
+  .hotdeals__rail {
+    grid-auto-columns: minmax(200px, 1fr);
+    gap: 16px;
+  }
+
+  .deal-card__bottom {
+    padding: 14px 12px;
+  }
+  .deal-card__bottom .price {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile (<= 768px) */
+@media (max-width: 768px) {
+  .hotdeals__head h2 {
+    font-size: 20px;
+  }
+
+  .hotdeals__rail {
+    grid-auto-columns: minmax(160px, 1fr); 
+    gap: 14px;
+  }
+
+  .deal-card__bottom {
+    padding: 12px 10px;
+  }
+  .deal-card__bottom .price {
+    font-size: 0.9rem;
+  }
+}
+
+/* Small mobile (<= 480px) */
+@media (max-width: 480px) {
+  .hotdeals__head h2 {
+      font-size: 18px;
+    }
+
+  .hotdeals__rail {
+    grid-auto-columns: minmax(140px, 1fr); 
+    gap: 12px;
+  }
+
+  .deal-card__bottom {
+    padding: 10px 8px;
+  }
+  .deal-card__bottom .price {
+    font-size: 0.85rem;
+  }
 }

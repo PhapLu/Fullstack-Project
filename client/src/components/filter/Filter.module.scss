@@ -39,3 +39,25 @@
   color: var(--primary-color );
   font-weight: 600;
 }
+
+/* ====== Responsive ====== */
+/* ====== Tablet (<= 1024px) ====== */
+@media (max-width: 1024px) {
+  .filter-nav {
+    display: none;
+  }
+}
+
+/* ====== Mobile (<= 768px) ====== */
+@media (max-width: 768px) {
+  .filter-nav {
+    display: none;
+  }
+}
+
+/* ====== Small Mobile (<= 480px) ====== */
+@media (max-width: 480px) {
+  .filter-nav {
+    display: none;
+  }
+}

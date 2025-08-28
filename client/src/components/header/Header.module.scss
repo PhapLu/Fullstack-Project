@@ -110,12 +110,15 @@
   display: flex;
   gap: 80px;
   align-items: center;
+  justify-content: space-between;
   padding: 14px 0;
 }
 
 .header__search {
   display: flex;
   flex: 1;
+  min-width: 0;                     /* allow shrinking without overflow */
+  max-width: 860px;
   border: 1px solid var(--border-color);
   border-radius: 5px;
   overflow: hidden;
@@ -160,19 +163,124 @@
 }
 
 /* ======= RESPONSIVE ======= */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .header__top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .header__links {
+    gap: 8px;
   }
 
   .header__searchRow {
-    flex-direction: column;
-    gap: 10px;
+    gap: 24px;
+    padding: 10px 0;
   }
 
-  .header__auth {
-    align-self: flex-end;
+  .auth__name {
+    font-size: 26px;
+  }
+
+  .auth__logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .header__search input {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .header__searchBtn {
+    padding: 0 12px;
+  }
+
+  .header__cart {
+    padding: 8px 12px;
+  }
+}
+
+/* ====== Mobile (<= 768px) ====== */
+@media (max-width: 768px) {
+  /* Hide brand (logo + name) */
+  .auth__brand {
+    display: none !important;
+  }
+
+  /* Make the top bar lighter or hide it if you prefer */
+  .header__top {
+    gap: 8px;
+    padding: 6px 0;
+  }
+  /* (Optional) hide the top bar entirely on mobile — uncomment if desired */
+  /* .header__top { display: none; } */
+
+  .header {
+    padding: 0 3%;
+  }
+
+  .header__searchRow {
+    gap: 12px;
+    padding: 8px 0;
+  }
+
+  /* Search takes the available width (left side) */
+  .header__search {
+    flex: 1 1 auto;
+  }
+
+  .header__search input {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+
+  .header__searchBtn {
+    padding: 0 10px;
+  }
+
+  /* Cart stays on the right, comfortably tappable */
+  .header__cart {
+    padding: 8px 10px;
+  }
+
+  /* Trim socials a bit */
+  .header__social a {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  /* Reduce link noise separators */
+  .header__links span {
+    display: none;
+  }
+}
+
+/* ====== Small Mobile (<= 480px) ====== */
+@media (max-width: 480px) {
+  /* Recommend hiding the entire top row for clarity on very small phones */
+  .header__top { display: none; }
+
+  .header {
+    padding: 0 4%;
+  }
+
+  .header__searchRow {
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  .header__search input {
+    padding: 8px 9px;
+    font-size: 12.5px;
+  }
+
+  .header__searchBtn {
+    padding: 0 9px;
+  }
+
+  .header__cart {
+    padding: 6px 9px;
   }
 }

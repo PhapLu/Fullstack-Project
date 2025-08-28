@@ -57,13 +57,78 @@
 
 
 /* ===== Responsive ===== */
-@media (max-width: 992px){
-  .banner-card{ grid-template-columns: 1fr; text-align: center; }
-  .banner-copy{ order: 2; }
-  .banner-media{ order: 1; }
-  .categories-grid{ grid-template-columns: repeat(6, 1fr); }
+/* Tablet (<= 1024px) */
+@media (max-width: 1024px) {
+  .banner { height: 52vh; }
+  .banner-card { 
+    gap: 16px; 
+    padding-left: 36px; 
+  }
+  .banner-media img { height: 320px; }
+  .banner-arrow { 
+    width: 34px; 
+    height: 34px; 
+    font-size: 20px; 
+  }
 }
-@media (max-width: 640px){
-  .categories-grid{ grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  .banner-arrow{ display:none; } /* ẩn nút mũi tên trên mobile */
+
+/* Mobile (<= 768px): stack, smaller type, tighter padding */
+@media (max-width: 768px) {
+  .banner {
+    height: auto;                 /* let content define height */
+    margin-top: 14px;
+  }
+
+  .banner-card {
+    grid-template-columns: 1fr;   /* stack: one column */
+    gap: 12px;
+    padding: 18px;
+    padding-left: 18px;
+    border-radius: 10px;
+  }
+
+  /* Show product image first on mobile for visual impact */
+  .banner-media { 
+    order: -1; 
+    justify-content: center; 
+  }
+  .banner-media img { height: 260px; }
+
+  .banner-copy h1 { 
+    font-size: clamp(20px, 5vw, 28px); 
+    line-height: 1.15; 
+  }
+  .banner-copy p  { 
+    font-size: 0.95rem; 
+    margin: 10px 0 16px; 
+  }
+
+  .banner-arrow {
+    top: auto; 
+    bottom: 10px; 
+    transform: none;
+    width: 32px; 
+    height: 32px; 
+    font-size: 18px;
+  }
+  .banner-arrow.left  { left: 10px; }
+  .banner-arrow.right { right: 10px; }
+
+  .banner-dots { margin-top: 6px; }
+  .dot { 
+    width: 8px; 
+    height: 8px; 
+  }
+}
+
+/* Small mobile (<= 480px) */
+@media (max-width: 480px) {
+  .banner-card      { padding: 14px; }
+  .banner-media img { height: 210px; }
+
+  .banner-copy h1 { font-size: clamp(18px, 6vw, 24px); }
+  .banner-copy p  { font-size: 0.9rem; }
+
+  /* hide arrows on very small screens*/
+  .banner-arrow { display: none; }
 }
