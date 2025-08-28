@@ -76,6 +76,18 @@ class UserService {
       
         return { profilePicture: publicUrl };
     };
+
+    static readBrands = async(req) => {
+        // 1. Read brands - which are vendors started selling more than 1 year ago
+        const brands = await User.find({
+            role: 'vendor',
+            createdAt: { $lte: new Date(Date.now() - 365*24*60*60*1000) }
+        })
+
+        return {
+            users: brands,
+        }
+    }
 }
 
 export default UserService;

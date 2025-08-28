@@ -86,8 +86,8 @@ class ProductService {
 
         // Query
         const [items, total] = await Promise.all([
-        Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum).lean(),
-        Product.countDocuments(filter)
+            Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum).lean(),
+            Product.countDocuments(filter)
         ]);
 
         return {
@@ -101,7 +101,7 @@ class ProductService {
                 id: p._id,
                 name: p.name,
                 price: p.price,
-                image: p.images,
+                images: p.images,
                 description: p.description,
                 vendor: p.vendorId
             }))

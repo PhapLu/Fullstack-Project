@@ -5,11 +5,12 @@ import { verifyToken } from "../../middlewares/jwt.middleware.js"
 
 const router = express.Router()
 
+router.get('/readProducts', asyncHandler(productController.readProducts))
+
 //Authentication
 router.use(verifyToken)
 router.post('/createProduct', asyncHandler(productController.createProduct))
 router.get('/readProduct', asyncHandler(productController.readProduct))
-router.get('/readProducts', asyncHandler(productController.readProducts))
 router.patch('/updateProduct', asyncHandler(productController.updateProduct))
 router.delete('/deleteProduct', asyncHandler(productController.deleteProduct))
 

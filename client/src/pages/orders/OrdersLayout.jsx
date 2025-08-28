@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
+import { apiUtils } from "../../utils/newRequest";
 
 const ordersMock = [
   {
@@ -76,6 +78,17 @@ const ordersMock = [
 ];
 
 export default function OrdersLayout() {
+
+  const [orders, setOrders] = useState([])
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const response = await apiUtils('/order/readOrders'); // Replace with your actual API endpoint
+      setOrders(response.data.metadata.orders);
+    }
+    fetchOrders();
+  })
+
   return (
     <div className="orders-layout container py-4">
       {/* Navigation */}
@@ -88,7 +101,7 @@ export default function OrdersLayout() {
       <h3 className="fw-bold mb-4">My Orders</h3>
 
       {/* Orders List */}
-      {ordersMock.map((order) => (
+      {orders.map((order) => (
         <div key={order.id} className="card mb-3 shadow-sm">
           <div className="card-body">
             {/* Header */}

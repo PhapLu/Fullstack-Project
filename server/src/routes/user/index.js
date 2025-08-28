@@ -7,6 +7,7 @@ import { uploadDisk } from "../../configs/multer.config.js"
 const router = express.Router()
 
 router.get('/readUserProfile/:userId', asyncHandler(userController.readUserProfile))
+router.get('/readBrands', asyncHandler(userController.readBrands))
 router.get('/me', asyncHandler(userController.me))
 
 //Authentication

@@ -1,50 +1,56 @@
-import React from "react";
-import styles from "./PopularProducts.module.scss";   // switched to CSS module
+import React, { useEffect, useState } from "react";
+import styles from "./PopularProducts.module.scss"; // switched to CSS module
 import { Link } from "react-router-dom";
-
-const products = [
-  { id: 1,  img: "/images/popular/p1.jpg",  title: "Hair Dryer Blue",               desc: "Lorem ipsum is simply dummy text of the printing", price: '999'},
-  { id: 2,  img: "/images/popular/p2.jpg",  title: "RGB Gaming Keyboard",           desc: "Lorem ipsum is simply dummy text of the printing" , price: '999'},
-  { id: 3,  img: "/images/popular/p3.jpg",  title: "Winter Vest Set",               desc: "Lorem ipsum is simply dummy text of the printing", price: '999' },
-  { id: 4,  img: "/images/popular/p4.jpg",  title: "Travel Bag & Accessories",      desc: "Lorem ipsum is simply dummy text of the printing", price: '999' },
-  { id: 5,  img: "/images/popular/p5.jpg",  title: "Wireless Earbuds 50H",          desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 6,  img: "/images/popular/p6.jpg",  title: "Super Sale Bundle",             desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 7,  img: "/images/popular/p7.jpg",  title: "Reboxy Sandals",                desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 8,  img: "/images/popular/p8.jpg",  title: "2-mode Wireless Mouse",         desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 9,  img: "/images/popular/p9.jpg",  title: "Glow Your Skin Serum",          desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 10, img: "/images/popular/p10.jpg", title: "PediaSure for Kids",            desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 11, img: "/images/popular/p11.jpg", title: "New Arrival Special Bag",       desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 12, img: "/images/popular/p12.jpg", title: "Seminar Starter Kit",           desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 13, img: "/images/popular/p13.jpg", title: "Kids Outfit – 50% Off",         desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 14, img: "/images/popular/p14.jpg", title: "Home Decor Surf Boards",        desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 15, img: "/images/popular/p15.jpg", title: "TVS Bluetooth Speaker",         desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 16, img: "/images/popular/p16.jpg", title: "Orange Skyline Blocks",         desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 17, img: "/images/popular/p17.jpg", title: "Out Now – Poster Frame",        desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-  { id: 18, img: "/images/popular/p18.jpg", title: "Daily Wear Casual Set",         desc: "Lorem ipsum is simply dummy text of the printing" , price: '999' },
-];
+import { apiUtils } from "../../utils/newRequest";
 
 export default function PopularProducts() {
-  return (
-    <section className={`${styles.popular} ${styles.container}`} id="popular">
-      <h2>Popular Products</h2>
+    const [products, setProducts] = useState([]);
 
-      <div className={styles["popular-grid"]}>
-        {/* Link to product:id */}
-        {products.map(p => (
-          <Link to={`/product/${p.id}`} key={p.id} className={styles["pop-card"]}>
-            <article>
-              <div className={styles.thumb}>
-                <img src={p.img} alt={p.title} loading="lazy" />
-              </div>
-              <div className={styles.info}>
-                <h3 title={p.title}>{p.title}</h3>
-                <p className={styles.desc} title={p.desc}>{p.desc}</p>
-                <span className={styles["price-link"]}>{p.price}</span>
-              </div>
-            </article>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await apiUtils.get("/product/readProducts"); // Adjust the path as necessary
+				console.log(response.data.metadata.products);
+                setProducts(response.data.metadata.products);
+            } catch (error) {
+                console.error("Error fetching popular products:", error);
+            }
+        };
+        fetchProducts();
+    }, []);
+
+    return (
+        <section
+            className={`${styles.popular} ${styles.container}`}
+            id="popular"
+        >
+            <h2>Popular Products</h2>
+
+            <div className={styles["popular-grid"]}>
+                {/* Link to product:id */}
+                {products.map((p) => (
+                    <Link
+                        to={`/product/${p.id}`}
+                        key={p.id}
+                        className={styles["pop-card"]}
+                    >
+                        <article>
+                            <div className={styles.thumb}>
+								<img src={p.images?.[0]} alt={p.title} loading="lazy" />
+                            </div>
+                            <div className={styles.info}>
+                                <h3 title={p.title}>{p.title}</h3>
+                                <p className={styles.desc} title={p.desc}>
+                                    {p.desc}
+                                </p>
+                                <span className={styles["price-link"]}>
+                                    {p.price}
+                                </span>
+                            </div>
+                        </article>
+                    </Link>
+                ))}
+            </div>
+        </section>
+    );
 }

@@ -22,6 +22,13 @@ class UserController {
             metadata: await UserService.updateProfilePicture(req)
         }).send(res)
     }
+
+    readBrands = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Read brands successfully',
+            metadata: await UserService.readBrands()
+        }).send(res)
+    }
 }
 
 export default new UserController()

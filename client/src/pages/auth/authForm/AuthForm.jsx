@@ -24,16 +24,16 @@ const AuthForm = () => {
     // dynamic fields
     const extraSignupFields = {
         customer: [
-			{
-				key: "name",
-				placeholder: "Name",
-				icon: <FontAwesomeIcon icon={faUser} />,
-			},
-            {
-                key: "address",
-                placeholder: "Address",
-                icon: <FontAwesomeIcon icon={faLocationDot} />,
-            },
+			// {
+			// 	key: "name",
+			// 	placeholder: "Name",
+			// 	icon: <FontAwesomeIcon icon={faUser} />,
+			// },
+            // {
+            //     key: "address",
+            //     placeholder: "Address",
+            //     icon: <FontAwesomeIcon icon={faLocationDot} />,
+            // },
         ],
         vendor: [
             {
@@ -105,7 +105,7 @@ const AuthForm = () => {
                 <form className={styles["auth__form"]} onSubmit={onSubmit}>
 					<div className={styles.field}>
                         <label htmlFor="username" className={styles.ico}>
-                            <FontAwesomeIcon icon={faEnvelope} />
+                            <FontAwesomeIcon icon={faUser} />
                         </label>
                         <input id="username" type="text" placeholder="Username" required />
                     </div>
@@ -158,18 +158,6 @@ const AuthForm = () => {
                                     />
                                 </button>
                             </div>
-
-							<div className={styles.field}>
-								<label className={styles.ico}>
-									<FontAwesomeIcon icon={faUser} />
-								</label>
-								<input
-									type="file"
-									accept="image/*"
-									required
-									placeholder="Profile Picture"
-								/>
-							</div>
 
                             {(extraSignupFields[role] || []).map((f) => (
                                 <label className={styles.field} key={f.key}>
