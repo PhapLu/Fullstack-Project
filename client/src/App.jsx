@@ -12,6 +12,8 @@ import { CartProvider } from "./store/cart/CartContext";
 import ShipperProfile from "./pages/profile/ShipperProfile/ShipperProfile.jsx";
 import CheckoutPage from "./pages/orders/CheckoutPage.jsx";
 import VendorDashboard from "./pages/vendorDashboard/VendorDashboard.jsx"
+import SignIn from "./pages/auth/signIn/SignIn";
+import SignUp from "./pages/auth/signUp/SignUp";
 
 const routes = [
     {
@@ -54,15 +56,14 @@ const routes = [
         ],
     },
     {
-        path: '/auth/:mode/:role',
+        path: "/auth",
         element: <AuthLayout />,
-         children: [
-            {
-                path: "/auth/:mode/:role",
-                element: <AuthForm />,
-            },
+        children: [
+            { index: true, element: <Navigate to="signin/customer" replace /> },
+            { path: "signin/:role", element: <SignIn /> },
+            { path: "signup/:role", element: <SignUp /> },
         ],
-    }
+      },
 ];
 
 const router = createBrowserRouter(routes);

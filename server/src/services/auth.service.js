@@ -90,8 +90,8 @@ class AuthService {
         assignedHubId       // DistributionHub _id (string)
     }) => {
         // ---- 1) base validations ----
-        if (!isValidUsername(username)) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
-        if (!isValidPasswordPerBrief(password)) throw new BadRequestError("Invalid password policy.");
+        if (!username) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
+        if (!isValidPassword(password)) throw new BadRequestError("Invalid password policy.");
         if (!["customer", "vendor", "shipper"].includes(role)) throw new BadRequestError("Invalid role.");
         if (!avatar) throw new BadRequestError("Profile picture (avatar) is required.");
       
