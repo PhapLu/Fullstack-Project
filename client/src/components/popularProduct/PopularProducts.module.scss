@@ -80,6 +80,57 @@
 
 
 /* Responsive */
-@media (max-width: 1100px){ .popular-grid{ grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 900px){  .popular-grid{ grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 640px){  .popular-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 1024px) {
+  .popular-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .pop-card {
+    border-radius: 10px;
+    box-shadow: 0 0 16px rgba(0,0,0,.06);
+  }
+
+  .info {
+    padding: 12px 10px;
+    gap: 4px;
+  }
+  .info h3 {
+    font-size: 14px;
+    margin: 4px 0;
+  }
+  .info .desc {
+    font-size: 12.5px;
+    margin-bottom: 6px;
+  }
+  .price-link {
+    font-size: 13px;
+  }
+}
+
+/* Mobile (<= 768px): 2 columns, card nhỏ thêm */
+@media (max-width: 768px) {
+  .popular-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .pop-card {
+    border-radius: 10px;
+    box-shadow: 0 0 14px rgba(0,0,0,.05);
+  }
+
+  .info {
+    padding: 10px 9px;
+    gap: 4px;
+  }
+  .info h3 {
+    font-size: 13.5px;
+  }
+  .info .desc {
+    font-size: 12px;
+  }
+  .price-link {
+    font-size: 12.5px;
+  }
+}

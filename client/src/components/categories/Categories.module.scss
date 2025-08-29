@@ -66,3 +66,34 @@
 .tone-14{ background: #ffeede; }
 .tone-15{ background: #fff0f4; }
 .tone-16{ background: #edf5ff; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .categories-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 10px;
+    scroll-snap-type: x mandatory;   
+  }
+
+  .cat-card {
+    flex: 0 0 120px;   
+    scroll-snap-align: start;
+  }
+
+
+  .categories-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .categories-grid {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;    
+  }
+}
+
+@media (max-width: 768px) {
+  .categories {
+    display: none;
+  }
+}

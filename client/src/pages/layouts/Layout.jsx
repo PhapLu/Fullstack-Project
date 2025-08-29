@@ -3,11 +3,12 @@ import { Outlet } from 'react-router-dom';
 
 import Footer from '../../components/footer/Footer.jsx';
 import Header from '../../components/header/Header.jsx';
-import Filter from '../../components/filter/Filter.jsx';
+import Filter from '../../components/filter/filter.jsx';
 import { useEffect } from 'react';
 import "../../assets/css/base.scss";
 
 import styles from './Layout.module.scss';
+
 
 export default function Layout() {
   // Navigate to id section

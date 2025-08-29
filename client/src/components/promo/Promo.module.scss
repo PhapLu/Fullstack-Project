@@ -41,14 +41,8 @@
 
 
 /* Responsive */
-@media (max-width: 992px){
-  .promos-grid{ grid-template-columns: repeat(2, 1fr); }
-  .promo-media img{ width: clamp(160px, 48%, 260px); }
-}
-@media (max-width: 640px){
-  .promos-grid{ grid-template-columns: 1fr; }
-  .promo-card{ padding: 20px; text-align: center; }
-  .promo-copy h3{ max-width: none; margin-inline: auto; }
-  .promo-media{ position: static; margin-top: 10px; }
-  .promo-media img{ width: 220px; }
+@media (max-width: 1024px) {
+  .promos {
+    display: none;
+  }
 }

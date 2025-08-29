@@ -1,7 +1,7 @@
 /* ===== Base & Container ===== */
 .container{
  width: 100%;;
-  margin-inline: auto;
+ margin-inline: auto;
 }
 
 h1,h2{ color: var(--text); font-family: 'Poppins', system-ui, sans-serif; }
@@ -40,4 +40,12 @@ h2{ font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; }
   color: var(--text-color);
   max-width: 700px;
   margin: 0 auto;
+}
+
+/*===== Responsive ===== */ 
+/* Tablet (<= 1024px) */
+@media (max-width: 1024px) {
+  .about {
+    display: none;
+  }  
 }
