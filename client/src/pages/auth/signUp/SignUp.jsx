@@ -138,8 +138,8 @@ const SignUp = () => {
             const response = await apiUtils.post("/auth/signUp", others);
             console.log(response)
             if (response) {
-                navigate("/auth/otp", { state: { email: others.email } });
                 // if has response => move to OTP page
+                navigate("/auth/otp", { state: { email: inputs.email, password: inputs.password } });
             }
         } catch (error) {
             console.error("Failed to register:", error);

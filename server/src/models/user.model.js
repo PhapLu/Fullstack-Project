@@ -6,8 +6,8 @@ const COLLECTION_NAME = "Users";
 
 const CustomerProfileSchema = new Schema(
     {
-        name: { type: String, required: true, trim: true, minlength: 5 },
-        address: { type: String, required: true, trim: true, minlength: 5 },
+        name: { type: String, trim: true, minlength: 5 },
+        address: { type: String, trim: true, minlength: 5 },
     },
     { _id: false }
 );
@@ -35,7 +35,7 @@ const UserSchema = new Schema(
             unique: true,
             trim: true,
         },
-        passwordHash: { type: String, required: true },
+        password: { type: String, required: true },
         role: {
             type: String,
             enum: ["customer", "vendor", "shipper", "admin"],

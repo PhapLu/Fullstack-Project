@@ -13,11 +13,14 @@ import DistributionHub from "../models/distributionHub.model.js"
 
 class AuthService {
     //-------------------CRUD----------------------------------------------------
-    static login = async ({ email, password }) => {
+    static login = async ({ username, password }) => {
         // 1. Check user
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ username });
         if (!user) throw new BadRequestError("User not found");
         
+        console.log(username, password)
+        console.log(user.password)
+
         // 2. Login validation
         const match = await bcrypt.compare(password, user.password);
         if (!match) throw new AuthFailureError("Account or password is invalid");
@@ -25,7 +28,7 @@ class AuthService {
         let token = jwt.sign(
             {
                 id: user._id,
-                email: user.email,
+                username: user.username,
             },
             process.env.JWT_SECRET
         );
@@ -119,7 +122,7 @@ class AuthService {
                         email,
                         username,
                         role,
-                        passwordHash,
+                        password: passwordHash,
                         customerProfile,
                         vendorProfile,
                         shipperProfile,
@@ -157,7 +160,7 @@ class AuthService {
     static verifyOtp = async ({ email, otp }) => {
         // 1. Find the OTP in the database
         const otpRecord = await UserOTPVerification.findOne({ email }).lean()
-
+        console.log(otpRecord)
         // 2. Check if the OTP is correct
         if (!otpRecord || otpRecord.otp !== otp) {
             throw new BadRequestError("Invalid OTP code")
@@ -169,38 +172,47 @@ class AuthService {
         }
 
         // 4. Create user by otpVerification
-        // 4.1 Create user
-        const newUser = await User.create({
-            fullName: otpRecord.fullName,
+        // 4.1 Build base fields
+        const userData = {
+            username: otpRecord.username,
             email: otpRecord.email,
-            password: otpRecord.password,
-            role: otpRecord.role, // Use the string directly
-        })
-        await newUser.save()
+            passwordHash: otpRecord.passwordHash, // match schema!
+            role: otpRecord.role,
+        };
 
+        // Add role-specific profile
+        if (otpRecord.role === "customer") {
+            userData.customerProfile = {
+                name: otpRecord.customerName,
+                address: otpRecord.customerAddress,
+            };
+        }
+        if (otpRecord.role === "vendor") {
+            userData.vendorProfile = {
+                businessName: otpRecord.businessName,
+                businessAddress: otpRecord.businessAddress,
+            };
+        }
+        if (otpRecord.role === "shipper") {
+            userData.shipperProfile = {
+                assignedHub: otpRecord.assignedHub,
+            };
+        }
+
+        const newUser = new User(userData);
+        await newUser.save();
+        
         //7. Delete the OTP record
-        await UserOTPVerification.deleteOne({ email })
+        await UserOTPVerification.deleteOne({ email });
 
-        //8. Create token
-        let token = jwt.sign(
-            {
-                id: newUser._id,
-                email: newUser.email,
-            },
-            process.env.JWT_SECRET
-        )
-
-        newUser.accessToken = token
-        await newUser.save()
-
-        const { password: hiddenPassword, ...userWithoutPassword } =
-            newUser.toObject() // Ensure toObject() is used to strip the password
+        const token = jwt.sign({ id: newUser._id, email: newUser.email }, process.env.JWT_SECRET);
         return {
             code: 200,
             metadata: {
-                user: userWithoutPassword,
+                user: newUser.toObject({ versionKey: false, transform: (_, ret) => { delete ret.passwordHash; return ret } }),
+                token,
             },
-        }
+        };
     }
 
     static forgotPassword = async ({ email }) => {
@@ -289,6 +301,8 @@ class AuthService {
     static verifyResetPasswordOtp = async ({ email, otp }) => {
         //1. Find, check the OTP and user in the database
         const otpRecord = await ForgotPasswordOTP.findOne({ email })
+        console.log(email)
+        console.log(otp)
 
         // 2. Check if the OTP is correct
         if (!otpRecord || otpRecord.otp !== otp) {

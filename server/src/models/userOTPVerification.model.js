@@ -48,7 +48,7 @@ const UserOTPVerificationSchema = new Schema(
             enum: ["customer", "vendor", "shipper"],
         },
         avatar: { type: String, required: true, trim: true }, // file path
-        passwordHash: { type: String, required: true },
+        password: { type: String, required: true },
 
         customerProfile: { type: CustomerProfileSchema },
         vendorProfile: { type: VendorProfileSchema },
