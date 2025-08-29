@@ -4,7 +4,6 @@ import LandingPage from "./pages/landingPage/landingPage";
 import DistributionHub from "./pages/distributionHub/DistributionHub";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";
-import AuthForm from "./pages/auth/authForm/AuthForm";
 import VendorProfile from "./pages/profile/vendorProfile/VendorProfile.jsx"
 import OrdersLayout from "./pages/orders/OrdersLayout";
 import OrderSuccess from "./pages/orders/OrderSuccess";

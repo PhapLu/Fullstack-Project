@@ -64,7 +64,7 @@
     width: 100%;
 }
 
-.field input {
+.field input, .field select {
   width: 100%;
   height: 46px;
   padding: 0 14px;
@@ -79,8 +79,17 @@
   font-family: 'Poppins', cursive;
   font-size: 1.05rem;
 }
-.form-field__input::placeholder {
-    padding-left: 10px;
+
+.field input::placeholder {
+    color: var(--placeholder);
+}
+
+.field select:invalid {
+  color: var(--placeholder);
+}
+
+.field select option {
+  color: var(--placeholder);
 }
 
 .field input:focus {
@@ -155,4 +164,23 @@
 .help__role-selection {
     font-family: "Lobster Two", cursive;
     font-size: larger;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .auth__card {
+    width: 100%;
+    padding: 0;
+  }
+
+  .auth__panel {
+    width: 100%;       
+    max-width: 600px; 
+  }
+}
+
+@media (max-width: 600px) {
+  .auth__panel {
+    max-width: 100%; 
+  }
 }
