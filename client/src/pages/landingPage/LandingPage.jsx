@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./LandingPage.module.scss";
 
+import ChatToggle from "../../components/chatToggle/ChatToggle";
 import Banner from "../../components/banner/Banner";
 import Categories from "../../components/categories/Categories";
 import Promo from "../../components/promo/Promo";
@@ -9,6 +10,14 @@ import Malls from "../../components/malls/Malls";
 import PopularProducts from "../../components/popularProduct/PopularProducts";
 
 export default function LandingPage() {
+
+  const USERS = [
+    { id: "customer_1", name: "Bạn", role: "buyer" },
+    { id: "s_ducanh", name: "Đức Anh Computer", role: "seller" },
+    { id: "s_hoangha", name: "Hoàng Hà Mobile", role: "seller" },
+    { id: "s_phongvu", name: "Phòng Vũ", role: "seller" },
+  ];
+
   return (
     <div id="top">
       {/* Banner */}
@@ -36,6 +45,15 @@ export default function LandingPage() {
           </p>
         </div>
       </section>
+      <ChatToggle
+        currentUserId="customer_1"
+        users={USERS}
+        role="buyer"
+        defaultOpen={false}
+        position="br"       // 'br' (góc phải) hoặc 'bl' (góc trái)
+        panelWidth={720}
+        panelHeight={640}
+      />
     </div>
   );
 }
