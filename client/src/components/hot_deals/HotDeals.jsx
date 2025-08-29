@@ -3,12 +3,6 @@ import styles from "./HotDeals.module.scss"; // switched to CSS module
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFire } from "@fortawesome/free-solid-svg-icons";
 
-import sale_1 from "../../assets/hot_deals_imgs/sale 1.jpg";
-import sale_2 from "../../assets/hot_deals_imgs/sale 2.jpg";
-import sale_3 from "../../assets/hot_deals_imgs/sale 3.jpg";
-import sale_4 from "../../assets/hot_deals_imgs/sale 4.jpg";
-import sale_5 from "../../assets/hot_deals_imgs/sale 5.jpg";
-import sale_6 from "../../assets/hot_deals_imgs/sale 6.jpg";
 import { Link } from "react-router-dom";
 import { apiUtils } from "../../utils/newRequest";
 

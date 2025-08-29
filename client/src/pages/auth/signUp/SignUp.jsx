@@ -1,6 +1,6 @@
 /* Gia Hy-s4053650 */
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import styles from "./SignUp.module.scss";
 import {
     faEnvelope,
@@ -23,8 +23,9 @@ const SignUp = () => {
     const [isSubmitRegisterLoading, setIsSubmitRegisterLoading] = useState(false);
     const [hubs, setHubs] = useState([]);
 
-    const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+     const navigate = useNavigate();
 
+    const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
     // role-based extra fields
     const extraSignupFields = {
         customer: [
@@ -82,16 +83,16 @@ const SignUp = () => {
 
         // Validate passwords
         if (!isFilled(inputs.password)) {
-            errors.password = "Vui lòng nhập mật khẩu";
+            errors.password = "Password is required";
         } else if (!isValidPassword(inputs.password)) {
             errors.password =
-                "Mật khẩu phải chứa ít nhất 6 kí tự, 1 số và 1 kí tự đặc biệt";
+                "Password must be at least 6 characters long and include at least one number and one special character.";
         }
 
         if (!isFilled(inputs.confirmPassword)) {
-            errors.confirmPassword = "Vui lòng nhập mật khẩu xác nhận";
+            errors.confirmPassword = "Confirm password is required";
         } else if (!isMatch(inputs.confirmPassword, inputs.password)) {
-            errors.confirmPassword = "Mật khẩu xác nhận không khớp";
+            errors.confirmPassword = "Confirm password is incorrect";
         }
 
         if (
@@ -99,8 +100,8 @@ const SignUp = () => {
             isFilled(inputs.confirmPassword) &&
             !isMatch(inputs.confirmPassword, inputs.password)
         ) {
-            errors.password = "Mật khẩu không khớp";
-            errors.confirmPassword = "Mật khẩu xác nhận không khớp";
+            errors.password = "Password is invalid";
+            errors.confirmPassword = "Confirm password is incorrect";
         }
         return errors;
     };
@@ -123,7 +124,6 @@ const SignUp = () => {
 
         // Validate user inputs
         const validationErrors = validateInputs();
-        console.log('PASSESS VALIDATION:', validationErrors);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             // Clear the loading effect if validation failed
@@ -134,9 +134,12 @@ const SignUp = () => {
         // Handle register request
         try {
             const { confirmPassword, ...others } = inputs;
+            others.role = role
             const response = await apiUtils.post("/auth/signUp", others);
+            console.log(response)
             if (response) {
-                setShowRegisterVerificationForm(true);
+                navigate("/auth/otp", { state: { email: others.email } });
+                // if has response => move to OTP page
             }
         } catch (error) {
             console.error("Failed to register:", error);

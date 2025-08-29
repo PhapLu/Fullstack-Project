@@ -14,6 +14,7 @@ import CheckoutPage from "./pages/orders/CheckoutPage.jsx";
 import VendorDashboard from "./pages/vendorDashboard/VendorDashboard.jsx"
 import SignIn from "./pages/auth/signIn/SignIn";
 import SignUp from "./pages/auth/signUp/SignUp";
+import VerifyOtp from "./pages/auth/verifyOtp/VerifyOtp.jsx";
 
 const routes = [
     {
@@ -62,6 +63,7 @@ const routes = [
             { index: true, element: <Navigate to="signin/customer" replace /> },
             { path: "signin/:role", element: <SignIn /> },
             { path: "signup/:role", element: <SignUp /> },
+            { path: "otp", element: <VerifyOtp />}
         ],
       },
 ];

@@ -1,74 +1,60 @@
-import React, { useState } from "react";
-import "./VerifyOtp.module.scss";
-import { apiUtils } from "../../../utils/newRequest.js";
+import React from "react";
+import styles from "./VerifyOtp.module.scss"; // <-- import as styles
+import logo from '../../../assets/logo.png'
 
-export default function RegisterVerification({ handleRegisterSubmit, registerInputs }) {
+export default function VerifyOtp({ registerInputs }) {
+  return (
+    <form
+      className={styles.verifyRegistrationForm}
+      onClick={(e) => e.stopPropagation()}
+      // Optional: prevent actual submit while wiring up
+      onSubmit={(e) => e.preventDefault()}
+    >
+        <img
+            className={styles["auth__logo-form"]}
+            src={logo}
+            alt="Logo"
+        />
+      <h1 className={styles.formTitle}>Verify OTP</h1>
 
-    return (
-        <>
-            <form
-                className="form verify-registration-form"
-                onSubmit={handleSubmit}
-                onClick={(e) => e.stopPropagation()}
-            >
+      <p className={styles.formSubTitle}>
+        Enter the verification code <span>Bloomart</span> just emailed you.
+      </p>
 
-                <h1 className="form__title">Đăng kí</h1>
+      <div className={styles.formField}>
+        <label htmlFor="otp" className={styles.formFieldLabel}>
+          Verify your OTP
+        </label>
 
-                <p className="text-align-center">
-                    Vui lòng điền mã xác thực Pastal vừa gửi đến email{" "}
-                    <span className="highlight-text purple">
-                        {registerInputs.email}
-                    </span>
-                </p>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          className={styles.formFieldInput}
+          placeholder="Your OTP code"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={6}
+          aria-label="One-time password code"
+        />
+      </div>
 
-                <div className="form-field">
-                    <label htmlFor="otp" className="form-field__label">
-                        Mã xác thực
-                    </label>
-                    <input
-                        type="text"
-                        id="otp"
-                        name="otp"
-                        value={inputs.otp || ""}
-                        onChange={handleChange}
-                        className="form-field__input"
-                        placeholder="Nhập mã xác thực"
-                    />
-                    {errors.otp && (
-                        <span className="form-field__error">{errors.otp}</span>
-                    )}
-                    {errors.serverError && <span className="form-field__error">{errors.serverError}</span>}
-                </div>
-                <p className="text-align-center">
-                    Không nhận được mã?{" "}
+      <p className={styles.centerText}>
+        Cannot receive the verification code?
+        <br />
+        <span className={styles.helperText}>
+          Can’t find the code? Check your email’s spam or junk folder.
+        </span>
+      </p>
 
-                    <span
-                        className={`highlight-text with-hover-effect purple ${isButtonDisabled ? "disabled" : ""
-                            }`}
-                        onClick={!isButtonDisabled ? handleResend : null}
-                    >
-                        {isButtonDisabled
-                            ? `Gửi lại sau ${countdown}s`
-                            : "Gửi lại"}
-                    </span>
-
-                    <br />
-                    <div className="">Kiểm tra hòm thư spam nếu không tìm thấy mã</div>
-                </p>
-                <div className="form-field">
-                    <button
-                        type="submit"
-                        className="form-field__input btn btn-2 btn-md"
-                        disabled={isSubmitRegisterVerificationLoading}
-                    >
-                        {isSubmitRegisterVerificationLoading ? (
-                            <span className="btn-spinner"></span>
-                        ) : (
-                            "Đăng kí"
-                        )}
-                    </button>
-                </div>
-            </form>
-        </>
-    );
+      <div className={styles.formActions}>
+        <button
+          type="submit"
+          className={styles.primaryBtn}
+        >
+          Verify
+        </button>
+      </div>
+    </form>
+  )
 }

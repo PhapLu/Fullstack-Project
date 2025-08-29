@@ -74,118 +74,79 @@ class AuthService {
         username,
         email,
         password,
-        role,               // "customer" | "vendor" | "shipper"
-        avatar,             // file path 
-        fullName,           // optional for your platform
-      
-        // customer
-        name,
-        address,
-      
-        // vendor
-        businessName,
-        businessAddress,
-      
-        // shipper
-        assignedHubId       // DistributionHub _id (string)
+        role,             
+        assignedHubId       
     }) => {
+
         // ---- 1) base validations ----
         if (!username) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
-        if (!isValidPassword(password)) throw new BadRequestError("Invalid password policy.");
+        if (!password) throw new BadRequestError("Invalid password policy.");
         if (!["customer", "vendor", "shipper"].includes(role)) throw new BadRequestError("Invalid role.");
-        if (!avatar) throw new BadRequestError("Profile picture (avatar) is required.");
-      
+        console.log('PASSED')
         // Optional: restrict allowed emails
         // if (!isAllowedEmail(email)) throw new BadRequestError("Invalid Email");
       
         // ---- 2) uniqueness: username (system-wide) ----
-        const usernameTaken = await User.findOne({ username }).select("_id").lean();
-        if (usernameTaken) throw new BadRequestError("Username already exists");
-      
-        // You may also wish to ensure no pending OTP uses the same username:
-        const pendingWithSameUsername = await UserOTPVerification.findOne({ username }).select("_id").lean();
-        if (pendingWithSameUsername) throw new BadRequestError("Username is reserved in a pending registration. Try again later.");
-      
+      console.log('PASSED 2')
         // ---- 3) role-specific checks ----
         let customerProfile, vendorProfile, shipperProfile;
       
         if (role === "customer") {
-          if (!minLen5(name))    throw new BadRequestError("Name must be at least 5 characters.");
-          if (!minLen5(address)) throw new BadRequestError("Address must be at least 5 characters.");
-          customerProfile = { name: name.trim(), address: address.trim() };
+          customerProfile = { };
         }
       
         if (role === "vendor") {
-          if (!minLen5(businessName))    throw new BadRequestError("Business name must be at least 5 characters.");
-            if (!minLen5(businessAddress)) throw new BadRequestError("Business address must be at least 5 characters.");
-        
             // Soft pre-checks (DB partial unique indexes will enforce hard constraints)
-            const dupBiz = await User.findOne({ role: "vendor", "vendorProfile.businessName": businessName }).select("_id").lean();
-            if (dupBiz) throw new BadRequestError("Business name already in use by another vendor.");
-            const dupAddr = await User.findOne({ role: "vendor", "vendorProfile.businessAddress": businessAddress }).select("_id").lean();
-            if (dupAddr) throw new BadRequestError("Business address already in use by another vendor.");
-        
             vendorProfile = { businessName: businessName.trim(), businessAddress: businessAddress.trim() };
         }
       
         if (role === "shipper") {
-            if (!assignedHubId) throw new BadRequestError("Assigned hub is required.");
-            const hub = await DistributionHub.findById(assignedHubId).select("_id").lean();
-            if (!hub) throw new BadRequestError("Invalid assigned hub.");
             shipperProfile = { assignedHub: hub._id };
         }
-      
+        console.log('PASSED 3')
         // ---- 4) hash password ----
         const passwordHash = await bcrypt.hash(password, 10);
       
         // ---- 5) Upsert/insert OTP record (with daily caps if you want) ----
         const otp = crypto.randomInt(100000, 999999).toString();
         const now = new Date();
-      
-        // You can enforce your daily requestCount policy here; minimal example:
-        const existingOtp = await UserOTPVerification.findOne({ email }).lean();
-        if (existingOtp && existingOtp.lastRequestDate) {
-            const last = new Date(existingOtp.lastRequestDate);
-            const sameDay = last.toDateString() === now.toDateString();
-            if (sameDay && existingOtp.requestCount >= 10) {
-                throw new BadRequestError("You have exceeded the maximum number of OTP requests for today.");
-            }
-        }
-      
-        await UserOTPVerification.findOneAndUpdate(
-            { email },
-            {
-                $set: {
-                email,
-                fullName: fullName || "",
-                username,
-                role,
-                avatar,
-                passwordHash,
-                customerProfile,
-                vendorProfile,
-                shipperProfile,
-                otp,
-                lastRequestDate: now,
-                isVerified: false
+        console.log('PASSED 4')
+        try {
+            await UserOTPVerification.findOneAndUpdate(
+                { email },
+                {
+                    $set: {
+                        email,
+                        username,
+                        role,
+                        passwordHash,
+                        customerProfile,
+                        vendorProfile,
+                        shipperProfile,
+                        otp,
+                        lastRequestDate: now,
+                        isVerified: false
+                    },
+                    $inc: { requestCount: 1 }
                 },
-                $inc: { requestCount: 1 }
-            },
-            { upsert: true, new: true }
-        );
+                { upsert: true, new: true }
+            );
+        } catch (error) {
+            console.log(error)
+        }
       
         // ---- 6) send OTP ----
-        try {
-            await sendOtpEmail(
-                email,
-                "[Pastal] OTP for Account Registration",
-                "Your verification code to complete account registration is:",
-                otp
-            );
-        } catch (err) {
-            console.error("Error sending OTP:", err);
-            throw new BadRequestError("Failed to send verification email");
-        }
+        // try {
+        //     await sendOtpEmail(
+        //         email,
+        //         "[Pastal] OTP for Account Registration",
+        //         "Your verification code to complete account registration is:",
+        //         otp
+        //     );
+        // } catch (err) {
+        //     console.error("Error sending OTP:", err);
+        //     throw new BadRequestError("Failed to send verification email");
+        // }
       
         return {
             code: 201,

@@ -7,8 +7,8 @@ const COLLECTION_NAME = "UserOTPVerifications";
 
 const CustomerProfileSchema = new Schema(
     {
-        name: { type: String, trim: true },
-        address: { type: String, trim: true },
+        name: { type: String, trim: true, default: '' },
+        address: { type: String, trim: true, default: '' },
     },
     { _id: false }
 );

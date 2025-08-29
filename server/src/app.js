@@ -98,7 +98,7 @@ app.use((error, req, res, _next) => {
             : process.env.NODE_ENV === "production"
             ? "Internal Server Error"
             : error.message || "Internal Server Error";
-
+    console.log(error)
     res.status(statusCode).json({
         status: "error",
         code: statusCode,
