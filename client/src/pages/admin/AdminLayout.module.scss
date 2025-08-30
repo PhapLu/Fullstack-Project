@@ -1,0 +1,53 @@
+/* client/src/admin/AdminLayout.module.scss */
+.wrap {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  background: #fafafa;
+}
+.sidebar {
+  border-right: 1px solid #e5e5e5;
+  padding: 16px;
+  background: #fff;
+}
+.brand {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+.nav { 
+    display: grid; 
+    gap: 6px; 
+}
+
+.navItem {
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+}
+
+.active { 
+    background: #eef2ff; 
+}
+
+.main { 
+    display: grid; 
+    grid-template-rows: auto 1fr; 
+}
+
+.topbar {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e5e5;
+  background: #fff;
+  display: flex; align-items: center; 
+  justify-content: space-between;
+}
+
+.accountLink { 
+    text-decoration: underline; 
+}
+
+.content { 
+    padding: 16px; 
+}

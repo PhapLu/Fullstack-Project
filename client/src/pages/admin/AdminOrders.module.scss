@@ -1,0 +1,44 @@
+.wrap { 
+  display: grid; 
+  gap: 12px; }
+
+.filters { 
+  display: flex; 
+  gap: 8px; }
+  
+.filters select, .filters input {
+  padding: 6px 8px; 
+  border: 1px solid #ddd; 
+  border-radius: 6px;
+}
+
+.tableWrap {
+  background: #fff; 
+  border: 1px solid #eee; 
+  border-radius: 10px; 
+  overflow: hidden;
+}
+
+.table { width: 100%; 
+  border-collapse: collapse; 
+}
+
+.table thead { 
+  background: #fafafa; 
+}
+
+.table th, .table td {
+  padding: 10px 12px; 
+  border-bottom: 1px solid #f1f1f1; 
+  font-size: 14px; 
+  vertical-align: middle;
+}
+
+.center { 
+  text-align: center; 
+}
+
+.meta { 
+  font-size: 12px; 
+  color: #666; 
+}
