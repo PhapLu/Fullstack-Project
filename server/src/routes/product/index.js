@@ -6,6 +6,7 @@ import { verifyToken } from "../../middlewares/jwt.middleware.js"
 const router = express.Router()
 
 router.get('/readProducts', asyncHandler(productController.readProducts))
+router.get('/readProfileProducts/:vendorId', asyncHandler(productController.readProfileProducts))
 
 //Authentication
 router.use(verifyToken)

@@ -55,10 +55,27 @@ class ProductService {
         }
     }
 
+    static readProfileProducts = async(req) => {
+        const vendorId = req.params.vendorId
+
+        // 1. Check user, vendor
+        const vendor = await User.findById(vendorId)
+        if(!vendor || vendor.role !== "vendor") throw new NotFoundError('Vendor not found')
+
+        // 2. Get products
+        const products = await Product.find({ vendorId}).sort({ createdAt: -1 }).lean()
+        
+        return {
+           products
+        }
+    }
+
     static readProducts = async(req) => {
         const userId = req.userId;
+
         const { q, minPrice, maxPrice, mine, page = "1", limit = "12" } = req.query;
         // If "mine" is requested, check user
+
         let user = null;
         if (mine === "true") {
             user = await User.findById(userId);

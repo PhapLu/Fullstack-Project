@@ -88,7 +88,7 @@ export default function Header() {
                     ) : (
                         <div className={styles.userBox}>
                             <NavLink
-                                to="/vendorprofile"
+                                to={`/vendor/${user._id}`}
                                 className={styles.userLink}
                             >
                                 <img

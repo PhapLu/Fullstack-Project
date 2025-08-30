@@ -31,16 +31,16 @@ const routes = [
         path: "",
         element: <Layout />,
         children: [
+            // {
+            //     path: "/distributionHub",
+            //     element: <DistributionHub />,
+            // },
             {
-                path: "/distributionHub",
+                path: "/distributionHub/:distributionHubId",
                 element: <DistributionHub />,
             },
             {
-                path: "/distributionHub/:id",
-                element: <DistributionHub />,
-            },
-            {
-                path: "/vendorprofile",
+                path: "/vendor/:profileId",
                 element: <VendorProfile />,
             },
             {

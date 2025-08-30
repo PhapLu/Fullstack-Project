@@ -16,6 +16,13 @@ class ProductController {
         }).send(res)
     }
 
+    readProfileProducts = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Read profile products successfully',
+            metadata: await ProductService.readProfileProducts(req)
+        }).send(res)
+    }
+
     readProducts = async (req, res, next) => {
         return new SuccessResponse({
             message: 'Read products successfully',
