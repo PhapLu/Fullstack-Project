@@ -23,8 +23,8 @@ import AdminHubs from "./pages/admin/AdminHubs.jsx";
 import AdminOverview from "./pages/admin/AdminOverview.jsx";
 import AdminProducts from "./pages/admin/AdminProducts.jsx";
 import AdminUsers from "./pages/admin/AdminUsers.jsx"; 
-
 import UserProfile from "./pages/profile/UserProfile/UserProfile";
+import MyCart from "./pages/orders/MyCart/MyCart";
 
 const routes = [
     {
@@ -38,10 +38,10 @@ const routes = [
         path: "",
         element: <Layout />,
         children: [
-            // {
-            //     path: "/distributionHub",
-            //     element: <DistributionHub />,
-            // },
+            {
+                path: "/cart",
+                element: <MyCart />,
+            },
             {
                 path: "/distributionHub/:distributionHubId",
                 element: <DistributionHub />,
