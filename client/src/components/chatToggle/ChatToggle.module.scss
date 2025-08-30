@@ -1,0 +1,171 @@
+/* ==== Modern Chat Widget – bigger, glossy, friendly ==== */
+
+:root { --offset: 22px; }
+
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: var(--offset);
+  right: var(--offset);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-color), #5aa9ff);
+  box-shadow: 0 14px 30px rgba(0, 123, 255, .25), 0 2px 6px rgba(2, 6, 23, .15);
+  transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+  z-index: 1000;
+}
+.fab span { letter-spacing: .2px; }
+.fab:hover { transform: translateY(-1px); box-shadow: 0 18px 44px rgba(0,123,255,.28), 0 4px 10px rgba(2,6,23,.18); }
+.fabOpen { opacity: .92; }
+
+/* allow left position */
+.br { right: var(--offset); }
+.bl { left: var(--offset); right: auto; }
+
+/* Panel container – bigger + responsive via CSS vars */
+.panel {
+  z-index: 100000;
+  --w: 720px;     /* default if not passed from props */
+  --h: 640px;
+  position: fixed;
+  bottom: calc(var(--offset) + 62px);
+  right: var(--offset);
+  width: min(96vw, var(--w));
+  height: min(86vh, var(--h));
+  background: #ffffffcc; /* a little glass feel */
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(2, 6, 23, .08);
+  border-radius: 22px;
+  overflow: clip;
+  opacity: 0;
+  transform: translateY(12px) scale(.98);
+  pointer-events: none;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 26px 70px rgba(2, 6, 23, .20),
+    0 2px 12px rgba(2, 6, 23, .12);
+}
+.panel.bl { left: var(--offset); right: auto; }
+.open { opacity: 1; transform: none; pointer-events: auto; }
+
+/* Header – gradient, compact, with close */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #f8fbff, #eef5ff);
+  border-bottom: 1px solid rgba(2, 6, 23, .06);
+}
+.title { display: flex; flex-direction: column; gap: 2px; }
+.title strong { font-size: 16px; color: var(--text-color); }
+.subtitle { font-size: 12px; color: var(--muted); }
+.close {
+  border: none; background: #ffffff; color: var(--muted);
+  width: 32px; height: 32px; border-radius: 10px; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(2,6,23,.08);
+}
+.close:hover { color: var(--text-color); }
+
+/* Layout – rộng hơn: sidebar 300px */
+.body { display: grid; grid-template-columns: 300px 1fr; min-height: 0; flex: 1; }
+
+/* Sidebar */
+.sidebar {
+  background: #fff;
+  border-right: 1px solid rgba(2, 6, 23, .06);
+  display: flex; flex-direction: column; min-width: 260px;
+}
+.search { padding: 12px; }
+.search input {
+  width: 100%; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--border-color); outline: none;
+  background: #f9fbff;
+}
+.people { list-style: none; margin: 0; padding: 6px 8px 12px; overflow: auto; }
+.person {
+  display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center;
+  padding: 10px; border-radius: 14px; cursor: pointer;
+  transition: background .15s ease, transform .05s ease;
+}
+.person:hover { background: #f5f8ff; }
+.person:active { transform: scale(.996); }
+.person img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.meta { min-width: 0; }
+.name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color); }
+.roleLabel { color: var(--muted); font-size: 12px; }
+.active { background: #eef4ff; }
+.empty { padding: 16px; color: var(--muted); font-size: 14px; }
+
+/* Conversation side */
+.convo { display: flex; flex-direction: column; background: #f6f9ff; min-width: 280px; }
+.placeholder {
+  margin: auto; color: var(--muted); text-align: center; padding: 12px;
+}
+
+.threadHeader {
+  display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid rgba(2,6,23,.06); background: #fff;
+}
+.threadHeader img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+
+/* Messages – bóng đẹp + bong bóng có “đuôi” */
+.messages {
+  flex: 1; overflow: auto; padding: 16px 18px;
+  background: linear-gradient(180deg, #f6f9ff, #ffffff);
+}
+
+.msg { margin: 8px 0; display: flex; flex-direction: column; max-width: 72%; }
+.mine { align-self: flex-end; text-align: right; }
+.their { align-self: flex-start; }
+
+.bubble {
+  position: relative;
+  display: inline-block; padding: 10px 12px; border-radius: 16px;
+  line-height: 1.35;
+  background: #edf2ff;           /* default (their) */
+  color: #0f172a;
+  box-shadow: 0 2px 10px rgba(2,6,23,.08);
+}
+.mine .bubble { background: #dcfce7; }
+.mine .bubble::after,
+.their .bubble::after {
+  content: ""; position: absolute; bottom: 0; width: 12px; height: 12px; background: inherit;
+}
+.mine .bubble::after  { right: -4px;  border-bottom-left-radius: 10px; transform: translateY(-2px) rotate(45deg); }
+.their .bubble::after { left: -4px;   border-bottom-right-radius: 10px; transform: translateY(-2px) rotate(45deg); }
+
+.time { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* Input row – pill + glow send */
+.inputRow {
+  display: grid; grid-template-columns: 1fr auto; gap: 10px;
+  padding: 12px; border-top: 1px solid rgba(2, 6, 23, .06); background: #fff;
+}
+.inputRow textarea {
+  resize: none; max-height: 140px; min-height: 40px; padding: 10px 12px;
+  border-radius: 14px; border: 1px solid var(--border-color); outline: none;
+  background: #f9fbff;
+}
+.inputRow textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(0,123,255,.10); }
+.inputRow button {
+  padding: 0 18px; border-radius: 14px; border: 0; height: 40px;
+  background: linear-gradient(135deg, var(--accent), #ffb94a);
+  color: #fff; font-weight: 800; cursor: pointer;
+  box-shadow: 0 10px 24px rgba(245,158,11,.25);
+}
+.inputRow button:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(245,158,11,.32); }
+.inputRow button:disabled { opacity: .65; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Responsive tweaks */
+@media (max-width: 740px) {
+  .body { grid-template-columns: 42% 58%; }
+  .panel { width: 96vw; height: 78vh; }
+}
