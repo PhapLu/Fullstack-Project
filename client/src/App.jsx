@@ -8,7 +8,6 @@ import LandingPage from "./pages/landingPage/landingPage";
 import DistributionHub from "./pages/distributionHub/DistributionHub";
 import { QueryClient, QueryClientProvider } from "react-query";
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";
-import AuthForm from "./pages/auth/authForm/AuthForm";
 import VendorProfile from "./pages/profile/vendorProfile/VendorProfile.jsx";
 import OrdersLayout from "./pages/orders/OrdersLayout";
 import OrderSuccess from "./pages/orders/OrderSuccess";
@@ -23,12 +22,15 @@ import VerifyOtp from "./pages/auth/verifyOtp/VerifyOtp.jsx";
 const routes = [
     {
         path: "",
+        element: <Layout withFilter />,
+        children: [
+            { path: "/", element: <LandingPage /> },
+        ]
+    },
+    {
+        path: "",
         element: <Layout />,
         children: [
-            {
-                path: "/",
-                element: <LandingPage />,
-            },
             {
                 path: "/distributionHub",
                 element: <DistributionHub />,
@@ -37,8 +39,6 @@ const routes = [
                 path: "/distributionHub/:id",
                 element: <DistributionHub />,
             },
-            // http://localhost:5173/distributionHub/A002?role=shipper
-            // http://localhost:5173/distributionHub/A002?role=customer
             {
                 path: "/vendorprofile",
                 element: <VendorProfile />,

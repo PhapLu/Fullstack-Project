@@ -18,9 +18,6 @@ class AuthService {
         const user = await User.findOne({ username });
         if (!user) throw new BadRequestError("User not found");
         
-        console.log(username, password)
-        console.log(user.password)
-
         // 2. Login validation
         const match = await bcrypt.compare(password, user.password);
         if (!match) throw new AuthFailureError("Account or password is invalid");
@@ -68,6 +65,7 @@ class AuthService {
             code: 200,
             metadata: {
                 user: { ...userData },
+                token
             },
         };
     };    
@@ -81,17 +79,15 @@ class AuthService {
         assignedHubId       
     }) => {
 
-        // ---- 1) base validations ----
+        // 1) base validations
         if (!username) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
         if (!password) throw new BadRequestError("Invalid password policy.");
         if (!["customer", "vendor", "shipper"].includes(role)) throw new BadRequestError("Invalid role.");
-        console.log('PASSED')
         // Optional: restrict allowed emails
         // if (!isAllowedEmail(email)) throw new BadRequestError("Invalid Email");
       
-        // ---- 2) uniqueness: username (system-wide) ----
-      console.log('PASSED 2')
-        // ---- 3) role-specific checks ----
+        // 2) uniqueness: username (system-wide)
+        // 3) role-specific checks
         let customerProfile, vendorProfile, shipperProfile;
       
         if (role === "customer") {
@@ -106,14 +102,12 @@ class AuthService {
         if (role === "shipper") {
             shipperProfile = { assignedHub: hub._id };
         }
-        console.log('PASSED 3')
-        // ---- 4) hash password ----
+        // 4) hash password
         const passwordHash = await bcrypt.hash(password, 10);
       
-        // ---- 5) Upsert/insert OTP record (with daily caps if you want) ----
+        // 5) Upsert/insert OTP record (with daily caps if you want)
         const otp = crypto.randomInt(100000, 999999).toString();
         const now = new Date();
-        console.log('PASSED 4')
         try {
             await UserOTPVerification.findOneAndUpdate(
                 { email },
@@ -138,7 +132,7 @@ class AuthService {
             console.log(error)
         }
       
-        // ---- 6) send OTP ----
+        // 6) send OTP
         // try {
         //     await sendOtpEmail(
         //         email,

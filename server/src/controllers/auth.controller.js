@@ -7,17 +7,13 @@ class AuthController {
         try {
             const { metadata, code } = await AuthService.login(req.body)
             // If sign up was successful and tokens were generated
-            if (code === 200 && metadata.user.accessToken) {
-                const { accessToken } = metadata.user
-
-                // Setting accessToken in a cookie
-                res.cookie("accessToken", accessToken, {
-                    httpOnly: true,
-                    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-                    secure: process.env.NODE_ENV === "production",
-                    maxAge: 24 * 60 * 60 * 1000 * 30, // 1 month
-                })
-            }
+            res.cookie("accessToken", metadata.token, {
+                httpOnly: true,
+                sameSite: "lax",
+                secure: false,     // false in dev (http)
+                path: "/",
+                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+            });
 
             // Sending response
             new SuccessResponse({

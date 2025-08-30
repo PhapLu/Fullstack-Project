@@ -1,7 +1,10 @@
 import { AuthFailureError, BadRequestError, NotFoundError } from "../core/error.response.js"
 import User from "../models/user.model.js"
 import path from "path";
+import jwt from 'jsonwebtoken';
 import fs from "fs/promises";
+import dotenv from 'dotenv'
+dotenv.config();
 
 const UPLOADS_DIR = path.join(process.cwd(), "src", "uploads");
 
@@ -19,6 +22,27 @@ class UserService {
             user: userProfile,
         }
     }
+
+    static me = async (accessToken) => {
+        console.log(accessToken)
+        console.log(process.env.JWT_SECRET)
+        // 1. Decode accessToken
+        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+        if (!decoded?.id) throw new AuthFailureError("Invalid token");
+
+        const userId = decoded.id;
+
+        // 2. Fetch user profile
+        const user = await User.findById(userId)
+            .select("-password -accessToken")
+            .lean(); // Use lean for faster read
+
+        if (!user) throw new NotFoundError("User not found");
+
+        return {
+            user
+        };
+    };
 
     static updateUserProfile = async(req) => {
         const userId = req.userId

@@ -6,6 +6,14 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./store/index.js";
+import { fetchMe, openSocket } from "./store/slices/authSlices";
+
+// kick off session restore using cookie
+store.dispatch(fetchMe()).then((res) => {
+    if (res.meta.requestStatus === "fulfilled") {
+        store.dispatch(openSocket());
+    }
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>

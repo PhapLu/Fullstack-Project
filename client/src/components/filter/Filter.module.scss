@@ -1,13 +1,12 @@
 .filter-nav {
-    height: 60px;
     display: flex;
     position: sticky;
-    top: 137px;
+    top: 103px;
     z-index: 10000;
     justify-content: center;
     align-items: center;
     background: #fff;
-    padding: 10px 4%;
+    padding: 14px 4%;
     border-bottom: 1px solid var(--border-color);
     font-family: "Poppins", sans-serif;
 }

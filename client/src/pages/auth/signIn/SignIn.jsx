@@ -11,11 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    signIn,
-    openSocket,
-    selectAuth,
-} from "../../../store/slices/authSlices";
+import {signIn, openSocket, selectAuth} from "../../../store/slices/authSlices";
 
 const SignIn = () => {
     const { role } = useParams(); // customer | vendor | shipper
@@ -109,7 +105,7 @@ const SignIn = () => {
                             id="username"
                             name="username"
                             type="username"
-                            placeholder="Email"
+                            placeholder="Username"
                             value={inputs.username}
                             onChange={onChange}
                             autoComplete="username"
