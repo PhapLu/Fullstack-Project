@@ -12,12 +12,12 @@ import VendorProfile from "./pages/profile/vendorProfile/VendorProfile.jsx";
 import OrdersLayout from "./pages/orders/OrdersLayout";
 import OrderSuccess from "./pages/orders/OrderSuccess";
 import { CartProvider } from "./store/cart/CartContext";
-import ShipperProfile from "./pages/profile/ShipperProfile/ShipperProfile.jsx";
 import CheckoutPage from "./pages/orders/CheckoutPage.jsx";
 import VendorDashboard from "./pages/vendorDashboard/VendorDashboard.jsx";
 import SignIn from "./pages/auth/signIn/SignIn";
 import SignUp from "./pages/auth/signUp/SignUp";
 import VerifyOtp from "./pages/auth/verifyOtp/VerifyOtp.jsx";
+import UserProfile from "./pages/profile/UserProfile/UserProfile";
 
 const routes = [
     {
@@ -42,6 +42,10 @@ const routes = [
             {
                 path: "/vendor/:profileId",
                 element: <VendorProfile />,
+            },
+            {
+                path: "/user/:profileId",
+                element: <UserProfile />,
             },
             {
                 path: "/vendordashboard",

@@ -24,7 +24,6 @@ const apiUtils = {
         return newRequest.get(url, requestConfig);
     },
 
-
     async post(url, data = {}, config = {}) {
         const requestConfig = { ...getLoggedInRequestConfig(data), ...config };
         return newRequest.post(url, data, requestConfig);
