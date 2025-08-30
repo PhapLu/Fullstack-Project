@@ -57,10 +57,10 @@ export async function verifyEmailTransport() {
     }
 }
 
-async function sendEmail({ to, subject, html, replyTo = FROM_EMAIL }) {
+async function sendEmail({ to, subject, html, replyTo = 'info@pastal.app' }) {
     try {
         const info = await transporter.sendMail({
-            from: `${FROM_NAME} <${FROM_EMAIL}>`,
+            from: `BlooMart <info@pastal.app>`,
             to,
             subject,
             html,

@@ -76,32 +76,27 @@ class AuthService {
         email,
         password,
         role,             
-        assignedHubId       
+        assignedHubId,
+        businessName,
+        businessAddress,    
     }) => {
-
-        // 1) base validations
+        // 1) Validate inputs
         if (!username) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
         if (!password) throw new BadRequestError("Invalid password policy.");
         if (!["customer", "vendor", "shipper"].includes(role)) throw new BadRequestError("Invalid role.");
-        // Optional: restrict allowed emails
-        // if (!isAllowedEmail(email)) throw new BadRequestError("Invalid Email");
-      
-        // 2) uniqueness: username (system-wide)
-        // 3) role-specific checks
         let customerProfile, vendorProfile, shipperProfile;
-      
         if (role === "customer") {
           customerProfile = { };
         }
-      
         if (role === "vendor") {
             // Soft pre-checks (DB partial unique indexes will enforce hard constraints)
             vendorProfile = { businessName: businessName.trim(), businessAddress: businessAddress.trim() };
         }
       
         if (role === "shipper") {
-            shipperProfile = { assignedHub: hub._id };
+            shipperProfile = { assignedHub: assignedHubId };
         }
+
         // 4) hash password
         const passwordHash = await bcrypt.hash(password, 10);
       
@@ -133,17 +128,17 @@ class AuthService {
         }
       
         // 6) send OTP
-        // try {
-        //     await sendOtpEmail(
-        //         email,
-        //         "[Pastal] OTP for Account Registration",
-        //         "Your verification code to complete account registration is:",
-        //         otp
-        //     );
-        // } catch (err) {
-        //     console.error("Error sending OTP:", err);
-        //     throw new BadRequestError("Failed to send verification email");
-        // }
+        try {
+            await sendOtpEmail(
+                email,
+                "[Pastal] OTP for Account Registration",
+                "Your verification code to complete account registration is:",
+                otp
+            );
+        } catch (err) {
+            console.error("Error sending OTP:", err);
+            throw new BadRequestError("Failed to send verification email");
+        }
       
         return {
             code: 201,
@@ -170,27 +165,24 @@ class AuthService {
         const userData = {
             username: otpRecord.username,
             email: otpRecord.email,
-            passwordHash: otpRecord.passwordHash, // match schema!
+            password: otpRecord.password, // match schema!
             role: otpRecord.role,
         };
 
         // Add role-specific profile
-        if (otpRecord.role === "customer") {
-            userData.customerProfile = {
-                name: otpRecord.customerName,
-                address: otpRecord.customerAddress,
-            };
+        if (otpRecord.role === "customer" && otpRecord.customerProfile) {
+            userData.customerProfile = otpRecord.customerProfile;
         }
-        if (otpRecord.role === "vendor") {
+        if (otpRecord.role === "vendor" && otpRecord.vendorProfile) {
             userData.vendorProfile = {
-                businessName: otpRecord.businessName,
-                businessAddress: otpRecord.businessAddress,
+                businessName: otpRecord.vendorProfile.businessName,
+                businessAddress: otpRecord.vendorProfile.businessAddress,
             };
         }
         if (otpRecord.role === "shipper") {
-            userData.shipperProfile = {
-                assignedHub: otpRecord.assignedHub,
-            };
+            const assignedHub = otpRecord.shipperProfile?.assignedHub;
+            if (!assignedHub) throw new BadRequestError("Missing assigned hub for shipper.");
+            userData.shipperProfile = { assignedHub };
         }
 
         const newUser = new User(userData);
@@ -203,7 +195,7 @@ class AuthService {
         return {
             code: 200,
             metadata: {
-                user: newUser.toObject({ versionKey: false, transform: (_, ret) => { delete ret.passwordHash; return ret } }),
+                user: newUser.toObject({ versionKey: false, transform: (_, ret) => { delete ret.password; return ret } }),
                 token,
             },
         };

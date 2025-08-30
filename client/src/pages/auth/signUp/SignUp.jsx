@@ -18,12 +18,19 @@ const SignUp = () => {
     const { role } = useParams(); // role: customer|vendor|shipper
     const [show1, setShow1] = useState(false);
     const [show2, setShow2] = useState(false);
-    const [inputs, setInputs] = useState({});
     const [errors, setErrors] = useState({});
     const [isSubmitRegisterLoading, setIsSubmitRegisterLoading] = useState(false);
     const [hubs, setHubs] = useState([]);
-
-     const navigate = useNavigate();
+    const [inputs, setInputs] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        businessName: "",
+        businessAddress: "",
+        distributionHub: "" // will be mapped to assignedHubId for shipper
+    });
+    const navigate = useNavigate();
 
     const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
     // role-based extra fields
@@ -61,8 +68,7 @@ const SignUp = () => {
         const fetchHubs = async () => {
             try {
                 const response = await apiUtils.get("/distributionHub/readDistributionHubs");
-                console.log('hubs:', response?.data?.metadata.hubs);
-                setHubs(response?.data?.metadata.hubs || []);
+                setHubs(response?.data?.metadata.distributionHubs || []);
             } catch (error) {
                 console.error("Error fetching distribution hubs:", error);
             }
@@ -75,7 +81,6 @@ const SignUp = () => {
 
         // Validate email
         if (!isFilled(inputs.username)) {
-            console.log(inputs)
             errors.username = "Vui lòng nhập username";
         } else if (!inputs.username) {
             errors.username = "Usrename không hợp lệ";
@@ -110,8 +115,6 @@ const SignUp = () => {
         const name = e.target.name;
         const value = e.target.value;
 
-        console.log(name, value);
-
         // Update input value & clear error
         setInputs((values) => ({ ...values, [name]: value }));
         setErrors((values) => ({ ...values, [name]: "" }));
@@ -133,19 +136,38 @@ const SignUp = () => {
 
         // Handle register request
         try {
-            const { confirmPassword, ...others } = inputs;
-            others.role = role
-            const response = await apiUtils.post("/auth/signUp", others);
-            console.log(response)
+            const {
+                confirmPassword,
+                distributionHub, // FE field for shipper
+                businessName,
+                businessAddress,
+                ...rest
+            } = inputs;
+
+            const payload = { ...rest, role };
+
+            if (role === "vendor") {
+                payload.businessName = businessName;
+                payload.businessAddress = businessAddress;
+            }
+
+            if (role === "shipper") {
+                payload.assignedHubId = distributionHub; // BE expects assignedHubId
+            }
+
+            const response = await apiUtils.post("/auth/signUp", payload);
             if (response) {
-                // if has response => move to OTP page
-                navigate("/auth/otp", { state: { email: inputs.email, password: inputs.password } });
+                navigate("/auth/otp", {
+                    state: { username: inputs.username, email: inputs.email, password: inputs.password } // no need to pass password
+                });
             }
         } catch (error) {
             console.error("Failed to register:", error);
-            errors.serverError = error.response.data.message;
+            setErrors((prev) => ({
+                ...prev,
+                serverError: error?.response?.data?.message || "Registration failed"
+            }));
         } finally {
-            // Clear the loading effect
             setIsSubmitRegisterLoading(false);
         }
     };
@@ -167,7 +189,7 @@ const SignUp = () => {
                         <label htmlFor="username" className={styles.ico}>
                             <FontAwesomeIcon icon={faUser} />
                         </label>
-                        <input type="username" id="username" name="username" value={inputs.username || ""} onChange={handleChange} placeholder="Username" autoComplete="on" />
+                        <input type="text" id="username" name="username" value={inputs.username || ""} onChange={handleChange} placeholder="Username" autoComplete="on" />
                         {errors.username && <span className="form-field__error">{errors.username}</span>}
                     </div>
 
@@ -233,7 +255,13 @@ const SignUp = () => {
                             <label className={styles.ico}>{f.icon}</label>
 
                             {f.type === "select" ? (
-                                <select required>
+                                <select
+                                    name="distributionHub"
+                                    value={inputs.distributionHub || ""}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.select}
+                                >
                                     <option value="">{f.placeholder}</option>
                                     {hubs?.map((h) => (
                                         <option key={h._id} value={h._id}>
@@ -244,8 +272,15 @@ const SignUp = () => {
                             ) : (
                                 <input
                                     type="text"
+                                    name={f.key}
+                                    value={inputs[f.key] || ""}
+                                    onChange={handleChange}
                                     placeholder={f.placeholder}
                                 />
+                            )}
+
+                            {errors.distributionHub && (
+                                <span className="form-field__error">{errors.distributionHub}</span>
                             )}
                         </div>
                     ))}
@@ -253,8 +288,9 @@ const SignUp = () => {
                     <button
                         className={`${styles.btn} ${styles["btn-primary"]} ${styles["auth__submit"]}`}
                         type="submit"
+                        disabled={isSubmitRegisterLoading}
                     >
-                        Create Account
+                        {isSubmitRegisterLoading ? "Creating..." : "Create Account"}
                     </button>
 
                     <div className={styles.help}>

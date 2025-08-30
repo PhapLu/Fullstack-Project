@@ -34,8 +34,8 @@ export default function VerifyOtp() {
         if (!isFilled?.(otp) || otp.length !== 6) {
             e.otp = "Vui lòng nhập đúng mã xác thực (6 số).";
         }
-        if (!registerInputs?.email || !registerInputs?.password) {
-            e.register = "Thiếu email hoặc mật khẩu đăng ký. Vui lòng đăng ký lại.";
+        if (!registerInputs?.username || !registerInputs?.password) {
+            e.register = "Thiếu username hoặc mật khẩu đăng ký. Vui lòng đăng ký lại.";
         }
         return e;
     };
@@ -63,7 +63,7 @@ export default function VerifyOtp() {
             // 2) If OTP OK → sign in via Redux
             const action = await dispatch(
                 signIn({
-                    email: registerInputs.email,
+                    username: registerInputs.username,
                     password: registerInputs.password,
                 })
             );

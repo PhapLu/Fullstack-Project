@@ -16,13 +16,13 @@ export default function VendorProfile() {
     const [tempCompanyName, setTempCompanyName] = useState(companyName);
     const [activeTab, setActiveTab] = useState("product");
     const [showWizard, setShowWizard] = useState(false);
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const products = await apiUtils.get(`/product/readProfileProducts/${profileId}`);
-                setProducts(products);
+                const reponse = await apiUtils.get(`/product/readProfileProducts/${profileId}`);
+                setProducts(reponse.data.metadata.products);
             } catch (err) {
                 console.error("Failed to fetch products", err);
             }
