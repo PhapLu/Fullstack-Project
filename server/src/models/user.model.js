@@ -48,16 +48,12 @@ const UserSchema = new Schema(
             default: "/uploads/pastal_system_default_avatar.png",
         },
         email: { type: String, trim: true, lowercase: true },
-        fullName: { type: String, trim: true },
-        bg: { type: String, default: "/uploads/pastal_system_default_background2.png" },
         phone: { type: String },
-        address: { type: String, default: "" },
         country: { type: String, default: "Vietnam" },
         bio: { type: String, default: "", maxlength: [200, "Bio cannot exceed 200 characters"] },
         customerProfile: { type: CustomerProfileSchema, required: function () { return this.role === "customer"; } },
         vendorProfile: { type: VendorProfileSchema, required: function () { return this.role === "vendor"; } },
         shipperProfile: { type: ShipperProfileSchema, required: function () { return this.role === "shipper"; } },
-        verificationExpiry: { type: Date },
     },
     { timestamps: true, collection: COLLECTION_NAME }
 );

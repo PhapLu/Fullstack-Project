@@ -5,13 +5,14 @@ import ProductCard from "../../../components/product/productCard/ProductCard";
 import CreateProduct from "../../../components/product/createProduct/CreateProduct";
 import { apiUtils } from "../../../utils/newRequest";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../../store/slices/authSlices";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMe, selectUser } from "../../../store/slices/authSlices";
 import { getAvatarUrl } from "../../../utils/imageUrl";
 
 export default function VendorProfile() {
     const { profileId } = useParams();
     const user = useSelector(selectUser);
+    const dispatch = useDispatch()
 
     // Identify if the current viewer owns this profile
     const isOwner = useMemo(() => {
@@ -76,26 +77,35 @@ export default function VendorProfile() {
     };
 
     const saveProfile = async () => {
-        if (!isOwner) return;
+        if (!isOwner || !draft) return;
         try {
-            // Persist changes to backend as needed (adjust endpoint/payload)
-            // await apiUtils.put(`/user/${me._id}`, {
-            //   fullName: draft.fullName,
-            //   phone: draft.phone,
-            //   country: draft.country,
-            //   avatar: draft.avatar,
-            //   vendorProfile: {
-            //     businessName: draft?.vendorProfile?.businessName || "",
-            //     businessAddress: draft?.vendorProfile?.businessAddress || "",
-            //   },
-            // });
-
-            setProfile(draft);
+            // Build a minimal payload that matches your User model
+            const payload = {
+                phone: draft.phone ?? "",
+                country: draft.country ?? "Vietnam",
+                vendorProfile: {
+                    businessName: draft?.vendorProfile?.businessName ?? "",
+                    businessAddress: draft?.vendorProfile?.businessAddress ?? "",
+                },
+            };
+        
+            const { data } = await apiUtils.patch("/user/updateUserProfile", payload);
+            const updated = data?.metadata?.user
+            console.log("Update response:", updated);
+        
+            // Update local state
+            setProfile(updated);
+            setDraft(updated);
             setIsEditingProfile(false);
+        
+            // If this is the owner, also update Redux so rest of the app sees new data
+            if(isOwner) 
+                dispatch(fetchMe());
         } catch (e) {
             console.error("Failed to save vendor profile", e);
         }
     };
+      
 
     const cancelProfile = () => {
         setDraft(profile);
@@ -105,7 +115,7 @@ export default function VendorProfile() {
     // Tabs & create product wizard
     const [activeTab, setActiveTab] = useState("product");
     const [showWizard, setShowWizard] = useState(false);
-    const tabs = isOwner ? ["Product", "Profile", "Income"] : ["Product", "Profile"];
+    const tabs = ["Products", "Profile"]
 
     // Early guard used later in JSX
     const isLoading = !profile || !draft;
@@ -200,25 +210,7 @@ export default function VendorProfile() {
                             <div className={styles.profileTable}>
                                 {/* Contact Name (map to fullName) + Business Name side-by-side to keep UI */}
                                 <div className={styles.row}>
-                                    <div className={styles.label}>Contact Name:</div>
-                
-                                    <div className={styles.subLabel}>Full name:</div>
-                                    <div className={styles.value}>
-                                        {!isEditingProfile ? (
-                                            profile?.fullName || <span className={styles.muted}>—</span>
-                                        ) : (
-                                            <input
-                                            name="fullName"
-                                            value={draft?.fullName ?? ""}
-                                            onChange={handleDraft}
-                                            className={styles.input}
-                                            placeholder="Full name"
-                                            disabled={!isOwner}
-                                            />
-                                        )}
-                                    </div>
-                
-                                    <div className={styles.subLabel}>Company Name:</div>
+                                    <div className={styles.label}>Company Name:</div>
                                     <div className={styles.value}>
                                         {!isEditingProfile ? (
                                             profile?.vendorProfile?.businessName || <span className={styles.muted}>—</span>
@@ -293,55 +285,6 @@ export default function VendorProfile() {
                 
                                 <hr className={styles.hr} />
                 
-                                {/* Address block: keep grid, bind Country, leave others as-is/muted */}
-                                <div className={styles.row}>
-                                    <div className={styles.label}>Address:</div>
-                                    <div className={styles.valueFull}>
-                                    <div className={styles.subgrid}>
-                                        <div>
-                                            <span className={styles.subLabel}>Country:</span>{" "}
-                                            {!isEditingProfile ? (
-                                                profile?.country || <span className={styles.muted}>Vietnam</span>
-                                            ) : (
-                                                <input
-                                                name="country"
-                                                value={draft?.country ?? "Vietnam"}
-                                                onChange={handleDraft}
-                                                className={styles.input}
-                                                placeholder="Country"
-                                                disabled={!isOwner}
-                                                />
-                                            )}
-                                        </div>
-                                        <div>
-                                            <span className={styles.subLabel}>City:</span>{" "}
-                                            <span className={styles.muted}>—</span>
-                                        </div>
-                                        <div>
-                                            <span className={styles.subLabel}>District:</span>{" "}
-                                            <span className={styles.muted}>—</span>
-                                        </div>
-                                        <div>
-                                            <span className={styles.subLabel}>Ward:</span>{" "}
-                                            <span className={styles.muted}>—</span>
-                                        </div>
-                                        <div>
-                                            <span className={styles.subLabel}>Address:</span>{" "}
-                                            <span className={styles.muted}>—</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                
-                                <hr className={styles.hr} />
-                
-                                {/* Zip row retained for layout; not in model so show muted */}
-                                <div className={styles.row}>
-                                    <div className={styles.label}>Zip/Postal code:</div>
-                                    <div className={styles.valueFull}>
-                                    <span className={styles.muted}>—</span>
-                                    </div>
-                                </div>
                                 {isEditingProfile && isOwner && (
                                     <div className={styles["profile-actions"]}>
                                         <button className={styles.btn} onClick={saveProfile}>
@@ -354,17 +297,6 @@ export default function VendorProfile() {
                                 )}
                             </div>
                         </div>
-                        )}
-            
-                        {activeTab === "income" && isOwner && (
-                            <div className={styles["profile-card"]}>
-                                <div className={styles["profile-card-head"]}>
-                                    <div className={styles["title-sm"]}>Income</div>
-                                </div>
-                                <div className={styles["profile-body"]}>
-                                    <p>Last 30 days: ₫12,345,000</p>
-                                </div>
-                            </div>
                         )}
                     </section>
                 </div>

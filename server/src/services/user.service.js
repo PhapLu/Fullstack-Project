@@ -78,27 +78,27 @@ class UserService {
 
     static updateUserProfile = async(req) => {
         const userId = req.userId
-        const { fullName, email, phoneNumber, address } = req.body
 
+        console.log('BODY', req.body)
         // 1. Validate inputs
-        if (!fullName || !email || !phoneNumber || !address) {
-            throw new AuthFailureError('All fields are required')
-        }
 
         // 2. Check user
         const user = await User.findById(userId)
         if (!user) throw new AuthFailureError('User not found')
-        // 3. Update user profile
-        user.fullName = fullName;
-        user.email = email;
-        user.phoneNumber = phoneNumber;
-        user.address = address;
 
-        await user.save();
+        // 3. Update user profile
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                ...req.body
+            },
+            { new: true }
+        )
+        console.log(updatedUser)
 
         // 4. Return updated user profile
         return {
-            message: 'User profile updated successfully',
+            user: updatedUser,
         }
     }
 
