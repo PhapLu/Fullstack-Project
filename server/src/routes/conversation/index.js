@@ -1,7 +1,6 @@
 import express from "express";
 import { asyncHandler } from "../../auth/checkAuth.js";
 import conversationController from "../../controllers/conversation.controller.js";
-import { uploadFields } from "../../configs/multer.config.js";
 import { verifyToken } from "../../middlewares/jwt.middleware.js";
 
 const router = express.Router();
@@ -11,7 +10,6 @@ router.use(verifyToken);
 
 router.post(
   "/createConversation",
-  uploadFields,
   asyncHandler(conversationController.createConversation)
 );
 router.get(
@@ -36,7 +34,6 @@ router.get(
 );
 router.patch(
   "/sendMessage",
-  uploadFields,
   asyncHandler(conversationController.sendMessage)
 );
 router.get(

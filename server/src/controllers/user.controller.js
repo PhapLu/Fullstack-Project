@@ -9,6 +9,13 @@ class UserController {
         }).send(res)
     }
 
+    uploadAvatar = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Avatar uploaded successfully',
+            metadata: await UserService.uploadAvatar(req)
+        }).send(res)
+    }
+
     me = async (req, res, next) => {
         console.log(req.cookies)
         console.log(req.cookies.accessToken)

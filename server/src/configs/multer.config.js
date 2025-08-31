@@ -1,51 +1,55 @@
+// server/src/utils/uploader.js
 import multer from "multer";
 import path from "path";
+import fs from "fs/promises";
+import { fileURLToPath } from "url";
 
-const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB in bytes
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const uploadDisk = multer({
-    storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, "./src/uploads/");
-        },
-        filename: function (req, file, cb) {
-            cb(null, `${Date.now()}-${file.originalname}`);
-        },
-    }),
-    limits: { fileSize: MAX_FILE_SIZE - 1 },
-    fileFilter: (req, file, cb) => {
-        const allowed = /jpeg|jpg|png|gif|webp/;
+const MAX_FILE_SIZE = 15 * 1024 * 1024;
+
+const ROOT_DIR     = path.resolve(__dirname, "..", "..");   // -> server/
+export const UPLOADS_DIR  = path.join(ROOT_DIR, "uploads"); // -> server/uploads
+export const AVATARS_DIR  = path.join(UPLOADS_DIR, "avatars");
+
+const ensureDir = (dir) => fs.mkdir(dir, { recursive: true });
+
+const fileFilter = (req, file, cb) => {
+    const extOk = /\.(jpe?g|png|gif|webp)$/i.test(file.originalname);
+    const mimeOk = /^image\/(jpeg|png|gif|webp)$/i.test(file.mimetype);
+    if (extOk && mimeOk) return cb(null, true);
+    cb(new Error("Only image files are allowed"));
+};
+
+// 🔹 set per-route subdir: req._uploadSubdir = 'avatars' | 'products' | ...
+export const useUploadDir =
+    (subdir = "") =>
+    (req, _res, next) => {
+        req._uploadSubdir = subdir;
+        next();
+    };
+
+const storage = multer.diskStorage({
+    async destination(req, _file, cb) {
+        try {
+            const sub = req._uploadSubdir || "misc";
+            const dir = path.join(UPLOADS_DIR, sub);
+            await ensureDir(dir);
+            cb(null, dir);
+        } catch (err) {
+            cb(err);
+        }
+    },
+    filename(req, file, cb) {
         const ext = path.extname(file.originalname).toLowerCase();
-        const mimeOk = /^image\/(jpeg|png|gif|webp)$/.test(file.mimetype);
-        if (allowed.test(ext) && mimeOk) return cb(null, true);
-        cb(new Error('Only image files are allowed'));
-    }
-});
-
-const uploadMemory = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: MAX_FILE_SIZE - 1, // Ensures file size is strictly < 15MB
+        const uid = req.userId || "anon";
+        cb(null, `${uid}-${Date.now()}${ext}`);
     },
 });
 
-const uploadFields = uploadMemory.fields([
-    { name: "files", maxCount: 5 },
-    { name: "artworks", maxCount: 10 },
-    { name: "media", maxCount: 5 },
-    { name: "thumbnail", maxCount: 1 },
-    { name: "portfolioLink", maxCount: 1 },
-    { name: "stageName", maxCount: 1 },
-    { name: "price", maxCount: 1 },
-    { name: "jobTitle", maxCount: 1 },
-    { name: "title", maxCount: 1 },
-    { name: "fromPrice", maxCount: 1 },
-    { name: "deliverables", maxCount: 1 },
-    { name: "avatar", maxCount: 1 },
-    { name: "accessory", maxCount: 1 },
-    { name: "skin", maxCount: 1 },
-    { name: "characterId", maxCount: 1},
-    { name: "newArtworks", maxCount: 5},
-]);
-
-export { uploadDisk, uploadFields, uploadMemory };
+export const uploadDisk = multer({
+    storage,
+    limits: { fileSize: MAX_FILE_SIZE - 1 },
+    fileFilter,
+});

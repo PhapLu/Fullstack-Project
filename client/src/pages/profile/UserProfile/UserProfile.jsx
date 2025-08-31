@@ -7,21 +7,13 @@ export default function UserProfile() {
 	// Seed a safe initial user so the page never crashes
 	const user = useSelector(selectUser);
 	const toForm = (u) => ({
-		username: u?.username || "",
-		fullName: u?.fullName || "",
 		email: u?.email || "",
 		phone: u?.phone || "",
-		address: u?.address || "",
 		country: u?.country || "Vietnam",
 		bio: u?.bio || "",
-		role: u?.role || "",
 		customerProfile: {
 			name: u?.customerProfile?.name || "",
 			address: u?.customerProfile?.address || "",
-		},
-		vendorProfile: {
-			businessName: u?.vendorProfile?.businessName || "",
-			businessAddress: u?.vendorProfile?.businessAddress || "",
 		},
 		shipperProfile: {
 			assignedHub: u?.shipperProfile?.assignedHub || "",
@@ -160,18 +152,28 @@ export default function UserProfile() {
 							<label className={styles["label"]}>Assigned Hub</label>
 							<input
 								className={`form-control form-control-sm ${styles["form-control-sm"]}`}
-								value={form.shipperProfile?.assignedHub.name || ""}
+								value={
+									typeof form.shipperProfile?.assignedHub === "object"
+									? (form.shipperProfile?.assignedHub?.name ||
+										form.shipperProfile?.assignedHub?._id ||
+										"")
+									: (form.shipperProfile?.assignedHub || "")
+								}
 								onChange={(e) =>
 									setForm((prev) => ({
-										...prev,
-										shipperProfile: { ...(prev.shipperProfile || {}), assignedHub: e.target.value },
+									...prev,
+									shipperProfile: {
+										...(prev.shipperProfile || {}),
+										assignedHub: e.target.value,
+									},
 									}))
 								}
 								disabled={!editing}
-								placeholder="DistributionHub ObjectId"
+								placeholder="DistributionHub ID (or pick from a selector)"
 							/>
-						</div>)
-					}
+						</div>
+					)}
+
 
 					{/* Country */}
 					<div className={styles["sheet-row"]}>

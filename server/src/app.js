@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import path from "path";
+import { fileURLToPath } from "url";
 import express from "express";
 import http from "http";
 import cors from "cors";
@@ -17,11 +19,16 @@ import SocketServices from "./services/socket.service.js";
 // import sanitizeInputs from './middlewares/sanitize.middleware.js';
 // import { globalLimiter, blockChecker } from './configs/rateLimit.config.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log(__dirname)
+console.log(__filename)
+
 const app = express();
 
 // Trust proxy
 app.set("trust proxy", 1);
-
+app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
 // Rate Limit
 // app.use(blockChecker);
 // app.use(globalLimiter);

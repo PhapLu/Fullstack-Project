@@ -1,12 +1,16 @@
-import { AuthFailureError, BadRequestError, NotFoundError } from "../core/error.response.js"
-import User from "../models/user.model.js"
-import path from "path";
-import jwt from 'jsonwebtoken';
-import fs from "fs/promises";
 import dotenv from 'dotenv'
 dotenv.config();
 
-const UPLOADS_DIR = path.join(process.cwd(), "src", "uploads");
+import User from "../models/user.model.js"
+import { AuthFailureError, BadRequestError, NotFoundError } from "../core/error.response.js"
+import jwt from 'jsonwebtoken';
+import fs from "fs/promises";
+import path from "path";
+import { UPLOADS_DIR } from '../configs/multer.config.js';
+
+const AVATARS_DIR = path.join(UPLOADS_DIR, "avatars");
+console.log('AVATARS_DIR:', AVATARS_DIR);
+const publicUrlFor = (filename) => `/uploads/avatars/${filename}`;
 
 class UserService {
     //-------------------CRUD----------------------------------------------------
@@ -44,6 +48,34 @@ class UserService {
         };
     };
 
+    static uploadAvatar = async (req) => {
+        const userId = req.userId;
+        const file = req.file;
+        if (!file) throw new BadRequestError("Avatar image is required");
+        
+        // 1. Check user
+        const user = await User.findById(userId);
+        if (!user) throw new NotFoundError("User not found");
+        
+        // 2. Process the uploaded file
+        const filename = file.filename || path.basename(file.path);
+        const url = publicUrlFor(filename);
+        
+        // 3. Delete old avatar if exists and is not an external URL
+        if (user.avatar && !/^https?:\/\//i.test(user.avatar)) {
+            try {
+                const oldBase = path.basename(user.avatar);
+                await fs.unlink(path.join(AVATARS_DIR, oldBase));
+            } catch (err) {
+                if (err.code !== "ENOENT") console.warn("delete old avatar failed:", err);
+            }
+        }
+      
+        user.avatar = url;
+        await user.save();
+        return { avatar: url, metadata: { avatar: url } };
+    };
+
     static updateUserProfile = async(req) => {
         const userId = req.userId
         const { fullName, email, phoneNumber, address } = req.body
@@ -69,37 +101,6 @@ class UserService {
             message: 'User profile updated successfully',
         }
     }
-
-    static updateProfilePicture = async (req) => {
-        const userId = req.userId;
-        const image = req.file;
-        if (!image) throw new BadRequestError("Profile picture is required");
-        
-        // 1. Check user
-        const user = await User.findById(userId);
-        if (!user) throw new NotFoundError("User not found");
-      
-        // 2. Build the public URL and return to the client
-        const filename = path.basename(image.path);
-        const publicUrl = `/uploads/${filename}`;
-      
-        // 3. Delete old file
-        if (user.profilePicture && !/^https?:\/\//i.test(user.profilePicture)) {
-            const oldBase = path.basename(user.profilePicture);
-            const oldFileAbs = path.join(UPLOADS_DIR, oldBase);
-            try {
-                await fs.unlink(oldFileAbs);
-            } catch (err) {
-                if (err.code !== "ENOENT") console.warn("Failed to delete old avatar:", err);
-            }
-        }
-        
-        // 4. Update user profile with new picture
-        user.profilePicture = publicUrl;
-        await user.save();
-      
-        return { profilePicture: publicUrl };
-    };
 
     static readBrands = async(req) => {
         // 1. Read brands - which are vendors started selling more than 1 year ago
