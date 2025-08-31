@@ -81,9 +81,9 @@ const SignUp = () => {
 
         // Validate email
         if (!isFilled(inputs.username)) {
-            errors.username = "Vui lòng nhập username";
+            errors.username = "Please fill username";
         } else if (!inputs.username) {
-            errors.username = "Usrename không hợp lệ";
+            errors.username = "Usrename is not valid";
         }
 
         // Validate passwords
@@ -190,7 +190,7 @@ const SignUp = () => {
                             <FontAwesomeIcon icon={faUser} />
                         </label>
                         <input type="text" id="username" name="username" value={inputs.username || ""} onChange={handleChange} placeholder="Username" autoComplete="on" />
-                        {errors.username && <span className="form-field__error">{errors.username}</span>}
+                        {errors.username && <span className={styles["form-field__error"]}>{errors.username}</span>}
                     </div>
 
                     <div className={styles.field}>
@@ -198,7 +198,7 @@ const SignUp = () => {
                             <FontAwesomeIcon icon={faEnvelope} />
                         </label>
                         <input type="email" id="email" name="email" value={inputs.email || ""} onChange={handleChange} className="form-field__input" placeholder="Email" autoComplete="on" />
-                        {errors.email && <span className="form-field__error">{errors.email}</span>}
+                        {errors.email && <span className={styles["form-field__error"]}>{errors.email}</span>}
                     </div>
 
                     <div className={styles.field}>
@@ -215,7 +215,6 @@ const SignUp = () => {
                             autoComplete="on"
                             required
                         />
-                        {errors.password && <span className="form-field__error">{errors.password}</span>}
                         <button
                             type="button"
                             className={styles.eye}
@@ -223,6 +222,8 @@ const SignUp = () => {
                         >
                             <FontAwesomeIcon icon={show1 ? faEyeSlash : faEye} />
                         </button>
+                        {errors.password && <span className={styles["form-field__error"]}>{errors.password}</span>}
+                        
                         </div>
 
                         <div className={styles.field}>
@@ -239,7 +240,7 @@ const SignUp = () => {
                             autoComplete="on"
                             required
                         />
-                        {errors.confirmPassword && <span className="form-field__error">{errors.confirmPassword}</span>}
+                        {errors.confirmPassword && <span className={styles["form-field__error"]}>{errors.confirmPassword}</span>}
 
                         <button
                             type="button"
@@ -280,7 +281,7 @@ const SignUp = () => {
                             )}
 
                             {errors.distributionHub && (
-                                <span className="form-field__error">{errors.distributionHub}</span>
+                                <span className={styles["form-field__error"]}>{errors.distributionHub}</span>
                             )}
                         </div>
                     ))}

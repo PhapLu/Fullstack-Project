@@ -86,25 +86,21 @@
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
 }
 
-.field .ico {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    font-size: 18px;
+.field .ico,
+.field .eye {
+  position: absolute;
+  top: 0;                
+  transform: none;        
+  height: 46px;            
+  display: flex;
+  align-items: center;   
+  z-index: 2;       
+  font-size: 20px; 
 }
 
-.field .eye {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    font-size: 18px;
-}
+.field .ico { left: 12px; }
+.field .eye { right: 10px; }
+
 
 .btn.btn-primary {
     width: 100%;
@@ -183,4 +179,40 @@
   .auth__panel {
     max-width: 100%; 
   }
+}
+
+.form-field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.06);  
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #b91c1c;       
+  margin-top: 20px;         
+  font-size: 1.2rem;               
+  line-height: 1.35;
+  animation: err-pop 0.18s ease-out;
+  word-break: break-word;
+}
+
+.form-field__error::before {
+  content: "⚠️";
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* red input when .field has error  */
+@supports selector(:has(*)) {
+  .field:has(.form-field__error) input {
+    border-color: var(--danger, #ef4444);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+}
+
+/* effect */
+@keyframes err-pop {
+  from { transform: translateY(-2px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
 }
