@@ -2,6 +2,7 @@ import express from "express"
 import productController from "../../controllers/product.controller.js"
 import { asyncHandler } from "../../auth/checkAuth.js"
 import { verifyToken } from "../../middlewares/jwt.middleware.js"
+import { uploadDisk, useUploadDir } from "../../configs/multer.config.js"
 
 const router = express.Router()
 
@@ -10,9 +11,9 @@ router.get('/readProfileProducts/:vendorId', asyncHandler(productController.read
 
 //Authentication
 router.use(verifyToken)
-router.post('/createProduct', asyncHandler(productController.createProduct))
+router.post('/createProduct', useUploadDir("products"), uploadDisk.array("files", 10) , asyncHandler(productController.createProduct))
 router.get('/readProduct', asyncHandler(productController.readProduct))
 router.patch('/updateProduct', asyncHandler(productController.updateProduct))
-router.delete('/deleteProduct', asyncHandler(productController.deleteProduct))
+router.delete('/deleteProduct/:productId', asyncHandler(productController.deleteProduct))
 
 export default router

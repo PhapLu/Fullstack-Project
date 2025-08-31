@@ -32,13 +32,6 @@ class UserController {
         }).send(res)
     }
 
-    updateProfilePicture = async (req, res, next) => {
-        return new SuccessResponse({
-            message: 'Profile picture updated successfully',
-            metadata: await UserService.updateProfilePicture(req)
-        }).send(res)
-    }
-
     readBrands = async (req, res, next) => {
         return new SuccessResponse({
             message: 'Read brands successfully',

@@ -14,6 +14,5 @@ router.get('/me', asyncHandler(userController.me))
 router.use(verifyToken)
 router.patch('/uploadAvatar', useUploadDir("avatars"), uploadDisk.single('file'), asyncHandler(userController.uploadAvatar))
 router.patch('/updateUserProfile', asyncHandler(userController.updateUserProfile))
-router.patch('/updateProfilePicture', uploadDisk.single('file'), asyncHandler(userController.updateProfilePicture))
 
 export default router

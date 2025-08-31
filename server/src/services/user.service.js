@@ -9,7 +9,6 @@ import path from "path";
 import { UPLOADS_DIR } from '../configs/multer.config.js';
 
 const AVATARS_DIR = path.join(UPLOADS_DIR, "avatars");
-console.log('AVATARS_DIR:', AVATARS_DIR);
 const publicUrlFor = (filename) => `/uploads/avatars/${filename}`;
 
 class UserService {

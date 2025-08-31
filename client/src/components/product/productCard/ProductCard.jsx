@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "../../../pages/profile/vendorProfile/VendorProfile.module.scss";
+import { getImageUrl } from "../../../utils/imageUrl";
 
 export default function ProductCard({ p, onDelete }) {
     return (
@@ -9,10 +10,10 @@ export default function ProductCard({ p, onDelete }) {
                     p.image ? styles["has-img"] : ""
                 }`}
             >
-                {p.image ? (
+                {p.images ? (
                     <img
                         className={styles["card-img"]}
-                        src={p.image}
+                        src={getImageUrl(p.images[0])}
                         alt={p.title}
                     />
                 ) : (

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./VendorProfile.module.scss";
 import Avatar from "../../../components/profile/avatar/Avatar";
 import ProductCard from "../../../components/product/productCard/ProductCard";
@@ -7,12 +7,13 @@ import { apiUtils } from "../../../utils/newRequest";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMe, selectUser } from "../../../store/slices/authSlices";
-import { getAvatarUrl } from "../../../utils/imageUrl";
+import { getImageUrl } from "../../../utils/imageUrl";
 
 export default function VendorProfile() {
     const { profileId } = useParams();
     const user = useSelector(selectUser);
     const dispatch = useDispatch()
+    const backupRef = useRef(null)
 
     // Identify if the current viewer owns this profile
     const isOwner = useMemo(() => {
@@ -34,8 +35,15 @@ export default function VendorProfile() {
         if (profileId) fetchProducts();
     }, [profileId]);
 
-    const removeProduct = (id) => {
-        setProducts((list) => list.filter((x) => (x._id || x.id) !== id));
+    const removeProduct = async (productId) => {
+        backupRef.current = products;
+        setProducts((list) => list.filter((x) => (x._id || x.productId) !== productId));
+        try {
+            await apiUtils.delete(`/product/deleteProduct/${productId}`);
+        } catch (err) {
+            console.error("Failed to delete product:", err);
+            setProducts(backupRef.current || []);
+        }
     };
 
     // User data (owner: from Redux, visitor: fetch from DB)
@@ -113,28 +121,35 @@ export default function VendorProfile() {
     };
 
     // Tabs & create product wizard
-    const [activeTab, setActiveTab] = useState("product");
+    const [activeTab, setActiveTab] = useState("products");
     const [showWizard, setShowWizard] = useState(false);
     const tabs = ["Products", "Profile"]
 
     // Early guard used later in JSX
     const isLoading = !profile || !draft;
 
-    // Expose helpers you’ll use in the JSX (Avatar, ProductCard, CreateProduct need these)
-    const onAddProductDone = (data) => {
-        if (data?.name) {
+    const onAddProductDone = (created) => {
+        if (created?._id || created?.id) {
+            setProducts((arr) => [
+                created, // already in the right shape for your ProductCard if it reads fields from backend
+                ...arr,
+            ]);
+        } else if (created?.title) {
+            // fallback if your API returns a different envelope
             setProducts((arr) => [
                 {
                     _id: `tmp_${Date.now()}`,
-                    title: data.name,
-                    desc: data.description || "—",
-                    image: data.images?.[0]?.url ?? null,
+                    title: created.title,
+                    description: created.description || "—",
+                    images: created.images || [],
+                    status: created.status || "active",
                 },
                 ...arr,
             ]);
         }
         setShowWizard(false);
     };
+  
 
     return (
         <>
@@ -147,7 +162,7 @@ export default function VendorProfile() {
                     {/* Header */}
                     <section className={styles.profileHeader}>
                         <Avatar
-                            url={getAvatarUrl(profile?.avatar)}
+                            url={getImageUrl(profile?.avatar)}
                             onSaveImage={isOwner ? (url) => setDraft((p) => ({ ...p, avatar: url })) : undefined}
                         />
                         <div className={styles.companyBlock}>
@@ -176,7 +191,7 @@ export default function VendorProfile() {
                                 );
                             })}
                         </div>
-                        {activeTab === "product" && isOwner && (
+                        {activeTab === "products" && isOwner && (
                             <button className={styles.btn} onClick={() => setShowWizard(true)}>
                                 Add product
                             </button>
@@ -185,14 +200,14 @@ export default function VendorProfile() {
             
                     {/* Content */}
                     <section className={styles.section}>
-                        {activeTab === "product" && (
+                        {activeTab === "products" && (
                             <div className={styles.grid}>
                                 {products?.map((p) => (
-                                <ProductCard
-                                    key={p._id || p.id}
-                                    p={p}
-                                    onDelete={isOwner ? () => removeProduct(p._id || p.id) : undefined}
-                                />
+                                    <ProductCard
+                                        key={p._id || p.id}
+                                        p={p}
+                                        onDelete={isOwner ? () => removeProduct(p._id || p.id) : undefined}
+                                    />
                                 ))}
                             </div>
                         )}

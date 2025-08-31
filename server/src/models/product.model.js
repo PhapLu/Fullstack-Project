@@ -7,8 +7,8 @@ const COLLECTION_NAME = "Products";
 const ProductSchema = new Schema(
     {
         vendorId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-        title: { type: String, required: true, trim: true, minlength: 5 },
-        description: { type: String, required: true, trim: true, minlength: 5 },
+        title: { type: String, required: true, trim: true},
+        description: { type: String, required: true, trim: true},
         price: { type: Number, required: true, min: 0 },
         stock: { type: Number, required: true, min: 0 },
         images: [{ type: String }],

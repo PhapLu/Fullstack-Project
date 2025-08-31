@@ -2,41 +2,65 @@ import { AuthFailureError, BadRequestError, NotFoundError } from "../core/error.
 import Product from "../models/product.model.js"
 import User from "../models/user.model.js"
 import path from "path";
-import fs from "fs/promises";
+import fs from "fs/promises"; // <- promise-based API
+import { PRODUCTS_DIR, UPLOADS_DIR } from "../configs/multer.config.js";
 
-const UPLOADS_DIR = path.join(process.cwd(), "src", "uploads");
+const absFromUploadsUrl = (rawUrl) => {
+    if (!rawUrl || /^https?:\/\//i.test(rawUrl)) return null;
+    const clean = String(rawUrl).split("?")[0].split("#")[0];
+    if (!clean.startsWith("/uploads/")) return null;
+    const rel = clean.replace(/^\/uploads\//, "").replace(/^\//, "");
+    return path.join(UPLOADS_DIR, rel);
+};
+
+export const productPublicUrlFor = (filename) => `/uploads/products/${filename}`;
 
 class ProductService {
     //-------------------CRUD----------------------------------------------------
     static createProduct = async (req) => {
-        const userId = req.userId
-        const { name, price, description } = req.body;
-        const imageFile = req.file;
-
-        // 1. Check user
-        const user = await User.findById(userId)
-        if(!user) throw new AuthFailureError('You are not authenticated!')
-
+        const userId = req.userId;
+        const files = req.files || [];
+        console.log('FILES', files);
+    
+        // 1. Check vendor
+        const vendor = await User.findById(userId);
+        if (!vendor) throw new AuthFailureError("You are not authenticated!");
+        if (vendor.role !== "vendor") throw new AuthFailureError("Only vendors can create products");
+    
         // 2. Validate body
-        if (!validateName(name)) throw new BadRequestError("Product name must be 10–20 characters.");
-        const parsedPrice = typeof price === "string" ? Number(price) : price;
-        if (!validatePrice(parsedPrice)) throw new BadRequestError("Price must be a positive number.");
-        if (!validateDescription(description ?? "")) throw new BadRequestError("Description must be at most 500 characters.");
-        if (!imageFile) throw new BadRequestError("Product image is required.");
-
-        // 3. Create Product
+        const { title, description, price, stock, status = "active" } = req.body;
+    
+        if (!title?.trim()) throw new BadRequestError("Title is required");
+        if (!description?.trim()) throw new BadRequestError("Description is required");
+    
+        const pPrice = Number(price);
+        const pStock = Number(stock);
+        if (!Number.isFinite(pPrice) || pPrice < 0)
+        throw new BadRequestError("Price must be a non-negative number");
+        if (!Number.isInteger(pStock) || pStock < 0)
+        throw new BadRequestError("Stock must be a non-negative integer");
+        if (!["active", "inactive"].includes(status))
+        throw new BadRequestError("Invalid status");
+    
+        // 3. Upload images
+        if (!files.length) throw new BadRequestError("At least one product image is required");
+        const images = files.map((f) => productPublicUrlFor(f.filename || path.basename(f.path)));
+    
+        // 4) Create
         const product = await Product.create({
-            name: name.trim(),
-            price: parsedPrice,
-            description: (description ?? "").trim(),
-            image: filePublicUrl(imageFile),
-            vendor: user._id
-        })
-
+            vendorId: userId,
+            title: title.trim(),
+            description: description.trim(),
+            price: pPrice,
+            stock: pStock,
+            images,
+            status,
+        });
+    
         return {
-            message: "Product created successfully"
-        }
-    }
+            product
+        };
+    };
 
     static readProduct = async(req) => {
         const { productId } = req.params;
@@ -124,34 +148,37 @@ class ProductService {
             }))
         };
     }
-
-    static deleteProduct = async(req) => {
+      
+    static deleteProduct = async (req) => {
         const userId = req.userId;
         const { productId } = req.params;
 
-        // 1. Authentication
+        // 1. Check user, product
         const user = await User.findById(userId);
         if (!user) throw new AuthFailureError("You are not authenticated!");
-
-        // 2. Find product
         const product = await Product.findById(productId);
-        if (!product) throw new NotFoundError("Product not found")
-
-        // 3. Ownership check
-        if (String(product.vendorId) !== String(user._id)) {
+        if (!product) throw new NotFoundError("Product not found");
+        if (product.vendorId.toString() !== String(userId))
             throw new AuthFailureError("You are not allowed to delete this product");
-        }
 
-        // 4. Delete image (best-effort)
-        await safeDeleteImage(product.images);
-
-        // 5. Delete doc
-        await Product.deleteOne({ _id: productId });
-
-        // 6. Return
+        // 2. Delete images
+        const imgs = Array.isArray(product.images) ? product.images : product.images ? [product.images] : [];
+        await Promise.allSettled(
+            imgs.flatMap((u) => {
+                const clean = String(u || "").split(/[?#]/)[0];
+                const rel = clean.startsWith("/uploads/") ? clean.replace(/^\/uploads\//, "").replace(/^\//, "") : null;
+                const base = path.basename(clean || "");
+                const p1 = rel ? path.join(UPLOADS_DIR, rel) : null;
+                const p2 = base ? path.join(PRODUCTS_DIR, base) : null;
+                return [p1, p2].filter(Boolean).map((p) => fs.rm(p, { force: true }));
+            })
+        );
+        
+        // 3. Delete product
+        await product.deleteOne();
         return { message: "Product deleted successfully" };
-    }
-
+    };
+      
     static updateProduct = async(req) => {
         const userId = req.userId;
         const { productId } = req.params;
