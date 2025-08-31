@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
-import {signIn, openSocket, selectAuth} from "../../../store/slices/authSlices";
+import {signIn, openSocket, selectAuth, fetchMe} from "../../../store/slices/authSlices";
 
 const SignIn = () => {
     const { role } = useParams(); // customer | vendor | shipper
@@ -55,6 +55,7 @@ const SignIn = () => {
             // Persist token then open socket
             localStorage.setItem("token", action.payload.token);
             dispatch(openSocket());
+            dispatch(fetchMe())
             // Navigate wherever you want after login
             navigate("/");
         } else {
