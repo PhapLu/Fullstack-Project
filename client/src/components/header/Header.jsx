@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./Header.module.scss"; // switched to CSS module
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../../store/slices/authSlices";
+import { logout, selectUser } from "../../store/slices/authSlices";
 
 library.add(fas);
 

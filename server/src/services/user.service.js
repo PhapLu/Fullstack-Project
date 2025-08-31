@@ -24,8 +24,6 @@ class UserService {
     }
 
     static me = async (accessToken) => {
-        console.log(accessToken)
-        console.log(process.env.JWT_SECRET)
         // 1. Decode accessToken
         const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
         if (!decoded?.id) throw new AuthFailureError("Invalid token");
@@ -35,6 +33,8 @@ class UserService {
         // 2. Fetch user profile
         const user = await User.findById(userId)
             .select("-password -accessToken")
+            .populate('shipperProfile.assignedHub', 'name address') // populate assignedHub with name and address only
+
             .lean(); // Use lean for faster read
 
         if (!user) throw new NotFoundError("User not found");

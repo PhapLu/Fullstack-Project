@@ -6,7 +6,6 @@ import CreateProduct from "../../../components/product/createProduct/CreateProdu
 import { apiUtils } from "../../../utils/newRequest";
 import { useParams } from "react-router-dom";
 
-/* ================== Seed demo products ================== */
 export default function VendorProfile() {
     const { profileId } = useParams();
 
@@ -30,8 +29,6 @@ export default function VendorProfile() {
       
         if (profileId) fetchProducts();
     }, [profileId]);
-
-    console.log(products);
 
     const removeProduct = (id) =>
         setProducts((list) => list.filter((x) => x.id !== id));

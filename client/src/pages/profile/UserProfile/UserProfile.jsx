@@ -1,56 +1,70 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./UserProfile.module.scss";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../store/slices/authSlices";
 
 export default function UserProfile() {
 	// Seed a safe initial user so the page never crashes
-	const [user, setUser] = useState({
-		firstName: "User",
-		lastName: "Name",
-		phone: "+84 123456789",
-		gender: "male", // male | female | other
-		dob: "", // ISO date string (yyyy-mm-dd)
-		address: {
-			hubName: "",
-			zip: ""
-		}
+	const user = useSelector(selectUser);
+	const toForm = (u) => ({
+		username: u?.username || "",
+		fullName: u?.fullName || "",
+		email: u?.email || "",
+		phone: u?.phone || "",
+		address: u?.address || "",
+		country: u?.country || "Vietnam",
+		bio: u?.bio || "",
+		role: u?.role || "",
+		customerProfile: {
+			name: u?.customerProfile?.name || "",
+			address: u?.customerProfile?.address || "",
+		},
+		vendorProfile: {
+			businessName: u?.vendorProfile?.businessName || "",
+			businessAddress: u?.vendorProfile?.businessAddress || "",
+		},
+		shipperProfile: {
+			assignedHub: u?.shipperProfile?.assignedHub || "",
+		},
 	});
 
 	// Edit mode
 	const [editing, setEditing] = useState(false);
-	const [form, setForm] = useState(user);
+	const [form, setForm] = useState(toForm(user));
+
+	useEffect(() => {
+		if (!editing) setForm(toForm(user));
+	}, [user, editing]);
+
 
 	const startEdit = () => {
-		setForm({
-			...user,
-			dob: (user.dob || "").substring(0, 10),
-			address: {
-				hubName: user.address?.hubName || "",
-				zip: user.address?.zip || "",
-				...user.address
-			}
-		});
+		setForm(toForm(user));
 		setEditing(true);
 	};
-
+	
 	const saveEdit = (e) => {
 		e?.preventDefault?.();
-		setUser(form);
+		// TODO: dispatch(updateProfile(form)) if you have it
 		setEditing(false);
 	};
-
+	
 	const cancelEdit = () => {
 		setEditing(false);
-		setForm(user);
-	};
+		setForm(toForm(user));
+	};	  
+
+	if (!user) {
+		return <div className="container-xl py-4">Loading profile…</div>;
+	}	  
 
 	return (
 		<div className={`${styles["profile-page"]} ${styles.white}`}>
 			<div className="container-xl py-4">
 				<div className={`text-center mb-2 ${styles["hero-name"]}`}>
-					{(user.firstName || "User") + " " + (user.lastName || "Name")}
+					{user?.fullName || user?.username || "User"}
 				</div>
 
-				{/* Simple avatar placeholder — removed change handlers to avoid undefined errors */}
+				{/* Avatar*/}
 				<div className="text-center mb-3">
 					<div className={`${styles["avatar-hero"]} mx-auto`} role="img" aria-label="User avatar">
 						<svg viewBox="0 0 24 24" width="96" height="96" aria-hidden>
@@ -64,97 +78,110 @@ export default function UserProfile() {
 
 				<div className={styles["sheet-tab"]}>Profile</div>
 
-				{/* Unified form structure: each field is `div > label + input` */}
 				<form className={styles["profile-sheet"]} onSubmit={saveEdit}>
-					{/* First Name */}
+					{/* Email */}
 					<div className={styles["sheet-row"]}>
-						<label className={styles["label"]}>First name</label>
+						<label className={styles["label"]}>Email</label>
 						<input
+							type="email"
 							className={`form-control form-control-sm ${styles["form-control-sm"]}`}
-							value={form.firstName}
-							onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+							value={form.email}
+							onChange={(e) => setForm({ ...form, email: e.target.value })}
 							disabled={!editing}
+							placeholder="Please update your email"
 						/>
 					</div>
 
-					{/* Last Name */}
+					{/* Phone */}
 					<div className={styles["sheet-row"]}>
-						<label className={styles["label"]}>Last name</label>
+						<label className={styles["label"]}>Phone</label>
 						<input
 							className={`form-control form-control-sm ${styles["form-control-sm"]}`}
-							value={form.lastName}
-							onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-							disabled={!editing}
-						/>
-					</div>
-
-					{/* Contact Number */}
-					<div className={styles["sheet-row"]}>
-						<label className={styles["label"]}>Contact Number</label>
-						<input
-							className={`form-control form-control-sm w-auto ${styles["form-control-sm"]}`}
 							value={form.phone}
 							onChange={(e) => setForm({ ...form, phone: e.target.value })}
 							disabled={!editing}
+							placeholder="Please update your phone"
 						/>
 					</div>
 
-					{/* Gender (converted to select to keep label+input pattern) */}
+					{/* Bio */}
 					<div className={styles["sheet-row"]}>
-						<label className={styles["label"]}>Gender</label>
-						<select
-							className={`form-select form-select-sm w-auto ${styles["form-control-sm"]}`}
-							value={form.gender}
-							onChange={(e) => setForm({ ...form, gender: e.target.value })}
+						<label className={styles["label"]}>Bio</label>
+						<textarea
+							className={`form-control form-control-sm ${styles["form-control-sm"]}`}
+							rows={3}
+							value={form.bio}
+							onChange={(e) => setForm({ ...form, bio: e.target.value })}
 							disabled={!editing}
-						>
-							<option value="male">Male</option>
-							<option value="female">Female</option>
-							<option value="other">Other</option>
-						</select>
-					</div>
-
-					{/* Date of Birth */}
-					<div className={styles["sheet-row"]}>
-						<label className={styles["label"]}>Date of Birth</label>
-						<input
-							type="date"
-							className={`form-control form-control-sm w-auto ${styles["form-control-sm"]}`}
-							value={form.dob || ""}
-							onChange={(e) => setForm({ ...form, dob: e.target.value })}
-							disabled={!editing}
+							placeholder="Tell others a little about you (max 200 chars)"
 						/>
 					</div>
 
-					{/* Distribution Hub */}
+					{/* Customer profile */}
+					{form.role === "customer" && (
+						<>
+							<div className={styles["sheet-row"]}>
+								<label className={styles["label"]}>Customer Name</label>
+								<input
+									className={`form-control form-control-sm ${styles["form-control-sm"]}`}
+									value={form.customerProfile?.name || ""}
+									onChange={(e) =>
+										setForm((prev) => ({
+											...prev,
+											customerProfile: { ...(prev.customerProfile || {}), name: e.target.value },
+										}))
+									}
+									disabled={!editing}
+									placeholder="Full legal name"
+								/>
+							</div>
+
+							<div className={styles["sheet-row"]}>
+								<label className={styles["label"]}>Customer Address</label>
+								<input
+									className={`form-control form-control-sm ${styles["form-control-sm"]}`}
+									value={form.customerProfile?.address || ""}
+									onChange={(e) =>
+										setForm((prev) => ({
+											...prev,
+											customerProfile: { ...(prev.customerProfile || {}), address: e.target.value },
+										}))
+									}
+									disabled={!editing}
+									placeholder="Street/City"
+								/>
+							</div>
+						</>)
+					}
+
+					{/* Shipper profile */}
+					{form.role === "shipper" && (
+						<div className={styles["sheet-row"]}>
+							<label className={styles["label"]}>Assigned Hub</label>
+							<input
+								className={`form-control form-control-sm ${styles["form-control-sm"]}`}
+								value={form.shipperProfile?.assignedHub.name || ""}
+								onChange={(e) =>
+									setForm((prev) => ({
+										...prev,
+										shipperProfile: { ...(prev.shipperProfile || {}), assignedHub: e.target.value },
+									}))
+								}
+								disabled={!editing}
+								placeholder="DistributionHub ObjectId"
+							/>
+						</div>)
+					}
+
+					{/* Country */}
 					<div className={styles["sheet-row"]}>
-						<label className={styles["label"]}>Distribution Hub</label>
+						<label className={styles["label"]}>Country</label>
 						<input
 							className={`form-control form-control-sm ${styles["form-control-sm"]}`}
-							value={form.address?.hubName || ""}
-							onChange={(e) =>
-								setForm({
-									...form,
-									address: { ...(form.address || {}), hubName: e.target.value }
-								})
-							}
+							value={form.country}
+							onChange={(e) => setForm({ ...form, country: e.target.value })}
 							disabled={!editing}
-						/>
-					</div>
-
-					{/* Zip/Postal code */}
-					<div className={styles["sheet-row"]}>
-						<label className={styles["label"]}>Zip/Postal code</label>
-						<input
-							className={`form-control form-control-sm w-auto ${styles["form-control-sm"]}`}
-							value={form.address?.zip || ""}
-							onChange={(e) =>
-								setForm({
-									...form,
-									address: { ...(form.address || {}), zip: e.target.value }
-								})
-							}
-							disabled={!editing}
+							placeholder="Country"
 						/>
 					</div>
 
