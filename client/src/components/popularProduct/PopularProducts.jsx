@@ -40,8 +40,8 @@ export default function PopularProducts() {
                             </div>
                             <div className={styles.info}>
                                 <h3 title={p.title}>{p.title}</h3>
-                                <p className={styles.desc} title={p.desc}>
-                                    {p.desc}
+                                <p className={styles.desc} title={p.description}>
+                                    {p.description}
                                 </p>
                                 <span className={styles["price-link"]}>
                                     {p.price}

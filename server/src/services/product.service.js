@@ -10,7 +10,7 @@ class ProductService {
     //-------------------CRUD----------------------------------------------------
     static createProduct = async (req) => {
         const userId = req.userId
-        const { name, price, description } = req.body;
+        const { name, price, description, title } = req.body;
         const imageFile = req.file;
 
         // 1. Check user
@@ -26,6 +26,7 @@ class ProductService {
 
         // 3. Create Product
         const product = await Product.create({
+            title: title.trim(),
             name: name.trim(),
             price: parsedPrice,
             description: (description ?? "").trim(),
@@ -45,6 +46,7 @@ class ProductService {
         if (!product) throw new NotFoundError("Product not found")
         return {
             product: {
+                title: product.title,
                 id: product._id,
                 name: product.name,
                 price: product.price,
@@ -115,6 +117,7 @@ class ProductService {
                 totalPages: Math.ceil(total / limitNum)
             },
             products: items.map(p => ({
+                title: p.title,
                 id: p._id,
                 name: p.name,
                 price: p.price,

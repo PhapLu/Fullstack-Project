@@ -82,15 +82,22 @@ export default function HotDeals() {
                             key={p.id}
                         >
                             <article>
-                                <div className={styles["deal-card__thumb"]}>
-                                    <img src={p.image} alt="" />
+                                <div className={styles.thumb}>
+                                    <img src={p.images?.[0]} alt={p.title} loading="lazy" />
                                 </div>
-                                <div className={styles["deal-card__bottom"]}>
-                                    <FontAwesomeIcon icon={faFire} />
-                                    <span className={styles.price}>
-                                        {p.price}
-                                    </span>
+                                <div className={styles.info}>
+                                    <h3 title={p.title}>{p.title}</h3>
+                                    <p className={styles.desc} title={p.description}>
+                                        {p.description}
+                                    </p>
+                                    <div className={styles.info__bottom}>
+                                        <FontAwesomeIcon icon={faFire} />
+                                        <span className={styles["price-link"]}>
+                                            {p.price}
+                                        </span>
+                                    </div>
                                 </div>
+                                
                             </article>
                         </Link>
                     ))}
