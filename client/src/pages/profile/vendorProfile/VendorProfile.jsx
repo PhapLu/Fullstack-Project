@@ -261,12 +261,12 @@ export default function VendorProfile() {
                                             profile?.phone || <span className={styles.muted}>—</span>
                                         ) : (
                                             <input
-                                            name="phone"
-                                            value={draft?.phone ?? ""}
-                                            onChange={handleDraft}
-                                            className={styles.input}
-                                            placeholder="+84 ..."
-                                            disabled={!isOwner}
+                                                name="phone"
+                                                value={draft?.phone ?? ""}
+                                                onChange={handleDraft}
+                                                className={styles.input}
+                                                placeholder="+84 ..."
+                                                disabled={!isOwner}
                                             />
                                         )}
                                     </div>
