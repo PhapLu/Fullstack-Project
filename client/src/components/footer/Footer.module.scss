@@ -3,7 +3,7 @@
   background-color: #fff;
   padding: 40px 20px;
   font-family: 'Poppins', sans-serif;
-  color: #253D4E;
+  color: var(--text-color);
   border-top: 1px solid #eee;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .footer h4 {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 15px;
 }
@@ -74,20 +74,23 @@
 }
 
 .footer ul li {
-  margin-bottom: 8px;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  line-height: normal;
 }
+
 
 .footer ul li a,
 .footer ul li span {
   text-decoration: none;
-  color: #253D4E;
-  font-size: 0.9rem;
+  color: var(--text-color);
+  font-size: 1.4rem;
   cursor: pointer;
 }
 
 .footer ul li a:hover,
 .footer ul li span:hover {
-  color: #007bff;
+  color: var(--primary-color);
 }
 
 .footer__badges {
@@ -100,7 +103,7 @@
   background: #000;
   color: #fff;
   padding: 5px 10px;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   border-radius: 4px;
 }
 
@@ -112,7 +115,7 @@
 .footer__cards span {
   background: #f5f5f5;
   padding: 5px 8px;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   border-radius: 4px;
 }
 
@@ -123,7 +126,6 @@
   align-items: center;
   border-top: 1px solid #eee;
   padding-top: 20px;
-  font-size: 0.85rem;
 }
 
 .footer__phones {
@@ -139,16 +141,14 @@
   gap: 5px;
 }
 
-.footer__phone span {
-  font-size: 1.3rem;
-}
-
 .footer__phoneNum {
   font-weight: bold;
   color: #007bff;
-  font-size: 1rem;
+  font-size: 1.4rem;
 }
-
+.footer__small {
+  font-size: 1.2rem;
+}
 .footer__social {
   display: flex;
   flex-direction: column;
@@ -160,6 +160,7 @@
   align-items: center;
   gap: 10px;
 }
+
 .footer__payment p {
   margin-bottom: 8px;
 }
@@ -181,7 +182,7 @@
 }
 
 .footer__copy b {
-  font-size: 0.9rem;
+  font-size: 1.5rem;
 }
 
 /* ====== Responsive ====== */

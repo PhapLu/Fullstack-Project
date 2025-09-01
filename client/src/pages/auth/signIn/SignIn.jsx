@@ -115,7 +115,7 @@ const SignIn = () => {
                             disabled={submitting}
                         />
                         {errors.username && (
-                            <span className="form-field__error">
+                            <span className={styles["form-field__error"]}>
                                 {errors.username}
                             </span>
                         )}
@@ -137,7 +137,7 @@ const SignIn = () => {
                             disabled={submitting}
                         />
                         {errors.password && (
-                            <span className="form-field__error">
+                            <span className={styles["form-field__error"]}>
                                 {errors.password}
                             </span>
                         )}

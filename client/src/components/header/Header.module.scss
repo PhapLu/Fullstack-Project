@@ -76,9 +76,6 @@
   align-items: center;
   justify-content: space-between;
 }
-.header__auth span {
-    color: var(--border-color);
-}
 
 .header__link--signin,
 .header__link--signup {
@@ -161,6 +158,71 @@
   background-color: var(--bg-color);
 }
 
+/* ==== User Box ==== */
+.userBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+}
+
+/* link bọc avatar + tên */
+.userLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;          /* bỏ gạch chân */
+  color: var(--text-color, #253d4e);
+  padding: 6px 8px;
+  border-radius: 10px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.userLink:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.userLink:focus-visible {
+  outline: 2px solid var(--primary-color, #007bff);
+  outline-offset: 2px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 1.3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-color);
+}
+
+.logoutBtn {          
+  padding: 6px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s;
+}
+
+.logoutBtn:hover {
+  border-color: var(--primary-color, #007bff);
+}
+
+.logoutBtn:active {
+  transform: translateY(1px);
+}
+
+
 /* ======= RESPONSIVE ======= */
 @media (max-width: 1024px) {
   .header__top {
@@ -199,6 +261,7 @@
     padding: 8px 12px;
   }
 }
+
 
 /* ====== Mobile (<= 768px) ====== */
 @media (max-width: 768px) {

@@ -60,6 +60,7 @@ class ProductService {
         if (!product) throw new NotFoundError("Product not found")
         return {
             product: {
+                title: product.title,
                 id: product._id,
                 name: product.name,
                 price: product.price,
@@ -131,6 +132,7 @@ class ProductService {
                 totalPages: Math.ceil(total / limitNum),
             },
             products: items.map(p => ({
+                title: p.title,
                 id: p._id,
                 name: p.name,
                 price: p.price,
