@@ -160,10 +160,13 @@ export default function VendorProfile() {
                 <div className={styles.container}>
                     {/* Header */}
                     <section className={styles.profileHeader}>
-                        <Avatar
-                            url={getImageUrl(profile?.avatar)}
-                            onSaveImage={isOwner ? (url) => setDraft((p) => ({ ...p, avatar: url })) : undefined}
-                        />
+                    <Avatar
+                        url={getImageUrl(profile?.avatar)}
+                        onSaveImage={isOwner ? (url) => {
+                            setProfile((p) => ({ ...p, avatar: url }));
+                            setDraft((p) => ({ ...p, avatar: url }));
+                        } : undefined}
+                    />
                         <div className={styles.companyBlock}>
                             <div className={styles["company-row"]}>
                                 <span className={styles["company-label"]}>Company Name:</span>

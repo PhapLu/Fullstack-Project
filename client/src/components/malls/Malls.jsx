@@ -51,7 +51,7 @@ export default function Malls() {
                         </div>
                     )}
 
-                    {vendors.map((b) => {
+                    {vendors.slice(0, 8).map((b) => {
                         const displayName =
                             b?.vendorProfile?.businessName ||
                             b?.fullName ||

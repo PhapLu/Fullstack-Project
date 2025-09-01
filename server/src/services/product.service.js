@@ -2,16 +2,8 @@ import { AuthFailureError, BadRequestError, NotFoundError } from "../core/error.
 import Product from "../models/product.model.js"
 import User from "../models/user.model.js"
 import path from "path";
-import fs from "fs/promises"; // <- promise-based API
+import fs from "fs/promises";
 import { PRODUCTS_DIR, UPLOADS_DIR } from "../configs/multer.config.js";
-
-const absFromUploadsUrl = (rawUrl) => {
-    if (!rawUrl || /^https?:\/\//i.test(rawUrl)) return null;
-    const clean = String(rawUrl).split("?")[0].split("#")[0];
-    if (!clean.startsWith("/uploads/")) return null;
-    const rel = clean.replace(/^\/uploads\//, "").replace(/^\//, "");
-    return path.join(UPLOADS_DIR, rel);
-};
 
 export const productPublicUrlFor = (filename) => `/uploads/products/${filename}`;
 
@@ -45,7 +37,7 @@ class ProductService {
         if (!files.length) throw new BadRequestError("At least one product image is required");
         const images = files.map((f) => productPublicUrlFor(f.filename || path.basename(f.path)));
     
-        // 4) Create
+        // 4. Create product
         const product = await Product.create({
             vendorId: userId,
             title: title.trim(),
@@ -185,20 +177,15 @@ class ProductService {
         const { name, price, description } = req.body;
         const newImageFile = req.file;
 
-        // 1. Authn
+        // 1. Check user, product
         const user = await User.findById(userId);
         if (!user) throw new AuthFailureError("You are not authenticated!");
-
-        // 2. Find product
         const product = await Product.findById(productId);
         if (!product) throw new NotFoundError("Product not found");
-
-        // 3. Ownership check
-        if (String(product.vendorId) !== String(user._id)) {
+        if (String(product.vendorId) !== String(user._id)) 
             throw new AuthFailureError("You are not allowed to modify this product");
-        }
 
-        // 4. Validate fields if provided
+        // 2. Validate fields if provided
         if (name !== undefined && !validateName(String(name))) {
             throw new BadRequestError("Product name must be 10–20 characters.");
         }
@@ -213,28 +200,22 @@ class ProductService {
                 product.description = description.trim();
         }
 
-        // 5. Handle image replacement
+        // 3. Handle image replacement
         if (newImageFile) {
             const newUrl = filePublicUrl(newImageFile);
             await safeDeleteImage(product.images);
             product.images = newUrl;
         }
 
-        // 6. Apply name last (to keep original if not provided)
+        // 4. Apply name last (to keep original if not provided)
         if (name !== undefined) product.name = name.trim();
 
         await product.save();
 
-        // 7. Return
+        // 5. Return
         return {
-        message: "Product updated successfully",
-            product: {
-                id: product._id,
-                name: product.name,
-                price: product.price,
-                image: product.images,
-                description: product.description
-            }
+            message: "Product updated successfully",
+            product
         };
     }
 }

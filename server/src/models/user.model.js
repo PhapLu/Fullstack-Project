@@ -6,16 +6,16 @@ const COLLECTION_NAME = "Users";
 
 const CustomerProfileSchema = new Schema(
     {
-        name: { type: String, trim: true, minlength: 5 },
-        address: { type: String, trim: true, minlength: 5 },
+        name: { type: String, trim: true },
+        address: { type: String, trim: true },
     },
     { _id: false }
 );
 
 const VendorProfileSchema = new Schema(
     {
-        businessName: { type: String, required: true, trim: true, minlength: 5 },
-        businessAddress: { type: String, required: true, trim: true, minlength: 5 },
+        businessName: { type: String, required: true, trim: true },
+        businessAddress: { type: String, required: true, trim: true},
     },
     { _id: false }
 );

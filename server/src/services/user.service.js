@@ -72,7 +72,8 @@ class UserService {
       
         user.avatar = url;
         await user.save();
-        return { avatar: url, metadata: { avatar: url } };
+        console.log("Avatar uploaded:", url);
+        return { avatar: url};
     };
 
     static updateUserProfile = async(req) => {

@@ -5,8 +5,6 @@ import OrderDetail from "../../components/distributionHub/OrderDetail"; // renam
 import { STATUS_FLOW } from "../../components/distributionHub/HubUtil.js";
 import { apiUtils } from "../../utils/newRequest";
 
-const mockOrders = [ { id: "A001", from: "Bloomart DC – District 1", to: "123 Nguyen Trai, District 5, HCMC", customerName: "Nguyen Van A", customerPhone: "0912 345 678", items: [ { name: "Colored Contact Lenses", qty: 2, image: "https://via.placeholder.com/64?text=L", }, ], price: 235000, status: "active", placedAt: "2025-08-24T09:30:00Z", }, { id: "A002", from: "Bloomart DC – District 1", to: "56 Le Loi, District 1, HCMC", customerName: "Tran Thi B", customerPhone: "0905 123 456", items: [ { name: "Wireless Earbuds", qty: 1, image: "https://via.placeholder.com/64?text=E", }, ], price: 119000, status: "at_hub", placedAt: "2025-08-24T10:05:00Z", }, { id: "A003", from: "Bloomart DC – Thu Duc", to: "78 Tran Hung Dao, District 3, HCMC", customerName: "Le Van C", customerPhone: "0938 123 123", items: [ { name: "Bluetooth Speaker", qty: 1, image: "https://via.placeholder.com/64?text=S", }, { name: "Phone Case", qty: 2, image: "https://via.placeholder.com/64?text=C", }, ], price: 80000, status: "out_for_delivery", placedAt: "2025-08-24T08:45:00Z", }, { id: "A004", from: "Bloomart DC – Thu Duc", to: "22 Pham Van Dong, Thu Duc City", customerName: "Pham Thi D", customerPhone: "0977 456 321", items: [ { name: "Pack of T-Shirts", qty: 3, image: "https://via.placeholder.com/64?text=T", }, ], price: 152000, status: "delivered", placedAt: "2025-08-23T16:20:00Z", }, { id: "A005", from: "Bloomart DC – District 7", to: "99 Nguyen Van Linh, District 7, HCMC", customerName: "Hoang Van E", customerPhone: "0987 456 123", items: [ { name: "Gaming Mouse", qty: 1, image: "https://via.placeholder.com/64?text=M", }, ], price: 67000, status: "cancelled", placedAt: "2025-08-23T12:10:00Z", }, { id: "A006", from: "Bloomart DC – District 5", to: "12 Vo Van Kiet, District 5, HCMC", customerName: "Nguyen Thi F", customerPhone: "0911 002 200", items: [ { name: "Makeup Kit", qty: 1, image: "https://via.placeholder.com/64?text=MK", }, ], price: 123000, status: "active", placedAt: "2025-08-24T11:40:00Z", }, ];
-
 export default function DistributionHub() {
     const { distributionHubId, orderId } = useParams();
     const [searchParams] = useSearchParams();
@@ -15,7 +13,7 @@ export default function DistributionHub() {
     const role = (searchParams.get("role") || "shipper").toLowerCase();
 
     const [hub, setHub] = useState(null);
-    const [orders, setOrders] = useState(mockOrders || []);
+    const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState({ hub: true, orders: true });
     const [error, setError] = useState({ hub: "", orders: "" });
 

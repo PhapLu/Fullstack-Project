@@ -4,7 +4,7 @@ import {
     Navigate,
 } from "react-router-dom";
 import Layout from "./pages/layouts/Layout";
-import LandingPage from "./pages/landingPage/landingPage";
+import LandingPage from "./pages/landingPage/LandingPage";
 import DistributionHub from "./pages/distributionHub/DistributionHub";
 import { QueryClient, QueryClientProvider } from "react-query";
 import AuthLayout from "./pages/auth/authLayout/AuthLayout";

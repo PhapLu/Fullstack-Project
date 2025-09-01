@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { apiUtils } from "../../../utils/newRequest";
 import { isFilled } from "../../../utils/validator"; // if you have it
-import { signIn, openSocket } from "../../../store/slices/authSlices"; // <-- Redux thunks
+import { signIn, openSocket, fetchMe } from "../../../store/slices/authSlices"; // <-- Redux thunks
 
 export default function VerifyOtp() {
 	const { state: registerInputs } = useLocation();
@@ -71,6 +71,7 @@ export default function VerifyOtp() {
                 // 3) Persist token + open socket, then redirect
                 localStorage.setItem("token", action.payload.token);
                 dispatch(openSocket());
+                dispatch(fetchMe());
                 navigate("/");
             } else {
                 // signIn rejected

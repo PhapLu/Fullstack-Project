@@ -9,6 +9,7 @@ import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./Header.module.scss"; // switched to CSS module
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../store/slices/authSlices";
+import { apiUtils } from "../../utils/newRequest";
 
 library.add(fas);
 
