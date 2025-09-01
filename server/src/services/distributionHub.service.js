@@ -43,7 +43,7 @@ class DistributionHubService {
         const shipper = await User.findById(shipperId)
         if (!shipper || shipper.role !== 'shipper') 
             throw new AuthFailureError('You are not authorized to view DistributionHub details')
-        if (shipper.assignedHub.toString() !== distributionHubId)
+        if (shipper.shipperProfile.assignedHub.toString() !== distributionHubId)
             throw new AuthFailureError('You are not assigned to this DistributionHub')
 
         const distributionHub = await DistributionHub.findById(distributionHubId).lean()

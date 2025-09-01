@@ -23,7 +23,6 @@ const OrderSchema = new Schema(
             validate: { validator: v => Array.isArray(v) && v.length > 0, message: "Order must have at least one item" },
         },
         distributionHubId: { type: Schema.Types.ObjectId, ref: "DistributionHub", required: true, index: true },
-        shipperId: { type: Schema.Types.ObjectId, ref: "User", index: true },
         status: {
             type: String,
             enum: ["placed", "at_hub", "out_for_delivery", "delivered", "cancelled"],

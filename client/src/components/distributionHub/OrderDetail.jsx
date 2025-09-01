@@ -1,0 +1,262 @@
+import React, { useEffect, useState } from "react";
+import styles from "../../pages/distributionHub/DistributionHub.module.scss";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { fmt, STATUS_FLOW, labelOf } from "./HubUtil.js";
+import { apiUtils } from "../../utils/newRequest";
+
+export default function OrderDetail({
+    role = "shipper",
+    distributionHubId,
+    orderId,
+    order, // optional shallow order from list
+    onBack,
+    onAdvance,
+    onDeliver,
+    onCancel,
+}) {
+    const [detail, setDetail] = useState(order || null);
+    const [loading, setLoading] = useState(!order);
+    const [err, setErr] = useState("");
+
+    // Always fetch full order detail for orderId
+    useEffect(() => {
+        let alive = true;
+        const load = async () => {
+            setLoading(true);
+            setErr("");
+            try {
+                // assuming API expects ?orderId=<id>
+                const response = await apiUtils.get(`/order/readOrder${orderId}`);
+                if (alive) setDetail(response.data.metadata.order);
+            } catch (e) {
+                if (alive)
+                    setErr(e?.response?.data?.message || "Failed to load order");
+            } finally {
+                if (alive) setLoading(false);
+            }
+        };
+        if (orderId) load();
+        return () => {
+            alive = false;
+        };
+    }, [orderId]);
+
+    if (loading) {
+        return (
+            <div className={styles.container} style={{ padding: 16 }}>
+                Loading…
+            </div>
+        );
+    }
+    if (err) {
+        return (
+            <div
+                className={styles.container}
+                style={{ padding: 16, color: "#b91c1c" }}
+            >
+                {err}
+                <div style={{ marginTop: 12 }}>
+                    <button className={styles.actions_mark} onClick={onBack}>
+                        ⟵ Back
+                    </button>
+                </div>
+            </div>
+        );
+    }
+    if (!detail) {
+        return (
+            <div className={styles.container} style={{ padding: 16 }}>
+                <h3>Order not found</h3>
+                <button className={styles.actions_mark} onClick={onBack}>
+                    ⟵ Back
+                </button>
+            </div>
+        );
+    }
+
+    const items = Array.isArray(detail.items) ? detail.items : [];
+    const subtotalFromItems = items.reduce(
+        (s, it) => s + (it.unitPrice ?? it.price ?? 0) * (it.qty ?? 1),
+        0
+    );
+    const subtotal = detail.subtotal ?? subtotalFromItems;
+    const shippingFee =
+        detail.shippingFee ?? detail.deliveryFee ?? detail.shipping ?? 0;
+    const total = detail.total ?? detail.price ?? subtotal + shippingFee;
+
+    return (
+        <section className={`${styles.hub} ${styles.container}`}>
+            <header className={styles.hub__head}>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <button className={styles.actions_mark} onClick={onBack}>
+                        ⟵ Back
+                    </button>
+                    <h1 style={{ margin: 0 }}>
+                        ORDER DETAIL{" "}
+                        <span className={styles.loc}>#{detail.id}</span>
+                    </h1>
+                </div>
+                <p>Detailed information for shipment and delivery tracking.</p>
+            </header>
+
+            <article className={styles["order-card"]}>
+                <div className={styles["order-card__top"]}>
+                    <div className={styles.route}>
+                        <FaMapMarkerAlt className={styles.pin} />
+                        <div className={styles.route__text}>
+                            <div className={styles.from}>
+                                From: <p>{detail.from}</p>
+                            </div>
+                            <div>
+                                To: <span>{detail.to}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.price}>
+                        <span>Value</span>
+                        <strong>
+                            {fmt(
+                                detail.value ??
+                                    detail.total ??
+                                    detail.price ??
+                                    subtotal
+                            )}
+                        </strong>
+                    </div>
+                    <div
+                        className={`${styles["status-badge"]} ${
+                            styles[detail.status]
+                        }`}
+                    >
+                        {labelOf(detail.status)}
+                    </div>
+                </div>
+
+                <div className={styles.customer}>
+                    <div>
+                        <strong>Customer:</strong> {detail.customerName}
+                    </div>
+                    <div>
+                        <strong>Phone:</strong> {detail.customerPhone}
+                    </div>
+                    <div>
+                        <strong>Placed:</strong>{" "}
+                        {new Date(detail.placedAt).toLocaleString()}
+                    </div>
+                </div>
+
+                <ul className={styles.items}>
+                    {items.map((it, idx) => (
+                        <li key={idx} className={styles.item}>
+                            <img src={it.image} alt={it.name} />
+                            <div className={styles.item__meta}>
+                                <div className={styles.item__name}>
+                                    {it.name}
+                                </div>
+                                <div className={styles.item__qty}>
+                                    x{it.qty}
+                                </div>
+                            </div>
+                            {(it.unitPrice ?? it.price) != null && (
+                                <div
+                                    style={{
+                                        marginLeft: "auto",
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {fmt(
+                                        (it.unitPrice ?? it.price) *
+                                            (it.qty ?? 1)
+                                    )}
+                                </div>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+
+                <div style={{ paddingTop: 12 }}>
+                    <div style={{ fontWeight: 700, marginBottom: 6 }}>
+                        Status timeline
+                    </div>
+                    <div className={styles.timeline}>
+                        {STATUS_FLOW.map((s, i) => {
+                            const activeIdx = STATUS_FLOW.indexOf(
+                                detail.status
+                            );
+                            const done = activeIdx >= i;
+                            return (
+                                <div
+                                    key={s}
+                                    className={`${styles.step} ${
+                                        done ? styles.done : ""
+                                    }`}
+                                >
+                                    <span>{labelOf(s)}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div style={{ paddingTop: 12 }}>
+                    <div style={{ fontWeight: 700, marginBottom: 6 }}>
+                        Payment Details
+                    </div>
+                    <div className={styles.summary}>
+                        <div>
+                            <span>Subtotal</span>
+                            <b>{fmt(subtotal)}</b>
+                        </div>
+                        <div>
+                            <span>Shipping Fee</span>
+                            <b>{fmt(shippingFee)}</b>
+                        </div>
+                        <hr />
+                        <div>
+                            <span>Total</span>
+                            <b style={{ color: "#e11d48" }}>{fmt(total)}</b>
+                        </div>
+                    </div>
+                </div>
+
+                {role === "shipper" && (
+                    <div className={styles["order-card__bottom"]}>
+                        <div className={styles.when}>
+                            Order #{detail.id} • {labelOf(detail.status)}
+                        </div>
+                        <div className={styles.actions}>
+                            <button
+                                className={styles.actions_mark}
+                                onClick={onAdvance}
+                                disabled={
+                                    detail.status === "delivered" ||
+                                    detail.status === "cancelled"
+                                }
+                                title="Advance to next status"
+                            >
+                                Advance status
+                            </button>
+                            <button
+                                className={styles.actions_mark}
+                                onClick={onDeliver}
+                                disabled={
+                                    detail.status === "delivered" ||
+                                    detail.status === "cancelled"
+                                }
+                            >
+                                Mark delivered
+                            </button>
+                            <button
+                                className={styles.actions_cancel}
+                                onClick={onCancel}
+                                disabled={detail.status === "delivered"}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </article>
+        </section>
+    );
+}
