@@ -149,7 +149,6 @@ class AuthService {
     static verifyOtp = async ({ email, otp }) => {
         // 1. Find the OTP in the database
         const otpRecord = await UserOTPVerification.findOne({ email }).lean()
-        console.log(otpRecord)
         // 2. Check if the OTP is correct
         if (!otpRecord || otpRecord.otp !== otp) {
             throw new BadRequestError("Invalid OTP code")
@@ -287,8 +286,6 @@ class AuthService {
     static verifyResetPasswordOtp = async ({ email, otp }) => {
         //1. Find, check the OTP and user in the database
         const otpRecord = await ForgotPasswordOTP.findOne({ email })
-        console.log(email)
-        console.log(otp)
 
         // 2. Check if the OTP is correct
         if (!otpRecord || otpRecord.otp !== otp) {

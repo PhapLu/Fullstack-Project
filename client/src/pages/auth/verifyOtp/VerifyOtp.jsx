@@ -10,7 +10,6 @@ import { signIn, openSocket } from "../../../store/slices/authSlices"; // <-- Re
 
 export default function VerifyOtp() {
 	const { state: registerInputs } = useLocation();
-	console.log("registerInputs", registerInputs);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

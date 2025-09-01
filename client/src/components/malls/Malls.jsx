@@ -37,7 +37,6 @@ export default function Malls() {
 		const fetchBrands = async () => {
 			try {
 				const response = await apiUtils.get('/user/readBrands') // Replace with your API endpoint
-				console.log(response.data.metadata.brands);
 				setBrands(response.data.metadata.brands); // Adjust based on your API response structure
 			} catch (error) {
 				console.error("Error fetching brands:", error);

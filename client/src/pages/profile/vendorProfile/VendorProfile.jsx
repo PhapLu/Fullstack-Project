@@ -62,7 +62,7 @@ export default function VendorProfile() {
                         setDraft(clone);
                     }
                 } else if (profileId) {
-                    const { data } = await apiUtils.get(`/user/${profileId}`); // adjust if needed
+                    const { data } = await apiUtils.get(`/user/readUserProfile/${profileId}`); // adjust if needed
                     const u = data?.user || data?.metadata?.user || data || {};
                     setFetchedUser(u);
                     const clone = JSON.parse(JSON.stringify(u));
@@ -99,7 +99,6 @@ export default function VendorProfile() {
         
             const { data } = await apiUtils.patch("/user/updateUserProfile", payload);
             const updated = data?.metadata?.user
-            console.log("Update response:", updated);
         
             // Update local state
             setProfile(updated);

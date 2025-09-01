@@ -68,7 +68,6 @@
 //         const fetchHubs = async () => {
 //             try {
 //                 const response = await apiUtils.get("/distributionHub/readDistributionHubs");
-//                 console.log(response)
 //                 setHubs(response.data.metadata || []);
 //             } catch (error) {
 //                 console.error("Error fetching distribution hubs:", error);

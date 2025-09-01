@@ -10,7 +10,6 @@ export default function PopularProducts() {
         const fetchProducts = async () => {
             try {
                 const response = await apiUtils.get("/product/readProducts"); // Adjust the path as necessary
-				console.log(response.data.metadata.products);
                 setProducts(response.data.metadata.products);
             } catch (error) {
                 console.error("Error fetching popular products:", error);

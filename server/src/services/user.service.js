@@ -78,7 +78,6 @@ class UserService {
     static updateUserProfile = async(req) => {
         const userId = req.userId
 
-        console.log('BODY', req.body)
         // 1. Validate inputs
 
         // 2. Check user
@@ -93,7 +92,6 @@ class UserService {
             },
             { new: true }
         )
-        console.log(updatedUser)
 
         // 4. Return updated user profile
         return {

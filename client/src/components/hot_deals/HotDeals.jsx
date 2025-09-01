@@ -15,7 +15,6 @@ export default function HotDeals() {
         const fetchHotDealProducts = async () => {
             try {
                 const response = await apiUtils.get('/product/readProducts') // Replace with your API endpoint
-                console.log(response.data.metadata.products);
                 setHotDealProducts(response.data.metadata.products); // Adjust based on your API response structure
             } catch (error) {
                 console.error("Error fetching hot deal products:", error);

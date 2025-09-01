@@ -17,8 +17,6 @@ class UserController {
     }
 
     me = async (req, res, next) => {
-        console.log(req.cookies)
-        console.log(req.cookies.accessToken)
         return new SuccessResponse({
             message: 'User information retrieved successfully',
             metadata: await UserService.me(req.cookies.accessToken)

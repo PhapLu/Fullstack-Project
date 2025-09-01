@@ -21,8 +21,6 @@ import SocketServices from "./services/socket.service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-console.log(__dirname)
-console.log(__filename)
 
 const app = express();
 

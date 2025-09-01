@@ -20,7 +20,6 @@ class ProductService {
     static createProduct = async (req) => {
         const userId = req.userId;
         const files = req.files || [];
-        console.log('FILES', files);
     
         // 1. Check vendor
         const vendor = await User.findById(userId);
