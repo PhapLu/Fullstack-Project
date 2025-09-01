@@ -3,9 +3,12 @@ import styles from "./PopularProducts.module.scss"; // switched to CSS module
 import { Link } from "react-router-dom";
 import { apiUtils } from "../../utils/newRequest";
 import { getImageUrl } from "../../utils/imageUrl";
+import { Pagination } from "./Pagination";
 
 export default function PopularProducts() {
     const [products, setProducts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage, setProductsPerPage] = useState(6);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -19,6 +22,15 @@ export default function PopularProducts() {
         fetchProducts();
     }, []);
 
+
+    // Get current products
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+    
+    // Change page of pagination
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <section
             className={`${styles.popular} ${styles.container}`}
@@ -28,7 +40,7 @@ export default function PopularProducts() {
 
             <div className={styles["popular-grid"]}>
                 {/* Link to product:id */}
-                {products.map((p) => (
+                {currentProducts.map((p) => (
                     <Link
                         to={`/product/${p.id}`}
                         key={p.id}
@@ -51,6 +63,7 @@ export default function PopularProducts() {
                     </Link>
                 ))}
             </div>
+            <Pagination productsPerPage={productsPerPage} totalProducts={products.length} paginate={paginate} />
         </section>
     );
 }

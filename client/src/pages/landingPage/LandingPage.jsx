@@ -8,6 +8,7 @@ import Promo from "../../components/promo/Promo";
 import HotDeals from "../../components/hot_deals/HotDeals";
 import Malls from "../../components/malls/Malls";
 import PopularProducts from "../../components/popularProduct/PopularProducts";
+import { Pagination } from "../../components/popularProduct/Pagination";
 
 export default function LandingPage() {
   return (
