@@ -14,9 +14,19 @@ const ordersMock = [
     placedAt: "2025-08-20T09:30:00Z",
     deliveredAt: null,
     items: [
-      { productId: "prod_001", name: "Colored Contact Lenses", quantity: 2, priceAtPurchase: 159000 },
-      { productId: "prod_002", name: "Lens Cleaning Solution", quantity: 1, priceAtPurchase: 99000 }
-    ]
+      {
+        productId: "prod_001",
+        name: "Colored Contact Lenses",
+        quantity: 2,
+        priceAtPurchase: 159000,
+      },
+      {
+        productId: "prod_002",
+        name: "Lens Cleaning Solution",
+        quantity: 1,
+        priceAtPurchase: 99000,
+      },
+    ],
   },
   {
     id: "order_002",
@@ -29,8 +39,13 @@ const ordersMock = [
     placedAt: "2025-08-21T11:00:00Z",
     deliveredAt: null,
     items: [
-      { productId: "prod_003", name: "Wireless Earbuds", quantity: 3, priceAtPurchase: 250000 }
-    ]
+      {
+        productId: "prod_003",
+        name: "Wireless Earbuds",
+        quantity: 3,
+        priceAtPurchase: 250000,
+      },
+    ],
   },
   {
     id: "order_003",
@@ -43,9 +58,19 @@ const ordersMock = [
     placedAt: "2025-08-22T08:15:00Z",
     deliveredAt: null,
     items: [
-      { productId: "prod_004", name: "Bluetooth Speaker", quantity: 1, priceAtPurchase: 199000 },
-      { productId: "prod_005", name: "Phone Case", quantity: 2, priceAtPurchase: 120000 }
-    ]
+      {
+        productId: "prod_004",
+        name: "Bluetooth Speaker",
+        quantity: 1,
+        priceAtPurchase: 199000,
+      },
+      {
+        productId: "prod_005",
+        name: "Phone Case",
+        quantity: 2,
+        priceAtPurchase: 120000,
+      },
+    ],
   },
   {
     id: "order_004",
@@ -58,8 +83,13 @@ const ordersMock = [
     placedAt: "2025-08-18T13:45:00Z",
     deliveredAt: "2025-08-19T16:20:00Z",
     items: [
-      { productId: "prod_006", name: "Pack of T-Shirts", quantity: 5, priceAtPurchase: 50000 }
-    ]
+      {
+        productId: "prod_006",
+        name: "Pack of T-Shirts",
+        quantity: 5,
+        priceAtPurchase: 50000,
+      },
+    ],
   },
   {
     id: "order_005",
@@ -72,29 +102,35 @@ const ordersMock = [
     placedAt: "2025-08-15T10:10:00Z",
     deliveredAt: null,
     items: [
-      { productId: "prod_007", name: "Gaming Mouse", quantity: 1, priceAtPurchase: 890000 }
-    ]
-  }
+      {
+        productId: "prod_007",
+        name: "Gaming Mouse",
+        quantity: 1,
+        priceAtPurchase: 890000,
+      },
+    ],
+  },
 ];
 
 export default function OrdersLayout() {
-
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await apiUtils('/order/readOrders'); // Replace with your actual API endpoint
+      const response = await apiUtils("/order/readOrders"); // Replace with your actual API endpoint
       setOrders(response.data.metadata.orders);
-    }
+    };
     fetchOrders();
-  })
+  });
 
   return (
     <div className="orders-layout container py-4">
       {/* Navigation */}
       <nav className="orders-nav mb-4 d-flex gap-3">
         <NavLink to="/orders/success">Order Success</NavLink>
-        <NavLink to="/orders/shipper">Shipper Orders</NavLink>
+        <NavLink to="../distributionHub/DistributionHub.jsx">
+          Shipper Orders
+        </NavLink>
         <NavLink to="/orders/checkout">Checkout Orders</NavLink>
       </nav>
 
@@ -151,10 +187,7 @@ export default function OrdersLayout() {
               <strong>
                 Total: ₫
                 {order.items
-                  .reduce(
-                    (sum, i) => sum + i.priceAtPurchase * i.quantity,
-                    0
-                  )
+                  .reduce((sum, i) => sum + i.priceAtPurchase * i.quantity, 0)
                   .toLocaleString()}
               </strong>
             </div>
