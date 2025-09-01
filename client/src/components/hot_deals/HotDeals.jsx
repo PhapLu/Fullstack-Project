@@ -5,6 +5,7 @@ import { faFire } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom";
 import { apiUtils } from "../../utils/newRequest";
+import { getImageUrl } from "../../utils/imageUrl";
 
 export default function HotDeals() {
     const railRef = useRef();
@@ -14,8 +15,8 @@ export default function HotDeals() {
         // Fetch hot deal products from your API
         const fetchHotDealProducts = async () => {
             try {
-                const response = await apiUtils.get('/product/readProducts') // Replace with your API endpoint
-                setHotDealProducts(response.data.metadata.products); // Adjust based on your API response structure
+                const response = await apiUtils.get('/product/readProducts')
+                setHotDealProducts(response.data.metadata.products);
             } catch (error) {
                 console.error("Error fetching hot deal products:", error);
             }
@@ -73,7 +74,6 @@ export default function HotDeals() {
 
             <div className={styles.hotdeals__viewport}>
                 <div className={styles.hotdeals__rail} ref={railRef}>
-                    {/* Link tới product/id ( Product Details ) */}
                     {hotdealProducts.map((p) => (
                         <Link
                             to={`/product/${p.id}`}
@@ -82,7 +82,7 @@ export default function HotDeals() {
                         >
                             <article>
                                 <div className={styles["deal-card__thumb"]}>
-                                    <img src={p.image} alt="" />
+                                    <img src={getImageUrl(p.images[0])} alt="" />
                                 </div>
                                 <div className={styles["deal-card__bottom"]}>
                                     <FontAwesomeIcon icon={faFire} />

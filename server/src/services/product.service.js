@@ -103,7 +103,6 @@ class ProductService {
         if (mine === "true") {
             user = await User.findById(userId);
             if (!user) throw new AuthFailureError("You are not authenticated!");
-            // if (user.role !== "vendor") throw new AuthFailureError("Only vendors can view their products");
         }
         // Build filter
         const filter = {};
@@ -119,23 +118,25 @@ class ProductService {
         if (max != null && Number.isFinite(max)) priceFilter.$lte = max;
         if (Object.keys(priceFilter).length) filter.price = priceFilter;
 
-        // Pagination
-        const pageNum = Math.max(1, Number(page) || 1);
+        // Pagination (limit still matters, page is ignored when randomizing)
         const limitNum = Math.min(100, Math.max(1, Number(limit) || 12));
-        const skip = (pageNum - 1) * limitNum;
 
-        // Query
+        // Randomized query via aggregation
         const [items, total] = await Promise.all([
-            Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum).lean(),
-            Product.countDocuments(filter)
+            Product.aggregate([
+                { $match: filter },
+                { $sample: { size: limitNum } }, // <-- random selection
+                { $project: { _id: 1, name: 1, price: 1, images: 1, description: 1, vendorId: 1 } },
+            ]),
+            Product.countDocuments(filter),
         ]);
 
         return {
             pagination: {
-                page: pageNum,
+                page: 1, // random draw ignores traditional paging
                 limit: limitNum,
                 total,
-                totalPages: Math.ceil(total / limitNum)
+                totalPages: Math.ceil(total / limitNum),
             },
             products: items.map(p => ({
                 id: p._id,
@@ -143,8 +144,8 @@ class ProductService {
                 price: p.price,
                 images: p.images,
                 description: p.description,
-                vendor: p.vendorId
-            }))
+                vendor: p.vendorId,
+            })),
         };
     }
       

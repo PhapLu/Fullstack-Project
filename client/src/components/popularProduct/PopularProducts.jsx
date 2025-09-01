@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./PopularProducts.module.scss"; // switched to CSS module
 import { Link } from "react-router-dom";
 import { apiUtils } from "../../utils/newRequest";
+import { getImageUrl } from "../../utils/imageUrl";
 
 export default function PopularProducts() {
     const [products, setProducts] = useState([]);
@@ -9,7 +10,7 @@ export default function PopularProducts() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await apiUtils.get("/product/readProducts"); // Adjust the path as necessary
+                const response = await apiUtils.get("/product/readProducts");
                 setProducts(response.data.metadata.products);
             } catch (error) {
                 console.error("Error fetching popular products:", error);
@@ -35,7 +36,7 @@ export default function PopularProducts() {
                     >
                         <article>
                             <div className={styles.thumb}>
-								<img src={p.images?.[0]} alt={p.title} loading="lazy" />
+								<img src={getImageUrl(p.images[0])} alt={p.title} loading="lazy" />
                             </div>
                             <div className={styles.info}>
                                 <h3 title={p.title}>{p.title}</h3>

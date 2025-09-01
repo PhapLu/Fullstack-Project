@@ -103,7 +103,7 @@ class UserService {
         // 1. Read brands - which are vendors started selling more than 1 year ago
         const brands = await User.find({
             role: 'vendor',
-            createdAt: { $lte: new Date(Date.now() - 365*24*60*60*1000) }
+            // createdAt: { $lte: new Date(Date.now() - 365*24*60*60*1000) }
         })
 
         return {
