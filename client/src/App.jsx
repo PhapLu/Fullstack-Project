@@ -25,6 +25,7 @@ import AdminProducts from "./pages/admin/AdminProducts.jsx";
 import AdminUsers from "./pages/admin/AdminUsers.jsx"; 
 import UserProfile from "./pages/profile/UserProfile/UserProfile";
 import MyCart from "./pages/orders/MyCart/MyCart";
+import ProductDetail from "./pages/product/ProductDetail.jsx";
 
 const routes = [
     {
@@ -79,6 +80,10 @@ const routes = [
                 { path: 'orders', element: <AdminOrders /> },
                 { path: 'hubs', element: <AdminHubs /> },
                 ],
+            },
+            {
+                path: "/product/:productId",
+                element: <ProductDetail />,
             },
         ],
     },
