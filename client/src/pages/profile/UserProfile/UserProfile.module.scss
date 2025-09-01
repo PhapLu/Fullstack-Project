@@ -17,7 +17,7 @@
     transition: transform 0.15s ease, background-color 0.2s;
 
     &:hover {
-        background: var(--hover-accent);
+        background: var(--hover-btn);
         transform: translateY(-1px);
     }
 
