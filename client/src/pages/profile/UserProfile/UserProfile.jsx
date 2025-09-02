@@ -3,8 +3,6 @@ import styles from "./UserProfile.module.scss";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../store/slices/authSlices";
 import { apiUtils } from "../../../utils/newRequest";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../../../components/profile/avatar/Avatar";
 import { getImageUrl } from "../../../utils/imageUrl";
 
@@ -17,6 +15,12 @@ export default function UserProfile() {
     const [previewAvatar, setPreviewAvatar] = useState(null);
     const [avatarFile, setAvatarFile] = useState(null);
 	const [avatarUrl, setAvatarUrl] = useState(getImageUrl(user?.avatar));
+
+    const isOwner = useMemo(() => {
+        if (!user || !profileId) return false;
+        return user._id === profileId || user.username === profileId;
+    }, [user, profileId]);
+
 	useEffect(() => {
 		setAvatarUrl(getImageUrl(user?.avatar));
 	}, [user?.avatar]);
@@ -190,6 +194,7 @@ export default function UserProfile() {
                 <div className="text-center mb-3 position-relative">
 					<section className={styles.profileHeader}>
 						<Avatar
+                            isOwner={isOwner}
 							url={avatarUrl}
 							className={styles.avatarWrap}
 							onSaveImage={(url) => setAvatarUrl(url)}

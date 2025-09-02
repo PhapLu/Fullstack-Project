@@ -7,7 +7,7 @@ import { getImageUrl } from "../../../utils/imageUrl";
 const bust = (u) =>
     u ? `${u}${u.includes("?") ? "&" : "?"}v=${Date.now()}` : "";
 
-export default function Avatar({ url, onSaveImage }) {
+export default function Avatar({ isOwner, url, onSaveImage }) {
     const inputRef = useRef(null);
     const imgElRef = useRef(null);
     const prevUrlRef = useRef("");
@@ -113,23 +113,25 @@ export default function Avatar({ url, onSaveImage }) {
                 )}
             </div>
 
-            <button
-                className={`${styles["icon-btn"]} ${styles["avatar-edit"]}`}
-                onClick={pick}
-                type="button"
-                disabled={uploading}
-                title={uploading ? "Uploading..." : "Edit"}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="21"
-                    viewBox="0 -960 960 960"
-                    width="21"
-                    fill="#000000"
+            { isOwner && (
+                <button
+                    className={`${styles["icon-btn"]} ${styles["avatar-edit"]}`}
+                    onClick={pick}
+                    type="button"
+                    disabled={uploading}
+                    title={uploading ? "Uploading..." : "Edit"}
                 >
-                    <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z" />
-                </svg>
-            </button>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="21"
+                        viewBox="0 -960 960 960"
+                        width="21"
+                        fill="#000000"
+                    >
+                        <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z" />
+                    </svg>
+                </button>
+            )}
 
             <input
                 ref={inputRef}

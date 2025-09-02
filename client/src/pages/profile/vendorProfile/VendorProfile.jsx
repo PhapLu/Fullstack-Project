@@ -161,6 +161,7 @@ export default function VendorProfile() {
                     {/* Header */}
                     <section className={styles.profileHeader}>
                     <Avatar
+                        isOwner={isOwner}
                         url={getImageUrl(profile?.avatar)}
                         onSaveImage={isOwner ? (url) => {
                             setProfile((p) => ({ ...p, avatar: url }));

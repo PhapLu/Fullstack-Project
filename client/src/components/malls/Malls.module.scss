@@ -1,188 +1,247 @@
-.mall.container { 
-   margin: 3% 0;
-   margin-inline: auto;
+.mall.container {
+    margin: 3% 0;
+    margin-inline: auto;
 }
-.mall h2 { font-size: 26px; font-weight: 700; color: var(--text); margin: 14px 0; }
+.mall h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 14px 0;
+}
 
 /* layout trái - phải */
 .mall__layout {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;  
-  gap: 24px;
-  align-items: start;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 24px;
+    align-items: start;
 }
 
 /* Poster */
 .mall__poster {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 .mall__poster img {
-  display:block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Carousel */
-.mall__carousel { position: relative; }
-.mall__viewport {
-  position: relative;
-  overflow: hidden;                 /* che phần tràn khi slide */
-  border-radius: 12px;
+.mall__carousel {
+    position: relative;
 }
-
+.mall__viewport {
+    position: relative;
+    overflow: hidden; /* che phần tràn khi slide */
+    border-radius: 12px;
+}
 
 .mall__rail {
-  display: flex;
-  transition: transform .35s ease; 
-  will-change: scroll-position;
-  overflow: auto hidden;          
-  scroll-snap-type: x mandatory;
+    display: flex;
+    transition: transform 0.35s ease;
+    will-change: scroll-position;
+    overflow: auto hidden;
+    scroll-snap-type: x mandatory;
 }
-.mall__rail::-webkit-scrollbar{ height: 8px; }
-.mall__rail::-webkit-scrollbar-thumb{ background:#e6e9ef; border-radius: 6px; }
+.mall__rail::-webkit-scrollbar {
+    height: 8px;
+}
+.mall__rail::-webkit-scrollbar-thumb {
+    background: #e6e9ef;
+    border-radius: 6px;
+}
 
-.mall__page { scroll-snap-align: start; }
+.mall__page {
+    scroll-snap-align: start;
+}
 .mall__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px 18px;
-  padding: 6px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px 18px;
+    padding: 6px;
 }
 
 /* brand card */
-.brand-card{
-  display: flex;
-  flex-direction: column;
-  border-radius: 12px;
-  overflow: hidden;
-
+.brand-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
 }
-.brand-thumb{
-  aspect-ratio: 1 / 1;
-  overflow: hidden;   
-  background: #f8fafc;
-  display:grid; place-items:center;
+.brand-thumb {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
 }
-.brand-thumb img{
-  display: block;
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover;
+.brand-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-.brand-chip{
-  margin: 10px auto 12px;
-  width: 78%;
-  text-align: center;
-  padding: 8px 10px;
-  background: #fff;
-  border-radius: 999px;
-   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-  color: #111827;
-  font-weight: 600;
-  font-size: 14px;
+.brand-chip {
+    margin: 10px auto 12px;
+    width: 78%;
+    text-align: center;
+    padding: 8px 10px;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    color: #111827;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 /* nav buttons */
-.mall-nav{
-  position:absolute; bottom: -18px;   /* như mockup (ở dưới, giữa) */
-  transform: translateY(100%);
-  width:34px; height:34px; border:0; border-radius:999px;
-  background:#f3f6fb; color:#374151;
-  display:grid; place-items:center;
-  box-shadow: 0 6px 16px rgba(0,0,0,.12);
-  cursor:pointer; z-index:2;
+.mall-nav {
+    position: absolute;
+    bottom: -18px; /* như mockup (ở dưới, giữa) */
+    transform: translateY(100%);
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 999px;
+    background: #f3f6fb;
+    color: #374151;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    z-index: 2;
 }
-.mall-nav.left{ left: 50%; transform: translate(-120%, 100%); }
-.mall-nav.right{ right: 50%; transform: translate(120%, 100%); }
-.mall-nav.disabled{ opacity:.5; pointer-events:none; }
+.mall-nav.left {
+    left: 50%;
+    transform: translate(-120%, 100%);
+}
+.mall-nav.right {
+    right: 50%;
+    transform: translate(120%, 100%);
+}
+.mall-nav.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
 
 /* dots */
-.mall__dots{
-  display:flex; justify-content:center; gap:10px; margin-top: 28px;
+.mall__dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
 }
-.mall__dots .dot{
-  width:10px; height:10px; border-radius:50%;
-  background:#e4e7ee; border:0; cursor:pointer;
+.mall__dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e4e7ee;
+    border: 0;
+    cursor: pointer;
 }
-.mall__dots .dot.active{ background:#0b74ff; }
+.mall__dots .dot.active {
+    background: #0b74ff;
+}
 
 /* responsive */
 /* Tablet (<= 1024px): stack layout, soften sizes */
 @media (max-width: 1024px) {
-  .mall h2 { font-size: 22px; }                 /* smaller heading */
+    .mall h2 {
+        font-size: 22px;
+    } /* smaller heading */
 
-  .mall__layout {
-    grid-template-columns: 1fr;                 /* poster above, carousel below */
-    gap: 18px;
-  }
+    .mall__layout {
+        grid-template-columns: 1fr; /* poster above, carousel below */
+        gap: 18px;
+    }
 
-  .mall__poster {
-    display: none;                             /* allow full width poster */
-  }
-   .brand-card {
-    transform: scale(0.9);
-  }
+    .mall__poster {
+        display: none; /* allow full width poster */
+    }
+    .brand-card {
+        transform: scale(0.9);
+    }
 
-  /* keep 4 brands per row inside each page on tablet */
-  .mall__grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
+    /* keep 4 brands per row inside each page on tablet */
+    .mall__grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
 
-  /* place nav buttons at sides (centered vertically) on tablet */
-  .mall-nav {
-    bottom: auto;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-  }
-  .mall-nav.left  { left: 10px;  transform: translateY(-50%); }
-  .mall-nav.right { right: 10px; transform: translateY(-50%); }
-  .mall__dots { margin-top: 18px; }
+    /* place nav buttons at sides (centered vertically) on tablet */
+    .mall-nav {
+        bottom: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+    }
+    .mall-nav.left {
+        left: 10px;
+        transform: translateY(-50%);
+    }
+    .mall-nav.right {
+        right: 10px;
+        transform: translateY(-50%);
+    }
+    .mall__dots {
+        margin-top: 18px;
+    }
 }
 
 /* Mobile (<= 768px): tighter grid, hide poster for space */
 @media (max-width: 768px) {
-  .mall h2 { font-size: 20px; }
+    .mall h2 {
+        font-size: 20px;
+    }
 
-  .mall__poster { display: none; }              /* hide poster on mobile */
+    .mall__poster {
+        display: none;
+    } /* hide poster on mobile */
 
-  .mall__grid {
-    grid-template-columns: repeat(3, 1fr);      /* 3 per row */
-    gap: 14px;
-  }
+    .mall__grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 per row */
+        gap: 14px;
+    }
 
-  .brand-chip {
-    width: 84%;
-    font-size: 13px;
-    padding: 7px 10px;
-  }
+    .brand-chip {
+        width: 84%;
+        font-size: 13px;
+        padding: 7px 10px;
+    }
 
-  /* slightly smaller dots/buttons spacing */
-  .mall__dots { margin-top: 16px; }
+    /* slightly smaller dots/buttons spacing */
+    .mall__dots {
+        margin-top: 16px;
+    }
 }
 
 /* Small mobile (<= 520px): 2 per row, compact chips */
 @media (max-width: 520px) {
-  .mall h2 { font-size: 18px; }
+    .mall h2 {
+        font-size: 18px;
+    }
 
-  .mall__grid {
-    grid-template-columns: repeat(2, 1fr);      /* 2 per row */
-    gap: 12px;
-  }
+    .mall__grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 per row */
+        gap: 12px;
+    }
 
-  .brand-chip {
-    width: 88%;
-    font-size: 12px;
-    padding: 6px 9px;
-  }
+    .brand-chip {
+        width: 88%;
+        font-size: 12px;
+        padding: 6px 9px;
+    }
 
-  /* optional: reduce shadows for performance on tiny devices */
-  .mall__poster,
-  .brand-card { box-shadow: 0 6px 14px rgba(0,0,0,.08); }
+    /* optional: reduce shadows for performance on tiny devices */
+    .mall__poster,
+    .brand-card {
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    }
 }

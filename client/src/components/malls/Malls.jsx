@@ -4,6 +4,7 @@ import poster_sale from "../../assets/malls_imgs/poster_sale.jpg";
 import locknlock from "../../assets/malls_imgs/locknlock.jpg"; // fallback image
 import { apiUtils } from "../../utils/newRequest";
 import { getImageUrl } from "../../utils/imageUrl";
+import { Link } from "react-router-dom";
 
 export default function Malls() {
     const [vendors, setVendors] = useState([]);
@@ -61,7 +62,8 @@ export default function Malls() {
                         const avatarSrc = getImageUrl(b?.avatar);
 
                         return (
-                            <article
+                            <Link
+                                to={ `/vendor/${b._id}` }
                                 className={styles["brand-card"]}
                                 key={b?._id || displayName}
                             >
@@ -78,7 +80,7 @@ export default function Malls() {
                                 <div className={styles["brand-chip"]}>
                                     {displayName}
                                 </div>
-                            </article>
+                            </Link>
                         );
                     })}
                 </div>
