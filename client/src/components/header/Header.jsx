@@ -23,8 +23,9 @@ export default function Header() {
         try {
             // clear cookie on server (adjust path if your route differs)
             await apiUtils.post("/auth/logout");
-        } catch (_) {
+        } catch (e) {
             // ignore; we'll still clear client state
+            console.log(e)
         } finally {
             dispatch(logout());
             navigate("/"); // optional

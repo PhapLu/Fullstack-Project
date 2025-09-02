@@ -1,6 +1,6 @@
 
 .header {
-  padding: 0 4%;
+  padding: 10px 4%;
   background: var(--bg-color);
   position: sticky;
   top: 0;
@@ -163,7 +163,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 6px 10px;
 }
 
 /* link bọc avatar + tên */
@@ -173,13 +172,8 @@
   gap: 10px;
   text-decoration: none;          /* bỏ gạch chân */
   color: var(--text-color, #253d4e);
-  padding: 6px 8px;
   border-radius: 10px;
   transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.userLink:hover {
-  background: rgba(0,0,0,0.04);
 }
 
 .userLink:focus-visible {
@@ -188,8 +182,8 @@
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--border-color);
@@ -202,12 +196,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--text-color);
+  transition: 0.15s;
+}
+
+.userName:hover {
+  color: #d4d4d4;
 }
 
 .logoutBtn {          
-  padding: 6px 10px;
-  border-radius: 7px;
-  border: 1px solid var(--border-color);
   color: var(--text-color);
   font-weight: 600;
   cursor: pointer;
@@ -215,7 +211,7 @@
 }
 
 .logoutBtn:hover {
-  border-color: var(--primary-color, #007bff);
+  color: #d4d4d4 ;
 }
 
 .logoutBtn:active {
