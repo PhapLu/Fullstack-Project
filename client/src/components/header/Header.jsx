@@ -119,7 +119,7 @@ export default function Header() {
                                     type="button"
                                     className={styles.menuItem}
                                     role="menuitem"
-                                    onClick={() => navigate("/vendor/dashboard")}
+                                    onClick={() => navigate("/vendordashboard")}
                                 >
                                     <FontAwesomeIcon icon={["fas", "gauge"]} className={styles.menuIcon} />
                                     <span>Vendor Dashboard</span>
@@ -129,7 +129,7 @@ export default function Header() {
                                     type="button"
                                     className={styles.menuItem}
                                     role="menuitem"
-                                    onClick={() => navigate(`/user/${user?._id}/orders`)}
+                                    onClick={() => navigate(`/user/${user?._id}/order-history`)}
                                 >
                                     <FontAwesomeIcon icon={["fas", "receipt"]} className={styles.menuIcon} />
                                     <span>Order History</span>
@@ -166,10 +166,6 @@ export default function Header() {
                             </div>
                             
                             {/* === /menuBar === */}
-
-                            <button className={styles.logoutBtn} onClick={onLogout}>
-                                Logout
-                            </button>
                         </div>
                     )}
                 </nav>

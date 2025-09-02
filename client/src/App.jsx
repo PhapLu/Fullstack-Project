@@ -58,7 +58,7 @@ const routes = [
                 element: <VendorDashboard />,
             },
             {
-                path: "/order-history",
+                path: "order-history",
                 element: <OrdersLayout />,
             },
 			{

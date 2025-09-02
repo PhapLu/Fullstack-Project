@@ -19,8 +19,8 @@ export default function ProductCard({ p, onDelete }) {
   const stock = p.inventory?.stock ?? p.stock ?? 0;
 
   // optional rating
-  const ratingValue = p.rating?.average ?? p.reviews?.avg ?? p.rating ?? null;
-  const ratingCount = p.rating?.count ?? p.reviews?.count ?? null;
+  // const ratingValue = p.rating?.average ?? p.reviews?.avg ?? p.rating ?? null;
+  // const ratingCount = p.rating?.count ?? p.reviews?.count ?? null;
 
   return (
     <article className={styles.card}>
@@ -64,7 +64,7 @@ export default function ProductCard({ p, onDelete }) {
         </div>
 
         {/* Block 3: Rating  */}
-        <div className={styles.ratingRow}>
+        {/* <div className={styles.ratingRow}>
           <a className={styles.ratingLink} href={`/product/${id}#reviews`}>
             {ratingCount
               ? `${ratingCount} reviews`
@@ -72,7 +72,7 @@ export default function ProductCard({ p, onDelete }) {
               ? `Rating: ${ratingValue}/5`
               : "Rating →"}
           </a>
-        </div>
+        </div> */}
       </div>
     </article>
   );

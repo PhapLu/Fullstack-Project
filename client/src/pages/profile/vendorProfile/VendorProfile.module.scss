@@ -10,8 +10,8 @@
     align-items: center;
     gap: 28px;
     padding: 24px 28px;
+    border: 1px solid #d3e2f8;
     background: var(--card);
-    border: 1px solid var(--border-color);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
 }
@@ -228,11 +228,6 @@
 /* ===== Section + Grid ===== */
 .section {
     margin-top: 26px;
-    background: var(--card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 18px;
-    box-shadow: var(--shadow);
 }
 
 .grid {
@@ -243,9 +238,10 @@
 
 /* ===== Card ===== */
 .card {
+    box-shadow: var(--shadow);
     border: 1px solid var(--border-color);
     background: var(--surface);
-    border-radius: 14px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -305,7 +301,6 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    min-height: 84px;
 }
 
 .title {
@@ -318,7 +313,6 @@
     color: var(--muted);
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 .delete-btn {
@@ -343,9 +337,12 @@
 
 /* ===== Profile ===== */
 .profile-card {
+    display: flex;
+    align-items: center;
     background: var(--surface);
-    border-radius: 8px;
-    padding: 6px;
+    border: 1px solid #d3e2f8 ;
+    border-radius: 16px;
+    padding: 8px 12px;
     box-shadow: var(--shadow);
     position: relative;
 }
@@ -654,21 +651,21 @@
 
 /* rating */
 /* Block 3 */
-.ratingRow {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: auto;
-    min-height: 28px;
-}
+// .ratingRow {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-end;
+//     margin-top: auto;
+//     min-height: 28px;
+// }
 
-.ratingLink {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--primary-color);
-    text-decoration: none;
-}
+// .ratingLink {
+//     font-size: 12px;
+//     font-weight: 600;
+//     color: var(--primary-color);
+//     text-decoration: none;
+// }
 
-.ratingLink:hover {
-    text-decoration: underline;
-}
+// .ratingLink:hover {
+//     text-decoration: underline;
+// }
