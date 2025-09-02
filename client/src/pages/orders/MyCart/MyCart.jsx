@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../../store/cart/CartContext.jsx";
 import { vnd } from "../../../utils/currency.js";
 import styles from "./MyCart.module.scss"; // switched to CSS module
 
 export default function MyCart() {
+    const navigate = useNavigate()
     const { items, setQty, removeItem, clear, subtotal, addItem } = useCart();
     const [coupon, setCoupon] = useState("");
 
@@ -192,8 +193,7 @@ export default function MyCart() {
                         <button
                             className="btn btn-primary w-100 mt-3"
                             onClick={() => {
-                                window.location.href =
-                                    "https://example.com/checkout";
+                                navigate(`/checkout`)
                             }}
                         >
                             Proceed to checkout
