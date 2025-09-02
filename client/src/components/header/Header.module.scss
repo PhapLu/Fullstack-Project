@@ -4,7 +4,7 @@
   background: var(--bg-color);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 5000;
   font-family: 'Poppins', sans-serif;
   border-bottom: 1px solid var(--border-color);
 }
@@ -217,6 +217,121 @@
 .logoutBtn:active {
   transform: translateY(1px);
 }
+
+/* ==== user dropdown ==== */
+.userBox {
+  position: relative; 
+}
+
+.menuBar {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 60px;
+  width: 300px;
+  background: var(--surface);    
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 8px 0;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px) scale(0.98);
+  transition: opacity .18s ease, transform .18s ease, visibility .3s;
+}
+
+.userBox:hover .menuBar,
+.userBox:focus-within .menuBar {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.menuHeader {
+  padding: 14px 16px 10px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font-weight: 500;
+}
+
+.menuItem:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.menuIcon {
+  font-size: 22px;
+  line-height: 1;
+  width: 24px;
+  text-align: center;
+  opacity: .95;
+}
+
+.menuDivider {
+  height: 1px;
+  margin: 6px 0;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.menuLogout {
+  color: var(--danger);
+}
+
+.menuTitle {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+.menuEmail {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--muted);
+  word-break: break-all; /* tránh tràn */
+}
+
+.menuFooter {
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.menuTermsLink {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.menuBar::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  background: var(--surface);
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+  transform: rotate(45deg);
+}
+
 
 
 /* ======= RESPONSIVE ======= */

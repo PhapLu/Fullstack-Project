@@ -104,6 +104,69 @@ export default function Header() {
                                 </span>
                             </NavLink>
 
+                            {/* === menuBar === */}
+                            <div className={styles.menuBar} role="menu" aria-label="User menu">
+
+                            <div className={styles.menuHeader}>
+                                <div className={styles.menuTitle}>
+                                    Hi, {user?.fullName || user?.username || "User"}
+                                </div>
+                                {user?.email && <div className={styles.menuEmail}>{user.email}</div>}
+                            </div>
+
+                            {user?.role === "vendor" ? (
+                                <button
+                                    type="button"
+                                    className={styles.menuItem}
+                                    role="menuitem"
+                                    onClick={() => navigate("/vendor/dashboard")}
+                                >
+                                    <FontAwesomeIcon icon={["fas", "gauge"]} className={styles.menuIcon} />
+                                    <span>Vendor Dashboard</span>
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    className={styles.menuItem}
+                                    role="menuitem"
+                                    onClick={() => navigate(`/user/${user?._id}/orders`)}
+                                >
+                                    <FontAwesomeIcon icon={["fas", "receipt"]} className={styles.menuIcon} />
+                                    <span>Order History</span>
+                                </button>
+                            )}
+
+                            <button
+                                type="button"
+                                className={styles.menuItem}
+                                role="menuitem"
+                                onClick={() =>
+                                navigate(`/${user?.role === "vendor" ? "vendor" : "user"}/${user?._id}`)
+                                }
+                            >
+                                <FontAwesomeIcon icon={["fas", "user"]} className={styles.menuIcon} />
+                                <span>Profile</span>
+                            </button>
+
+                            <div className={styles.menuDivider} />
+
+                                <button
+                                    type="button"
+                                    className={`${styles.menuItem} ${styles.menuLogout}`}
+                                    role="menuitem"
+                                    onClick={onLogout}
+                                >
+                                    <FontAwesomeIcon icon={["fas", "right-from-bracket"]} className={styles.menuIcon} />
+                                    <span>Logout</span>
+                                </button>
+                                <div className={styles.menuFooter}>
+                                    <span>© {new Date().getFullYear()} • BlooMart</span>
+                                    <span className={styles.menuTermsLink}> Terms </span>
+                                </div>
+                            </div>
+                            
+                            {/* === /menuBar === */}
+
                             <button className={styles.logoutBtn} onClick={onLogout}>
                                 Logout
                             </button>
