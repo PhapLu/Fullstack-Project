@@ -10,6 +10,7 @@ import styles from "./Header.module.scss"; // switched to CSS module
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../store/slices/authSlices";
 import { apiUtils } from "../../utils/newRequest";
+import { getImageUrl } from "../../utils/imageUrl";
 
 library.add(fas);
 
@@ -94,7 +95,7 @@ export default function Header() {
                             >
                                 <img
                                     className={styles.avatar}
-                                    src={user.avatar || "/uploads/pastal_system_default_avatar.png"}
+                                    src={getImageUrl(user.avatar) || "/uploads/pastal_system_default_avatar.png"}
                                     alt="avatar"
                                 />
                                 <span className={styles.userName}>

@@ -56,18 +56,12 @@ class ProductService {
     static readProduct = async(req) => {
         const { productId } = req.params;
 
-        const product = await Product.findById(productId);
+        const product = await Product.findById(productId)
+            .populate('vendorId', 'vendorProfile.businessName avatar email')
+            .lean();
         if (!product) throw new NotFoundError("Product not found")
         return {
-            product: {
-                title: product.title,
-                id: product._id,
-                name: product.name,
-                price: product.price,
-                image: product.images,
-                description: product.description,
-                vendor: product.vendorId
-            }
+            product
         }
     }
 
