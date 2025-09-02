@@ -1,7 +1,7 @@
 import {
-    createBrowserRouter,
-    RouterProvider,
-    Navigate,
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import Layout from "./pages/layouts/Layout";
 import LandingPage from "./pages/landingPage/LandingPage";
@@ -22,93 +22,92 @@ import AdminOrders from "./pages/admin/AdminOrders.jsx";
 import AdminHubs from "./pages/admin/AdminHubs.jsx";
 import AdminOverview from "./pages/admin/AdminOverview.jsx";
 import AdminProducts from "./pages/admin/AdminProducts.jsx";
-import AdminUsers from "./pages/admin/AdminUsers.jsx"; 
+import AdminUsers from "./pages/admin/AdminUsers.jsx";
 import UserProfile from "./pages/profile/UserProfile/UserProfile";
 import MyCart from "./pages/orders/MyCart/MyCart";
 import ProductDetail from "./pages/product/ProductDetail.jsx";
 
 const routes = [
-    {
-        path: "",
-        element: <Layout withFilter />,
+  {
+    path: "",
+    element: <Layout withFilter />,
+    children: [{ path: "/", element: <LandingPage /> }],
+  },
+  {
+    path: "",
+    element: <Layout />,
+    children: [
+      {
+        path: "/cart",
+        element: <MyCart />,
+      },
+      {
+        path: "/distributionHub/:distributionHubId",
+        element: <DistributionHub />,
+      },
+      {
+        path: "/vendor/:profileId",
+        element: <VendorProfile />,
+      },
+      {
+        path: "/user/:profileId",
+        element: <UserProfile />,
+      },
+      {
+        path: "/vendordashboard",
+        element: <VendorDashboard />,
+      },
+      {
+        path: "/orders",
+        element: <OrdersLayout />,
         children: [
-            { path: "/", element: <LandingPage /> },
-        ]
-    },
-    {
-        path: "",
-        element: <Layout />,
-        children: [
-            {
-                path: "/cart",
-                element: <MyCart />,
-            },
-            {
-                path: "/distributionHub/:distributionHubId",
-                element: <DistributionHub />,
-            },
-            {
-                path: "/vendor/:profileId",
-                element: <VendorProfile />,
-            },
-            {
-                path: "/user/:profileId",
-                element: <UserProfile />,
-            },
-            {
-                path: "/vendordashboard",
-                element: <VendorDashboard />,
-            },
-            {
-                path: "/orders",
-                element: <OrdersLayout />,
-                children: [
-                    { index: true, element: <Navigate to="shipper" replace /> },
+          { path: "success", element: <OrderSuccess /> },
 
-                    { path: "success", element: <OrderSuccess /> },
-
-                    { path: "checkout", element: <CheckoutPage /> },
-                ],
-            },
-            {
-                path: '/admin',
-                element: <AdminLayout />,
-                children: [
-                { index: true, element: <AdminOverview /> },
-                { path: 'users', element: <AdminUsers /> },
-                { path: 'products', element: <AdminProducts /> },
-                { path: 'orders', element: <AdminOrders /> },
-                { path: 'hubs', element: <AdminHubs /> },
-                ],
-            },
-            {
-                path: "/product/:productId",
-                element: <ProductDetail />,
-            },
+          { path: "checkout", element: <CheckoutPage /> },
         ],
-    },
-    {
-        path: "/auth",
-        element: <AuthLayout />,
+      },
+      {
+        path: "/order-success",
+        element: <Navigate to="/orders/success" replace />,
+      },
+      {
+        path: "/admin",
+        element: <AdminLayout />,
         children: [
-            { index: true, element: <Navigate to="signin/customer" replace /> },
-            { path: "signin/:role", element: <SignIn /> },
-            { path: "signup/:role", element: <SignUp /> },
-            { path: "otp", element: <VerifyOtp /> },
+          { index: true, element: <AdminOverview /> },
+          { path: "users", element: <AdminUsers /> },
+          { path: "products", element: <AdminProducts /> },
+          { path: "orders", element: <AdminOrders /> },
+          { path: "hubs", element: <AdminHubs /> },
         ],
-    },
-
+      },
+      {
+        path: "/product/:productId",
+        element: <ProductDetail />,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      { index: true, element: <Navigate to="signin/customer" replace /> },
+      { path: "signin/:role", element: <SignIn /> },
+      { path: "signup/:role", element: <SignUp /> },
+      { path: "otp", element: <VerifyOtp /> },
+    ],
+  },
 ];
 
 const router = createBrowserRouter(routes);
 const queryClient = new QueryClient();
 
 export default function App() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <CartProvider>
-                <RouterProvider router={router} />
-            </CartProvider>
-        </QueryClientProvider>
-    );
+  return (
+    <QueryClientProvider client={queryClient}>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </QueryClientProvider>
+  );
 }
