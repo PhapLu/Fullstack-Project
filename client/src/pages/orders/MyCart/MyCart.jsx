@@ -9,8 +9,8 @@ export default function MyCart() {
     const { items, setQty, removeItem, clear, subtotal, addItem } = useCart();
     const [coupon, setCoupon] = useState("");
 
-    const delivery = items.length ? 30000 : 0;
-    const discount = coupon.trim() ? 50000 : 0;
+    const delivery = items.length ? 2 : 0;
+    const discount = coupon.trim() ? 3 : 0;
     const total = Math.max(0, subtotal + delivery - discount);
 
     return (
@@ -32,7 +32,7 @@ export default function MyCart() {
                                 >
                                     <div className="d-flex gap-3 align-items-center">
                                         <Link
-                                            to={`/products/${p.id}`}
+                                            to={`/product/${p.id}`}
                                             className={styles["product-link"]}
                                             aria-label={`View ${p.name}`}
                                         >
@@ -50,7 +50,7 @@ export default function MyCart() {
 
                                         <div className="flex-grow-1">
                                             <Link
-                                                to={`/products/${p.id}`}
+                                                to={`/product/${p.id}`}
                                                 className={
                                                     styles["product-link"]
                                                 }

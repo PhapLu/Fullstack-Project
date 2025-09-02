@@ -4,8 +4,10 @@ import styles from "./ProductDetail.module.scss";
 import { apiUtils } from "../../utils/newRequest";
 import { getImageUrl } from "../../utils/imageUrl";
 import { Link } from "react-router-dom";
+import { useCart } from "../../store/cart/CartContext";
 
 export default function ProductDetail({ onAddToCart }) {
+    const { addItem } = useCart()
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -53,16 +55,15 @@ export default function ProductDetail({ onAddToCart }) {
         if (!product || adding) return;
         setAdding(true);
         try {
-            const payload = {
-                productId: productId,
-                name: product.name || product.title,
+            await addItem({
+                id: productId,
+                name: product.title || product.name,
                 price: product.price,
+                image: getImageUrl(product.images?.[0] || product.thumbnail),
+                stock: product.stock,            // if you have it
+                classification: product.variant, // if applicable
                 qty,
-                image: product.images?.[0] || product.thumbnail,
-            };
-            if (typeof onAddToCart === "function") onAddToCart(payload);
-            else addToCartLocal(payload);
-
+            });
             setJustAdded(true);
             setTimeout(() => setJustAdded(false), 1600);
         } finally {

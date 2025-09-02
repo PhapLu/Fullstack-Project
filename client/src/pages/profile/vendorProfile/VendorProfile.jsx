@@ -207,7 +207,7 @@ export default function VendorProfile() {
                                 {products?.map((p) => (
                                     <ProductCard
                                         key={p._id || p.id}
-                                        p={p}
+                                        product={p}
                                         onDelete={isOwner ? () => removeProduct(p._id || p.id) : undefined}
                                     />
                                 ))}

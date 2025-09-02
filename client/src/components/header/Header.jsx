@@ -144,7 +144,7 @@ export default function Header() {
                 </div>
 
                 <NavLink
-                    to="/cart"
+                    to={user ? "/cart" : "/auth/signin/customer"}
                     style={{
                         display: "flex",
                         alignItems: "center",
