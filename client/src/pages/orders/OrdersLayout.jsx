@@ -117,7 +117,7 @@ export default function OrdersLayout() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await apiUtils("/order/readOrders"); // Replace with your actual API endpoint
+      const response = await apiUtils("/order/readOrders");
       setOrders(response.data.metadata.orders);
     };
     fetchOrders();
@@ -127,11 +127,8 @@ export default function OrdersLayout() {
     <div className="orders-layout container py-4">
       {/* Navigation */}
       <nav className="orders-nav mb-4 d-flex gap-3">
-        <NavLink to="/orders/success">Order Success</NavLink>
-        <NavLink to="../distributionHub/DistributionHub.jsx">
-          Shipper Orders
-        </NavLink>
         <NavLink to="/orders/checkout">Checkout Orders</NavLink>
+        <NavLink to="/orders/success">Order Success</NavLink>
       </nav>
 
       <h3 className="fw-bold mb-4">My Orders</h3>
@@ -177,7 +174,7 @@ export default function OrdersLayout() {
                   <span>
                     {item.name} × {item.quantity}
                   </span>
-                  <span>₫{item.priceAtPurchase.toLocaleString()}</span>
+                  <span>${item.priceAtPurchase.toLocaleString()}</span>
                 </li>
               ))}
             </ul>
@@ -185,7 +182,7 @@ export default function OrdersLayout() {
             {/* Total */}
             <div className="d-flex justify-content-end mt-2">
               <strong>
-                Total: ₫
+                Total: $
                 {order.items
                   .reduce((sum, i) => sum + i.priceAtPurchase * i.quantity, 0)
                   .toLocaleString()}

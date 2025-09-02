@@ -70,22 +70,30 @@ export default function OrderSuccess() {
 
   return (
     <div className="container py-4">
-      <div className="card shadow-sm mb-3">
-        <div className="card-body d-flex gap-3 align-items-start">
+      <div
+        className="card border-0 shadow-sm mb-3"
+        role="status"
+        aria-live="polite"
+        aria-label="Order placed successfully"
+      >
+        <div className="card-body d-flex align-items-center gap-3 p-4">
           <span
-            className="d-inline-flex align-items-center justify-content-center rounded-circle"
-            style={{ width: 48, height: 48, background: "#E7F5EE" }}
+            className="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0 bg-success-subtle"
+            style={{ width: 72, height: 72 }}
+            aria-hidden="true"
           >
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="11" stroke="#22C55E" />
               <path d="M7 12.5l3.2 3.2L17 9" stroke="#22C55E" strokeWidth="2" />
             </svg>
           </span>
-          <div>
-            <h3 className="mb-1">Order placed successfully</h3>
-            <div className="text-muted small">
+
+          <div className="flex-grow-1">
+            <h2 className="mb-1 fs-1 fs-md-2">Order placed successfully</h2>
+            <div className="mb-0 text-body-secondary fs-6 fs-md-5">
+              {" "}
               Order ID <span className="fw-semibold">{order.id}</span> · Placed
-              at {placedAtStr}
+              at {placedAtStr}{" "}
             </div>
           </div>
         </div>
