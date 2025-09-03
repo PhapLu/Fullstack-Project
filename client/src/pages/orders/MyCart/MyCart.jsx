@@ -3,15 +3,41 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../../store/cart/CartContext.jsx";
 import { vnd } from "../../../utils/currency.js";
 import styles from "./MyCart.module.scss"; // switched to CSS module
+import { encryptState } from "../../../utils/checkoutState.js";
+import { selectUser } from "../../../store/slices/authSlices.js";
+import { useSelector } from "react-redux";
 
 export default function MyCart() {
     const navigate = useNavigate()
     const { items, setQty, removeItem, clear, subtotal, addItem } = useCart();
     const [coupon, setCoupon] = useState("");
-
     const delivery = items.length ? 2 : 0;
     const discount = coupon.trim() ? 3 : 0;
     const total = Math.max(0, subtotal + delivery - discount);
+    const user = useSelector(selectUser);
+
+    const goCheckout = async () => {
+        const payload = {
+            ts: Date.now(),
+            currency: "USD",
+            customer: {
+                name: user?.name ?? "",
+                email: user?.email ?? "",
+                phone: user?.phone ?? "",
+                address: user?.address ?? "",
+                country: user?.country ?? "",
+            },
+            items: items.map(({ id, qty, price, name, image }) => ({ id, qty, price, name, image })),
+            pricing: { subtotal, delivery, discount, total },
+          };
+        try {
+            const token = await encryptState(payload);
+            navigate(`/checkout?state=${encodeURIComponent(token)}`);
+        } catch (e) {
+            console.error("Failed to build checkout state", e);
+            navigate("/checkout"); // graceful fallback
+        }
+    }; 
 
     return (
         <div className="container py-4">
@@ -192,9 +218,7 @@ export default function MyCart() {
                         </div>
                         <button
                             className="btn btn-primary w-100 mt-3"
-                            onClick={() => {
-                                navigate(`/checkout`)
-                            }}
+                            onClick={goCheckout}
                         >
                             Proceed to checkout
                         </button>

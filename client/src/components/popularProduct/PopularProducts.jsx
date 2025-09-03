@@ -30,8 +30,8 @@ export default function PopularProducts() {
                 {/* Link to product:id */}
                 {products.map((p) => (
                     <Link
-                        to={`/product/${p.id}`}
-                        key={p.id}
+                        to={`/product/${p._id}`}
+                        key={p._id}
                         className={styles["pop-card"]}
                     >
                         <article>

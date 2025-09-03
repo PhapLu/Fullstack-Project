@@ -12,10 +12,10 @@ export default function HotDeals() {
     const [hotdealProducts, setHotDealProducts] = useState([]);
 
     useEffect(() => {
-        // Fetch hot deal products from your API
         const fetchHotDealProducts = async () => {
             try {
                 const response = await apiUtils.get('/product/readProducts')
+                console.log(response.data.metadata.products);
                 setHotDealProducts(response.data.metadata.products);
             } catch (error) {
                 console.error("Error fetching hot deal products:", error);
@@ -25,7 +25,6 @@ export default function HotDeals() {
         fetchHotDealProducts();
     }, [])
 
-    // simple countdown (đếm về cuối ngày)
     const [clock, setClock] = useState("--:--:--");
     useEffect(() => {
         const tick = () => {
@@ -76,9 +75,9 @@ export default function HotDeals() {
                 <div className={styles.hotdeals__rail} ref={railRef}>
                     {hotdealProducts.map((p) => (
                         <Link
-                            to={`/product/${p.id}`}
+                            to={`/product/${p._id}`}
                             className={styles["deal-card"]}
-                            key={p.id}
+                            key={p._id}
                         >
                             <article>
                                 <div className={styles["deal-card__thumb"]}>

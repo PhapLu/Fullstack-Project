@@ -84,7 +84,6 @@ class ProductService {
         const userId = req.userId;
 
         const { q, minPrice, maxPrice, mine, page = "1", limit = "12" } = req.query;
-        // If "mine" is requested, check user
 
         let user = null;
         if (mine === "true") {
@@ -112,8 +111,8 @@ class ProductService {
         const [items, total] = await Promise.all([
             Product.aggregate([
                 { $match: filter },
-                { $sample: { size: limitNum } }, // <-- random selection
-                { $project: { _id: 1, name: 1, price: 1, images: 1, description: 1, vendorId: 1 } },
+                { $sample: { size: limitNum } },
+                { $project: { _id: 1, name: 1, title: 1, status: 1, stock: 1,  price: 1, images: 1, description: 1, vendorId: 1 } },
             ]),
             Product.countDocuments(filter),
         ]);
@@ -125,15 +124,7 @@ class ProductService {
                 total,
                 totalPages: Math.ceil(total / limitNum),
             },
-            products: items.map(p => ({
-                title: p.title,
-                id: p._id,
-                name: p.name,
-                price: p.price,
-                images: p.images,
-                description: p.description,
-                vendor: p.vendorId,
-            })),
+            products: items,
         };
     }
       
