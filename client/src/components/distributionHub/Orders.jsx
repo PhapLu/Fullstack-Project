@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { fmt, STATUS_FLOW, labelOf } from "./HubUtil.js";
+import { getImageUrl } from "../../utils/imageUrl";
 
 export default function Orders({
     hub,
@@ -114,57 +115,54 @@ export default function Orders({
             {toast && <div className={styles.toast}>{toast}</div>}
 
             <div className={styles.hub__grid}>
-                {filtered.map((o) => (
-                    <article className={styles["order-card"]} key={o.id}>
+                {filtered.map((order) => (
+                    <article className={styles["order-card"]} key={order.id}>
                         <div className={styles["order-card__top"]}>
                             <div className={styles.route}>
                                 <FaMapMarkerAlt className={styles.pin} />
                                 <div className={styles.route__text}>
-                                    <div className={styles.from}>
-                                        From: <p>{o.from}</p>
-                                    </div>
                                     <div>
-                                        To: <span>{o.to}</span>
+                                        To: <span>{order.deliveryInformationId.address}</span>
                                     </div>
                                 </div>
                             </div>
                             <div className={styles.price}>
                                 <span>Value</span>
                                 <strong>
-                                    {fmt(o.value ?? o.total ?? o.price ?? 0)}
+                                    {fmt(order.pricing.total ?? 0)}
                                 </strong>
                             </div>
                             <div
                                 className={`${styles["status-badge"]} ${
-                                    styles[o.status]
+                                    styles[order.status]
                                 }`}
                             >
-                                {labelOf(o.status)}
+                                {labelOf(order.status)}
                             </div>
                         </div>
 
                         <div className={styles.customer}>
                             <div>
-                                <strong>Customer:</strong> {o.customerName}
+                                <strong>Customer:</strong> {order.deliveryInformationId.name}
                             </div>
                             <div>
-                                <strong>Phone:</strong> {o.customerPhone}
+                                <strong>Phone:</strong> {order.deliveryInformationId.phoneNumber}
                             </div>
                             <div>
-                                <strong>Order #</strong> {o.id}
+                                <strong>Order #</strong> {order._id}
                             </div>
                         </div>
 
                         <ul className={styles.items}>
-                            {(o.items || []).map((it, idx) => (
+                            {(order.items || []).map((item, idx) => (
                                 <li key={idx} className={styles.item}>
-                                    <img src={it.image} alt={it.name} />
+                                    <img src={getImageUrl(item.productId.images[0])} alt={item.name} />
                                     <div className={styles.item__meta}>
                                         <div className={styles.item__name}>
-                                            {it.name}
+                                            {item.title}
                                         </div>
                                         <div className={styles.item__qty}>
-                                            x{it.qty}
+                                            x{item.quantity}
                                         </div>
                                     </div>
                                 </li>
@@ -173,12 +171,12 @@ export default function Orders({
 
                         <div className={styles["order-card__bottom"]}>
                             <div className={styles.when}>
-                                Placed: {new Date(o.placedAt).toLocaleString()}
+                                Placed: {new Date(order.placedAt).toLocaleString()}
                             </div>
                             <div className={styles.actions}>
                                 <button
                                     className={styles.actions_mark}
-                                    onClick={() => onOpenOrder?.(o.id)}
+                                    onClick={() => onOpenOrder?.(order.id)}
                                 >
                                     View detail
                                 </button>
@@ -188,14 +186,14 @@ export default function Orders({
                                         <button
                                             className={styles.actions_mark}
                                             onClick={() => {
-                                                onAdvance?.(o.id);
+                                                onAdvance?.(order.id);
                                                 show(
-                                                    `↪️ Order ${o.id} advanced`
+                                                    `↪️ Order ${order.id} advanced`
                                                 );
                                             }}
                                             disabled={
-                                                o.status === "delivered" ||
-                                                o.status === "cancelled"
+                                                order.status === "delivered" ||
+                                                order.status === "cancelled"
                                             }
                                             title="Advance to next status"
                                         >
@@ -204,24 +202,24 @@ export default function Orders({
                                         <button
                                             className={styles.actions_mark}
                                             onClick={() => {
-                                                onDeliver?.(o.id);
+                                                onDeliver?.(order.id);
                                                 show(
-                                                    `Order ${o.id} marked delivered`
+                                                    `Order ${order.id} marked delivered`
                                                 );
                                             }}
                                             disabled={
-                                                o.status === "delivered" ||
-                                                o.status === "cancelled"
+                                                order.status === "delivered" ||
+                                                order.status === "cancelled"
                                             }
                                         >
                                             Mark delivered
                                         </button>
                                         <button
                                             className={styles.actions_cancel}
-                                            onClick={() => onCancel?.(o.id)}
+                                            onClick={() => onCancel?.(order.id)}
                                             disabled={
-                                                o.status === "delivered" ||
-                                                o.status === "cancelled"
+                                                order.status === "delivered" ||
+                                                order.status === "cancelled"
                                             }
                                         >
                                             Cancel

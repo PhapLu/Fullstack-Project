@@ -50,13 +50,14 @@ class DistributionHubService {
         if (!distributionHub) throw new NotFoundError('DistributionHub not found')
 
         // 2. Return distributionHub orders
-        const orders = await Order.find({ distributionHubId })
-            .populate('customerId', 'fullName avatar')
-            .populate('vendorId', 'fullName avatar')
-            .populate('shipperId', 'fullName avatar')
-            .sort({ placedAt: -1 });
-        distributionHub.orders = orders;
-        distributionHub.ordersCount = orders.length;
+        // const orders = await Order.find({ distributionHubId })
+        //     .populate('customerId', 'fullName avatar')
+        //     .populate('distributionHubId', 'name address')
+        //     .sort({ placedAt: -1 });
+        // distributionHub.orders = orders;
+        // distributionHub.ordersCount = orders.length;
+
+        // console.log(distributionHub)
 
         // 3. Return distributionHub data
         return{
