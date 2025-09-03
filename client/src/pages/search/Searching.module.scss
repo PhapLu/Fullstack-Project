@@ -1,0 +1,266 @@
+/* layout */
+.wrap {
+    --gap: 16px;
+    --border: 1px solid #eee;
+    --radius: 12px;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: var(--gap);
+    align-items: start;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* sidebar */
+.sidebar {
+    position: sticky;
+    top: 12px;
+    background: #fff;
+    border: var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+}
+
+.sidebarTitle {
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.filterList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+        margin-bottom: 8px;
+    }
+
+    button {
+        width: 100%;
+        text-align: left;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: var(--border);
+        background: #fafafa;
+        cursor: pointer;
+    }
+}
+
+.activeBtn {
+    background: #111 !important;
+    color: #fff;
+    border-color: #111 !important;
+}
+
+.sortGroup {
+    margin-top: 12px;
+}
+
+.sortBtns {
+    display: grid;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+/* main */
+.main {
+    min-width: 0;
+}
+
+/* product grid 4 x 6 */
+.grid {
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.card,
+.placeholder {
+    border: var(--border);
+    border-radius: var(--radius);
+    background: #fff;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .04);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 320px;
+}
+
+.thumb {
+    position: relative;
+    padding-top: 75%;
+    border-bottom: var(--border);
+    overflow: hidden;
+
+    img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.noImg {
+    width: 100%;
+    height: 100%;
+    background: #f2f2f2;
+}
+
+.cardBody {
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+}
+
+.title {
+    font-size: 14px;
+    line-height: 1.3;
+    max-height: 2.6em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.priceRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    color: #0c7;
+    font-weight: 700;
+}
+
+.cta {
+    margin-top: auto;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* VENDOR VIEW: horizontal, no columns */
+.vendorRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.vendorCard {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+}
+
+.vendorAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #eee;
+    flex-shrink: 0;
+}
+
+.vendorAvatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vendorName {
+    font-weight: 600;
+}
+
+.vendorEmpty {
+    color: #666;
+}
+
+/* footer */
+.loginMore {
+    margin-top: 18px;
+    padding: 16px;
+    text-align: center;
+    border: var(--border);
+    border-radius: 8px;
+    background: #fafafa;
+    font-weight: 600;
+}
+
+.numericPager {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.navArrow {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: var(--border);
+    background: #fff;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: .4;
+        cursor: not-allowed;
+    }
+}
+
+.pageBtn {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: var(--border);
+    background: #fff;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.currentPage {
+    background: #111;
+    color: #fff;
+    border-color: transparent;
+}
+
+.gap {
+    color: #999;
+    user-select: none;
+}
+
+/* responsive */
+@media (max-width: 1200px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .wrap {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: static;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
