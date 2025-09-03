@@ -10,7 +10,7 @@
 }
 .card{
   border:1px solid var(--border-strong, var(--border-color));
-  border-radius:16px;
+  border-radius:8px;
   padding:14px;
   color: var(--text-color);
   box-shadow: var(--shadow);
@@ -93,23 +93,51 @@
 }
 .tab{
   position:relative; padding:8px 12px; border:1px solid var(--border-color); border-bottom:none;
-  background:var(--surface); border-top-left-radius:10px; border-top-right-radius:10px; cursor:pointer; font-weight:600;
+  background:var(--surface); border-top-left-radius:8px; border-top-right-radius:8px; cursor:pointer; font-weight:600;
   display:flex; align-items:center; gap:6px;
 }
 .active{ background:color-mix(in oklab, var(--primary-color) 6%, var(--bg-color)); border-color:var(--primary-color); color:var(--primary-color); }
-.active::after{
-  content:""; position:absolute; left:8px; right:8px; bottom:-1px; height:3px; background:var(--primary-color); border-radius:3px;
-}
+
 .countChip{
-  display:inline-block; min-width:20px; padding:2px 6px; border-radius:8px; background:var(--border-color); color:var(--text-color); font-size:12px; line-height:1; text-align:center;
+  display:inline-block; min-width:20px; padding:2px 6px; border-radius:8px; background: #e0e0e0; color:var(--text-color); font-size:12px; line-height:1; text-align:center;
 }
 
 /* ===== Table ===== */
-.tableCard{ background:var(--surface); border:1px solid var(--border-color); border-radius:12px; box-shadow:var(--shadow); overflow:auto; }
-.table{ width:100%; border-collapse:collapse; }
-.table th, .table td{ padding:12px; border-bottom:1px solid color-mix(in oklab, var(--border-color) 60%, var(--surface)); text-align:left; color:var(--text); }
-.actions{ display:flex; gap:8px; }
-.linkBtn{ background:transparent; border:1px solid var(--border-color); padding:6px 10px; border-radius:10px; cursor:pointer; color:var(--text-color); }
+.tableCard{ 
+  background:var(--surface); 
+  border:1px solid var(--border-color); 
+  border-radius:8px; 
+  box-shadow:var(--shadow); 
+  overflow:auto; 
+}
+
+.table{ 
+  width:100%; 
+  border-collapse:collapse; 
+}
+
+.table th, .table td{ 
+  padding:12px; 
+  border-bottom:1px solid color-mix(in oklab, var(--border-color) 60%, var(--surface)); 
+  text-align:left; 
+  color:var(--text); 
+}
+
+.actions{ 
+  display:flex; 
+  gap:8px; 
+}
+
+.linkBtn{ 
+  background:transparent; 
+  border:1px solid var(--border-color); 
+  padding:6px 10px; 
+  border-radius:10px; 
+  cursor:pointer; 
+  color:var(--text-color); 
+  text-decoration: none;
+  transition: 0.15s;
+}
 .linkBtn:hover{ border-color:var(--primary-color); color:var(--primary-color); }
 .emptyRow{ text-align:center; padding:28px !important; color:var(--muted); }
 
