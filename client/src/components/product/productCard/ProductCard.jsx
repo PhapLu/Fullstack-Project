@@ -71,7 +71,7 @@ export default function ProductCard({ product, onDelete }) {
                 </div>
 
                 {/* Block 3: Rating  */}
-                <div className={styles.ratingRow}>
+                {/* <div className={styles.ratingRow}>
                     <a
                         className={styles.ratingLink}
                         href={`/product/${id}#reviews`}
@@ -82,7 +82,7 @@ export default function ProductCard({ product, onDelete }) {
                             ? `Rating: ${ratingValue}/5`
                             : "Rating →"}
                     </a>
-                </div>
+                </div> */}
             </div>
         </Link>
     );

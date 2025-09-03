@@ -7,6 +7,7 @@ import cartRoute from "./cart/index.js";
 import conversationRoute from "./conversation/index.js";
 import productRoute from "./product/index.js";
 import reviewRoute from "./review/index.js";
+import deliveryInformationRoute from "./deliveryInformation/index.js";
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use("/v1/api/review", reviewRoute);
 router.use("/v1/api/product", productRoute);
 router.use("/v1/api/conversation", conversationRoute);
 router.use("/v1/api/distributionHub", distributionHubRoute);
+router.use("/v1/api/deliveryInformation", deliveryInformationRoute);
 
 export default router;

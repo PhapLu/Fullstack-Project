@@ -3,13 +3,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { decryptState } from "../../utils/checkoutState.js";
 import { useCart } from "../../store/cart/CartContext.jsx";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../store/slices/authSlices";
+import { apiUtils } from "../../utils/newRequest";
 
 export default function CheckoutPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const { items: cartItems } = useCart(); // fallback if no token
+
     const [items, setItems] = useState([]);
     const [pricing, setPricing] = useState({
         subtotal: 0,
@@ -20,34 +20,98 @@ export default function CheckoutPage() {
     });
     const [meta, setMeta] = useState({ currency: "VND" });
 
-    const reduxUser = useSelector(selectUser);
-    const [customer, setCustomer] = useState({
-        name: reduxUser?.name ?? "",
-        email: reduxUser?.email ?? "",
-        phone: reduxUser?.phone ?? "",
-        address: reduxUser?.address ?? "",
-        country: reduxUser?.country ?? "",
+    // Delivery infos
+    const [deliveryInfos, setDeliveryInfos] = useState([]);
+    const [selectedDeliveryId, setSelectedDeliveryId] = useState(null);
+    const selectedDelivery = useMemo(
+        () =>
+            Array.isArray(deliveryInfos)
+                ? deliveryInfos.find(
+                      (d) => String(d._id) === String(selectedDeliveryId)
+                  ) || null
+                : null,
+        [deliveryInfos, selectedDeliveryId]
+    );
+
+    // Create/delete UI state
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [creating, setCreating] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
+    const [createInputs, setCreateInputs] = useState({
+        name: "",
+        phoneNumber: "",
+        address: "",
+        isDefault: false,
     });
-    const [isEditing, setIsEditing] = useState(false);
+
+    // Create new address
+    const onCreateSubmit = async (e) => {
+        e.preventDefault();
+        console.log(createInputs)
+        if (
+            !createInputs.name.trim() ||
+            !createInputs.phoneNumber.trim() ||
+            !createInputs.address.trim()
+        ) {
+            alert("Vui lòng điền tối thiểu: Họ tên, SĐT, Địa chỉ.");
+            return;
+        }
+        setCreating(true);
+        try {
+            const res = await apiUtils.post(
+                "/deliveryInformation/createDeliveryInformation",
+                createInputs
+            );
+            const created = res?.data || null;
+            await fetchDeliveryInfos(false);
+            if (created?._id) setSelectedDeliveryId(String(created._id));
+            setCreateInputs({
+                name: "",
+                phoneNumber: "",
+                address: "",
+                isDefault: false,
+            });
+            setShowCreateForm(false);
+        } catch (err) {
+            console.error("Create delivery information failed", err);
+            alert(
+                err?.response?.data?.message ||
+                    "Không thể tạo địa chỉ. Thử lại sau."
+            );
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    // Delete address
+    const onDelete = async (id) => {
+        if (!window.confirm("Xóa địa chỉ này?")) return;
+        setDeletingId(String(id));
+        try {
+            await apiUtils.delete(
+                `/deliveryInformation/deleteDeliveryInformation/${id}`
+            );
+            await fetchDeliveryInfos(false);
+        } catch (err) {
+            console.error("Delete delivery information failed", err);
+            alert(
+                err?.response?.data?.message ||
+                    "Không thể xóa địa chỉ. Thử lại sau."
+            );
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    const [isEditing] = useState(false); // keeps UI parity for now
     const [payment, setPayment] = useState("cash");
 
-    useEffect(() => {
-        setCustomer((prev) => ({
-            name: prev.name || reduxUser?.name || "",
-            email: prev.email || reduxUser?.email || "",
-            phone: prev.phone || reduxUser?.phone || "",
-            address: prev.address || reduxUser?.address || "",
-            country: prev.country || reduxUser?.country || "",
-        }));
-    }, [reduxUser]);
-
-    // parse & decrypt ?state
+    // parse & decrypt ?state (fallback to cart)
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const token = params.get("state");
         (async () => {
             if (!token) {
-                // fallback: hydrate from current cart
                 const fallbackItems = cartItems.map((i) => ({
                     productId: i.id,
                     name: i.name,
@@ -64,6 +128,7 @@ export default function CheckoutPage() {
                 const voucher = 0;
                 const total =
                     subtotal + shippingFee - shippingDiscount - voucher;
+
                 setItems(fallbackItems);
                 setPricing({
                     subtotal,
@@ -76,7 +141,6 @@ export default function CheckoutPage() {
             }
             try {
                 const data = await decryptState(token);
-                // normalize to the structure this UI expects
                 const normItems = (data.items || []).map((it) => ({
                     productId: it.id,
                     name: it.name,
@@ -96,46 +160,94 @@ export default function CheckoutPage() {
                     shippingFee: p.delivery ?? 16500,
                     shippingDiscount: p.discount ?? 0,
                     voucher: p.voucher ?? 0,
-                    total: p.total ?? 0,
+                    total:
+                        p.total ??
+                        (p.subtotal ??
+                            normItems.reduce(
+                                (s, i) => s + i.priceAtPurchase * i.quantity,
+                                0
+                            )) +
+                            (p.delivery ?? 16500) -
+                            (p.discount ?? 0) -
+                            (p.voucher ?? 0),
                 });
                 setMeta({ currency: data.currency || "VND", ts: data.ts });
-                const tokenCustomer = data.customer || {};
-                setCustomer({
-                    name: tokenCustomer.name ?? reduxUser?.name ?? "",
-                    email: tokenCustomer.email ?? reduxUser?.email ?? "",
-                    phone: tokenCustomer.phone ?? reduxUser?.phone ?? "",
-                    address: tokenCustomer.address ?? reduxUser?.address ?? "",
-                    country: tokenCustomer.country ?? reduxUser?.country ?? "",
-                });
+
+                if (data.deliveryInformationId) {
+                    setSelectedDeliveryId(String(data.deliveryInformationId));
+                }
             } catch (e) {
                 console.error("Bad checkout token, falling back to cart", e);
                 navigate("/cart");
             }
         })();
-    }, [location.search]);
+    }, [location.search, cartItems, navigate]);
+
+    // Fetch delivery infos
+    const fetchDeliveryInfos = async (preserveSelection = true) => {
+        try {
+            const res = await apiUtils.get(
+                "/deliveryInformation/readDeliveryInformations"
+            );
+            const list = res?.data?.metadata?.deliveryInformations || [];
+            const arr = Array.isArray(list) ? list : [];
+            console.log(arr)
+            setDeliveryInfos(arr);
+
+            if (arr.length > 0) {
+                if (
+                    preserveSelection &&
+                    selectedDeliveryId &&
+                    arr.some(
+                        (d) => String(d._id) === String(selectedDeliveryId)
+                    )
+                ) {
+                    return;
+                }
+                const defaultItem = arr.find((d) => d.isDefault) || arr[0];
+                setSelectedDeliveryId(String(defaultItem._id));
+            }
+        } catch (err) {
+            console.error("Failed to load delivery informations", err);
+            setDeliveryInfos([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchDeliveryInfos();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const formatUSD = (n) => n.toLocaleString("en-US");
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCustomer((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handlePurchase = () => {
-        if (
-            !customer.name.trim() ||
-            !customer.phone.trim() ||
-            !customer.address.trim()
-        ) {
-            return alert("Please fill in complete delivery information.");
+    const handlePurchase = async () => {
+        if (!selectedDelivery) {
+            return alert("Please choose a delivery address.");
         }
-        if (isEditing) {
-            return alert("You are editing, click Save before purchasing.");
+        let orderId = null;
+        try {
+            const response = await apiUtils.post("/orders/createOrder", {
+                deliveryInformation: selectedDelivery,
+                payment,
+                items,
+                pricing,
+            });
+            if(!response?.data?.metadata.order){
+                throw new Error("Order creation failed");
+            } else{
+                console.log("Order created:", response.data.metadata.order);
+                orderId = response.data.metadata.order._id;
+            }
+        } catch (error) {
+            console.error("Order creation failed", error);
+            return alert(
+                error?.data?.message || "Order creation failed. Please try again."
+            );
         }
-
         navigate(`/payment-success?id=temp_${Date.now()}`, {
             state: {
-                customer,
+                orderId,
+                deliveryInformation: selectedDelivery,
                 payment,
                 items,
                 pricing,
@@ -148,72 +260,180 @@ export default function CheckoutPage() {
         <div className="container py-4">
             <h3 className="fw-bold mb-4">Checkout</h3>
 
-            {/* Customer Info */}
+            {/* Delivery Informations */}
             <div className="card mb-3 shadow-sm">
                 <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-start mb-2">
-                        <h4 className="fw-bold mb-0">Customer Information</h4>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h4 className="fw-bold mb-0">Delivery Address</h4>
                         <button
-                            className="btn btn-sm btn-link text-primary p-0"
-                            onClick={() => setIsEditing((v) => !v)}
-                            style={{ fontSize: "12px" }}
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => setShowCreateForm((v) => !v)}
                         >
-                            {isEditing ? "Save" : "Edit"}
+                            {showCreateForm ? "Close" : "+ New Address"}
                         </button>
                     </div>
 
-                    {!isEditing ? (
-                        <div className="lh-lg fs-7">
-                            {" "}
-                            <div className="mb-2">
-                                <span className="fw-bold me-2">Name:</span>
-                                <span>{customer?.name}</span>
+                    {showCreateForm && (
+                        <form
+                            onSubmit={onCreateSubmit}
+                            className="border rounded p-3 mb-3"
+                        >
+                            <div className="row g-3">
+                                <div className="col-md-6">
+                                    <label className="form-label fs-7 fw-semibold">
+                                        Full name *
+                                    </label>
+                                    <input
+                                        className="form-control form-control-sm"
+                                        value={createInputs.name}
+                                        onChange={(e) =>
+                                            setCreateInputs({
+                                                ...createInputs,
+                                                name: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label fs-7 fw-semibold">
+                                        Phone *
+                                    </label>
+                                    <input
+                                        className="form-control form-control-sm"
+                                        value={createInputs.phoneNumber}
+                                        onChange={(e) =>
+                                            setCreateInputs({
+                                                ...createInputs,
+                                                phoneNumber: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="col-12">
+                                    <label className="form-label fs-7 fw-semibold">
+                                        Address *
+                                    </label>
+                                    <input
+                                        className="form-control form-control-sm"
+                                        value={createInputs.address}
+                                        onChange={(e) =>
+                                            setCreateInputs({
+                                                ...createInputs,
+                                                address: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="col-12">
+                                    <div className="form-check">
+                                        <input
+                                            id="isDefault"
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            checked={createInputs.isDefault}
+                                            onChange={(e) =>
+                                                setCreateInputs({
+                                                    ...createInputs,
+                                                    isDefault: e.target.checked,
+                                                })
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="isDefault"
+                                        >
+                                            Set as default
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="col-12 d-flex gap-2">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary btn-sm"
+                                        disabled={creating}
+                                    >
+                                        {creating
+                                            ? "Saving..."
+                                            : "Save Address"}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-secondary btn-sm"
+                                        onClick={() => setShowCreateForm(false)}
+                                        disabled={creating}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
                             </div>
-                            <div className="mb-2">
-                                <span className="fw-bold me-2">Phone:</span>
-                                <span>{customer?.phone}</span>
-                            </div>
-                            <div className="mb-0">
-                                <span className="fw-bold me-2">Address:</span>
-                                <span>{customer?.address}</span>
-                            </div>
+                        </form>
+                    )}
+
+                    {deliveryInfos.length === 0 ? (
+                        <div className="alert alert-warning mb-0 fs-7">
+                            You have no saved addresses. Please create one.
                         </div>
                     ) : (
-                        <div className="row g-3">
-                            <div className="col-12 col-md-6">
-                                <label className="form-label fw-semibold fs-7">
-                                    Name
-                                </label>
-                                <input
-                                    name="name"
-                                    className="form-control form-control-lg fs-7"
-                                    value={customer?.name}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="col-12 col-md-6">
-                                <label className="form-label fw-semibold fs-7">
-                                    Phone
-                                </label>
-                                <input
-                                    name="phone"
-                                    className="form-control form-control-lg fs-7"
-                                    value={customer.phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="col-12">
-                                <label className="form-label fw-semibold fs-7">
-                                    Address
-                                </label>
-                                <textarea
-                                    name="address"
-                                    rows={3}
-                                    className="form-control form-control-lg fs-7"
-                                    value={customer.address}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                        <div className="list-group">
+                            {deliveryInfos.map((d) => (
+                                <div
+                                    key={d._id}
+                                    className="list-group-item d-flex align-items-start justify-content-between gap-3"
+                                >
+                                    <label
+                                        htmlFor={`delivery-${d._id}`}
+                                        className="d-flex gap-3 flex-grow-1"
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <input
+                                            type="radio"
+                                            id={`delivery-${d._id}`}
+                                            className="form-check-input mt-1"
+                                            name="delivery"
+                                            value={String(d._id)}
+                                            checked={
+                                                String(selectedDeliveryId) ===
+                                                String(d._id)
+                                            }
+                                            onChange={(e) =>
+                                                setSelectedDeliveryId(
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                        <div>
+                                            <div className="fw-bold">
+                                                {d.name || d.name}{" "}
+                                                {d.isDefault && (
+                                                    <span className="badge bg-secondary ms-2">
+                                                        Default
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="text-muted fs-7">
+                                                {d.phoneNumber}
+                                            </div>
+                                            <div className="fs-7 mt-1">
+                                                {d.address || ""}
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-danger"
+                                        onClick={() => onDelete(d._id)}
+                                        disabled={deletingId === String(d._id)}
+                                    >
+                                        {deletingId === String(d._id)
+                                            ? "Deleting..."
+                                            : "Delete"}
+                                    </button>
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
@@ -321,7 +541,7 @@ export default function CheckoutPage() {
                     className="btn btn-primary px-4 py-3 fw-bold rounded-pill"
                     style={{ fontSize: "12px" }}
                     onClick={handlePurchase}
-                    disabled={isEditing}
+                    disabled={isEditing || deliveryInfos.length === 0}
                 >
                     Purchase
                 </button>

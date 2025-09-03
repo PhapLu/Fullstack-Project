@@ -1,48 +1,22 @@
 // src/components/OrderSuccess.jsx
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
-const ordersMock = [
-    {
-        id: "order_001",
-        customerId: "user_101",
-        vendorId: "vendor_201",
-        distributionHubId: "hub_301",
-        shipperId: "shipper_401",
-        status: "placed",
-        shippingAddress: "123 Nguyen Trai Street, District 5, Ho Chi Minh City",
-        placedAt: "2025-08-20T09:30:00Z",
-        deliveredAt: null,
-        items: [
-            {
-                productId: "prod_001",
-                name: "Colored Contact Lenses",
-                quantity: 2,
-                priceAtPurchase: 159000,
-            },
-            {
-                productId: "prod_002",
-                name: "Lens Cleaning Solution",
-                quantity: 1,
-                priceAtPurchase: 99000,
-            },
-        ],
-    },
-    // ... giữ nguyên các order khác
-];
+import { selectUser } from "../../store/slices/authSlices";
 
 export default function OrderSuccess() {
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state || {};
-    const fallbackOrder = ordersMock[0];
+
+    const user = useSelector(selectUser)
+    console.log(user)
 
     const order = {
-        id: state.id || fallbackOrder.id,
-        items: state.items || fallbackOrder.items,
-        placedAt: state.placedAt || fallbackOrder.placedAt,
-        shippingAddress:
-            state.customer?.address || fallbackOrder.shippingAddress,
+        orderId: state.orderId,
+        items: state.items,
+        placedAt: state.placedAt,
+        deliveryInformation: state.deliveryInformation,
         customer: state.customer,
         payment: state.payment || "cash",
         pricing: state.pricing,
@@ -104,8 +78,6 @@ export default function OrderSuccess() {
                         </h2>
                         <div className="mb-0 text-body-secondary fs-6 fs-md-5">
                             {" "}
-                            Order ID{" "}
-                            <span className="fw-semibold">{order.id}</span> ·
                             Placed at {placedAtStr}{" "}
                         </div>
                     </div>
@@ -116,14 +88,14 @@ export default function OrderSuccess() {
                 <div className="col-12 col-lg-5">
                     <div className="card shadow-sm mb-3">
                         <div className="card-body">
-                            <h4 className="fw-bold mb-2">Shipping Address</h4>
-                            {order.customer && (
+                            <h4 className="fw-bold mb-2">Delivery Information</h4>
+                            {order.deliveryInformation && (
                                 <div className="text-muted small">
-                                    {order.customer.name} ·{" "}
-                                    {order.customer.phone}
+                                    {order.deliveryInformation.name} ·{" "}
+                                    {order.deliveryInformation.phoneNumber}
                                 </div>
                             )}
-                            <div>{order.shippingAddress}</div>
+                            <div>{order.deliveryInformation.address}</div>
                         </div>
                     </div>
 
@@ -202,13 +174,13 @@ export default function OrderSuccess() {
                             className="btn btn-outline-secondary rounded-pill px-4"
                             style={{ fontSize: "12px" }}
                             onClick={() =>
-                                navigate("../landingPage/LandingPage.jsx")
+                                navigate("/")
                             }
                         >
                             Continue shopping
                         </button>
                         <Link
-                            to="/orders"
+                            to={`/user/${user?._id}/order-history`}
                             className="btn btn-primary rounded-pill px-4"
                             style={{ fontSize: "12px" }}
                         >

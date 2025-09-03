@@ -36,7 +36,7 @@ export default function Header() {
             <div className={styles.header__top}>
                 <nav className={styles.header__links}>
                     {
-                        (!user || (user && user.role == 'customer')) && (
+                        !user && (
                             <>
                                 <Link to="/auth/signup/vendor">Become a vendor</Link>
                                 <span>│</span>
