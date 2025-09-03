@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./UserProfile.module.scss";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../store/slices/authSlices";
 import { apiUtils } from "../../../utils/newRequest";
 import Avatar from "../../../components/profile/avatar/Avatar";
 import { getImageUrl } from "../../../utils/imageUrl";
+import { useParams } from "react-router-dom";
 
 const PHONE_RE = /^\d{0,10}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function UserProfile() {
     const user = useSelector(selectUser);
+    const {profileId} = useParams()
     const [errors, setErrors] = useState({});
     const [previewAvatar, setPreviewAvatar] = useState(null);
     const [avatarFile, setAvatarFile] = useState(null);
