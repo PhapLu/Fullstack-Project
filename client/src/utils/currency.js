@@ -1,7 +1,7 @@
-export const vnd = (n) =>
-    new Intl.NumberFormat("vi-VN", {
+export const usd = (n) =>
+    new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "VND",
+      currency: "USD",
       maximumFractionDigits: 0,
     }).format(Number(n || 0));
   
