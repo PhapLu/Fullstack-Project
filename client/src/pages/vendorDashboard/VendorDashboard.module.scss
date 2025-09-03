@@ -9,11 +9,10 @@
   margin-bottom:16px;
 }
 .card{
-  background:var(--primary-color);
   border:1px solid var(--border-strong, var(--border-color));
-  border-radius:16px;
+  border-radius:8px;
   padding:14px;
-  color: #e7e7ea;
+  color: var(--text-color);
   box-shadow: var(--shadow);
 }
 .cardFill{
@@ -28,51 +27,64 @@
 .kv:last-child{ border-bottom:none; }
 
 /* Wallet */
-.range{ display:flex; align-items:center; gap:8px; margin:6px 0 10px; color:var(--on-dark-2, #c9cfdb); flex-wrap:wrap; }
+.range{ 
+  display:flex; 
+  align-items:center; 
+  gap:8px; 
+  margin:6px 0 10px; 
+  flex-wrap:wrap; 
+}
+
 .rangeBtn{
-  background:var(--surface-800, #0f1116);
+  background: color-mix(in oklab, var(--primary-color) 14%, var(--surface));
   border:1px solid var(--border-strong, var(--border-color));
-  color:var(--on-dark-2, #c9cfdb);
+  color:var(--text-color);
   padding:4px 10px;
   border-radius:10px;
   cursor:pointer;
 }
-.rangeActive{ border-color:var(--primary-color); color:color-mix(in oklab, var(--primary-color) 20%, #fff); }
+
 .chipBtn{
   margin-left:auto;
-  background:var(--surface-800, #0f1116);
-  border:1px dashed var(--border-strong, var(--border-color));
-  color:color-mix(in oklab, var(--primary-color) 25%, #cfe2ff);
+  background: color-mix(in oklab, var(--primary-color) 14%, var(--surface));
+  border:1px solid color-mix(in oklab, var(--primary-color) 50%, var(--surface));
+  color: var(--hover-btn);
   padding:4px 10px;
   border-radius:999px;
   cursor:pointer;
 }
-.chipActive{ border-color:var(--primary-color); color:color-mix(in oklab, var(--primary-color) 20%, #fff); }
+.chipActive{ 
+  color: #fff;
+  background: var(--hover-btn) 
+}
 .walletList{ list-style:none; padding:0; margin:0; display:grid; gap:8px; }
 .walletList li{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
 .input{
-  background:var(--surface-800, #0f1116);
-  border:1px solid var(--border-strong, var(--border-color));
-  color:var(--on-dark, #e7e7ea);
+
+  border:1px solid var(--border-color);
+  color:var(--text-color);
   padding:6px 10px; border-radius:8px; width:220px;
 }
 
 .iconBtn{
-  background:var(--surface-800, #0f1116);
+  background: color-mix(in oklab, var(--primary-color) 14%, var(--surface));
   color:color-mix(in oklab, var(--primary-color) 40%, var(--text-color));
-  padding:6px 10px; border-radius:10px; cursor:pointer;
+  padding:6px 10px; 
+  border-radius:10px; 
+  cursor:pointer;
+  transition: 0.15s;
 }
-.iconBtn:hover{ border-color:var(--hover-btn); color:color-mix(in oklab, var(--primary-color) 15%, #fff); }
+.iconBtn:hover{ color: #fff; background-color: var(--hover-btn);}
 .inlineActions{ display:flex; gap:8px; }
 .btn{ background:var(--primary-color); color:#fff; border:none; padding:6px 12px; border-radius:10px; cursor:pointer; }
 .ghost{ background:transparent; color:color-mix(in oklab, var(--primary-color) 40%, var(--text-color)); border:1px solid var(--border-strong, var(--border-color)); }
 .ghost:hover{ border-color:var(--primary-color); }
 
 /* Pie area */
-.pieArea{ background:var(--surface-800, #0f1116); border:1px solid var(--border-strong, var(--border-color)); border-radius:12px; padding:10px; }
+.pieArea{ border:1px solid var(--border-color); border-radius:12px; padding:10px; }
 .pieWrap{ display:flex; gap:14px; align-items:center; }
 .pieLegend{ list-style:none; padding:0; margin:0; }
-.pieLegend li{ display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:13px; color:var(--on-dark-2, #c9cfdb); }
+.pieLegend li{ display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:13px; color: var(--text-color) }
 .pieLegend li span{ width:12px; height:12px; border-radius:3px; display:inline-block; }
 
 /* ===== Tabs ===== */
@@ -81,23 +93,51 @@
 }
 .tab{
   position:relative; padding:8px 12px; border:1px solid var(--border-color); border-bottom:none;
-  background:var(--surface); border-top-left-radius:10px; border-top-right-radius:10px; cursor:pointer; font-weight:600;
+  background:var(--surface); border-top-left-radius:8px; border-top-right-radius:8px; cursor:pointer; font-weight:600;
   display:flex; align-items:center; gap:6px;
 }
 .active{ background:color-mix(in oklab, var(--primary-color) 6%, var(--bg-color)); border-color:var(--primary-color); color:var(--primary-color); }
-.active::after{
-  content:""; position:absolute; left:8px; right:8px; bottom:-1px; height:3px; background:var(--primary-color); border-radius:3px;
-}
+
 .countChip{
-  display:inline-block; min-width:20px; padding:2px 6px; border-radius:8px; background:var(--border-color); color:var(--text-color); font-size:12px; line-height:1; text-align:center;
+  display:inline-block; min-width:20px; padding:2px 6px; border-radius:8px; background: #e0e0e0; color:var(--text-color); font-size:12px; line-height:1; text-align:center;
 }
 
 /* ===== Table ===== */
-.tableCard{ background:var(--surface); border:1px solid var(--border-color); border-radius:12px; box-shadow:var(--shadow); overflow:auto; }
-.table{ width:100%; border-collapse:collapse; }
-.table th, .table td{ padding:12px; border-bottom:1px solid color-mix(in oklab, var(--border-color) 60%, var(--surface)); text-align:left; color:var(--text); }
-.actions{ display:flex; gap:8px; }
-.linkBtn{ background:transparent; border:1px solid var(--border-color); padding:6px 10px; border-radius:10px; cursor:pointer; color:var(--text-color); }
+.tableCard{ 
+  background:var(--surface); 
+  border:1px solid var(--border-color); 
+  border-radius:8px; 
+  box-shadow:var(--shadow); 
+  overflow:auto; 
+}
+
+.table{ 
+  width:100%; 
+  border-collapse:collapse; 
+}
+
+.table th, .table td{ 
+  padding:12px; 
+  border-bottom:1px solid color-mix(in oklab, var(--border-color) 60%, var(--surface)); 
+  text-align:left; 
+  color:var(--text); 
+}
+
+.actions{ 
+  display:flex; 
+  gap:8px; 
+}
+
+.linkBtn{ 
+  background:transparent; 
+  border:1px solid var(--border-color); 
+  padding:6px 10px; 
+  border-radius:10px; 
+  cursor:pointer; 
+  color:var(--text-color); 
+  text-decoration: none;
+  transition: 0.15s;
+}
 .linkBtn:hover{ border-color:var(--primary-color); color:var(--primary-color); }
 .emptyRow{ text-align:center; padding:28px !important; color:var(--muted); }
 

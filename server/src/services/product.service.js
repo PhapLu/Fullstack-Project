@@ -40,7 +40,7 @@ class ProductService {
         // 4. Create product
         const product = await Product.create({
             vendorId: userId,
-            title: title.trim(),
+            title: title,
             description: description.trim(),
             price: pPrice,
             stock: pStock,

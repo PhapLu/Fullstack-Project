@@ -21,7 +21,7 @@
   border-radius: 12px;
   overflow:hidden;
   border:1px solid var(--border-color);
-  box-shadow: 0 0 20px rgba(0,0,0,.08); 
+  box-shadow: var(--shadow); 
   display:flex; 
   flex-direction:column;
   transition: transform .25s ease, box-shadow .25s ease;
@@ -72,7 +72,7 @@
 .price-link{
   text-decoration: none;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   font-size: 14px; 
   font-weight: 600; 
   color:#0b74ff;

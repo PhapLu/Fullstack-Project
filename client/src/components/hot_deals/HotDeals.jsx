@@ -93,6 +93,9 @@ export default function HotDeals() {
                                         <span className={styles["price-link"]}>
                                             {p.price}
                                         </span>
+                                        <span className={styles["stock-link"]}>
+                                            {p.stock}
+                                        </span>
                                     </div>
                                 </div>
                                 
