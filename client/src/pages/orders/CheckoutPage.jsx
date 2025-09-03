@@ -133,7 +133,7 @@ export default function CheckoutPage() {
             return alert("You are editing, click Save before purchasing.");
         }
 
-        navigate(`/order-success?id=temp_${Date.now()}`, {
+        navigate(`/payment-success?id=temp_${Date.now()}`, {
             state: {
                 customer,
                 payment,

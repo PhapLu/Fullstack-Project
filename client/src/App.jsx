@@ -71,10 +71,6 @@ const routes = [
                 element: <CheckoutPage />,
             },
             {
-                path: "/order-success",
-                element: <Navigate to="/orders/success" replace />,
-            },
-            {
                 path: "/admin",
                 element: <AdminLayout />,
                 children: [
