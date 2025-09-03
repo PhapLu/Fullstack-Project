@@ -6,7 +6,7 @@ import User from "../models/user.model.js";
 class DeliveryInformationService {
     //-------------------CRUD----------------------------------------------------
     static createDeliveryInformation = async(req) => {
-        let { name, address, phoneNumber, isDefault } = req.body;
+        let { name, address, phoneNumber, isDefault, distributionHubId } = req.body;
         const userId = req.userId
 
         // 1. Validate inputs
@@ -37,7 +37,8 @@ class DeliveryInformationService {
             name,
             address,
             phoneNumber,
-            isDefault
+            isDefault,
+            distributionHubId
         });
 
         await newDeliveryInformation.save();
@@ -78,35 +79,9 @@ class DeliveryInformationService {
     static readDeliveryInformations = async(req) => {
         // 1. Get all deliveryInformations
         const deliveryInformations = await DeliveryInformation.find({customerId: req.userId}).lean()
-        console.log(deliveryInformations)
 
         return {
             deliveryInformations,
-        }
-    }
-
-    static updateDeliveryInformation = async(req) => {
-        const userId = req.userId
-        const deliveryInformationId = req.params.deliveryInformationId
-
-        // 1. Check user and deliveryInformation
-        const user = await User.findById(userId)
-        const deliveryInformation = await DeliveryInformation.findById(deliveryInformationId)
-        if (!deliveryInformation) throw new NotFoundError('DeliveryInformation not found')
-
-        //2. Validate inputs
-        const { name, address } = req.body;
-        if (!name || !address) {
-            throw new BadRequestError('All fields are required')
-        }
-
-        // 3. Update deliveryInformation
-        deliveryInformation.name = name;
-        deliveryInformation.address = address;
-        await deliveryInformation.save();
-
-        return {
-            message: 'DeliveryInformation updated successfully',
         }
     }
 

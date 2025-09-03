@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { decryptState } from "../../utils/checkoutState.js";
 import { useCart } from "../../store/cart/CartContext.jsx";
 import { apiUtils } from "../../utils/newRequest";
+import styles from './CheckoutPage.module.scss';
 
 export default function CheckoutPage() {
     const navigate = useNavigate();
@@ -11,11 +12,11 @@ export default function CheckoutPage() {
     const { items: cartItems } = useCart(); // fallback if no token
 
     const [items, setItems] = useState([]);
+    const [hubs, setHubs] = useState([]);
     const [pricing, setPricing] = useState({
         subtotal: 0,
         shippingFee: 16500,
         shippingDiscount: 16500,
-        voucher: 0,
         total: 0,
     });
     const [meta, setMeta] = useState({ currency: "VND" });
@@ -125,16 +126,14 @@ export default function CheckoutPage() {
                 );
                 const shippingFee = 16500;
                 const shippingDiscount = 16500;
-                const voucher = 0;
                 const total =
-                    subtotal + shippingFee - shippingDiscount - voucher;
+                    subtotal + shippingFee - shippingDiscount;
 
                 setItems(fallbackItems);
                 setPricing({
                     subtotal,
                     shippingFee,
                     shippingDiscount,
-                    voucher,
                     total,
                 });
                 return;
@@ -158,8 +157,6 @@ export default function CheckoutPage() {
                             0
                         ),
                     shippingFee: p.delivery ?? 16500,
-                    shippingDiscount: p.discount ?? 0,
-                    voucher: p.voucher ?? 0,
                     total:
                         p.total ??
                         (p.subtotal ??
@@ -167,9 +164,7 @@ export default function CheckoutPage() {
                                 (s, i) => s + i.priceAtPurchase * i.quantity,
                                 0
                             )) +
-                            (p.delivery ?? 16500) -
-                            (p.discount ?? 0) -
-                            (p.voucher ?? 0),
+                            (p.delivery ?? 16500)
                 });
                 setMeta({ currency: data.currency || "VND", ts: data.ts });
 
@@ -182,6 +177,18 @@ export default function CheckoutPage() {
             }
         })();
     }, [location.search, cartItems, navigate]);
+
+    useEffect(() => {
+        const fetchHubs = async () => {
+            try {
+                const response = await apiUtils.get("/distributionHub/readDistributionHubs");
+                setHubs(response?.data?.metadata.distributionHubs || []);
+            } catch (error) {
+                console.error("Error fetching distribution hubs:", error);
+            }
+        };
+        fetchHubs();
+    }, []);
 
     // Fetch delivery infos
     const fetchDeliveryInfos = async (preserveSelection = true) => {
@@ -218,7 +225,7 @@ export default function CheckoutPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const formatUSD = (n) => n.toLocaleString("en-US");
+    const formatUSD = (n) => n?.toLocaleString("en-US");
 
     const handlePurchase = async () => {
         if (!selectedDelivery) {
@@ -226,34 +233,34 @@ export default function CheckoutPage() {
         }
         let orderId = null;
         try {
-            const response = await apiUtils.post("/orders/createOrder", {
+            const response = await apiUtils.post("/order/createOrder", {
                 deliveryInformation: selectedDelivery,
                 payment,
                 items,
                 pricing,
+                distributionHubId: selectedDelivery.distributionHubId,
             });
-            if(!response?.data?.metadata.order){
-                throw new Error("Order creation failed");
-            } else{
-                console.log("Order created:", response.data.metadata.order);
+            console.log("Order created", response);
+            if(response.data?.metadata?.order) {
                 orderId = response.data.metadata.order._id;
+                navigate(`/payment-success?id=temp_${Date.now()}`, {
+                    state: {
+                        orderId,
+                        deliveryInformation: selectedDelivery,
+                        payment,
+                        items,
+                        pricing,
+                        placedAt: new Date().toISOString(),
+                    },
+                });
             }
         } catch (error) {
             console.error("Order creation failed", error);
-            return alert(
-                error?.data?.message || "Order creation failed. Please try again."
+            alert(
+                error?.response?.data?.message ||
+                    "Order creation failed. Please try again."
             );
         }
-        navigate(`/payment-success?id=temp_${Date.now()}`, {
-            state: {
-                orderId,
-                deliveryInformation: selectedDelivery,
-                payment,
-                items,
-                pricing,
-                placedAt: new Date().toISOString(),
-            },
-        });
     };
 
     return (
@@ -264,7 +271,7 @@ export default function CheckoutPage() {
             <div className="card mb-3 shadow-sm">
                 <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h4 className="fw-bold mb-0">Delivery Address</h4>
+                        <h4 className="fw-bold mb-0">Delivery Information</h4>
                         <button
                             className="btn btn-sm btn-outline-primary"
                             onClick={() => setShowCreateForm((v) => !v)}
@@ -324,6 +331,28 @@ export default function CheckoutPage() {
                                             })
                                         }
                                     />
+                                </div>
+
+                                <div className={styles.field}>
+                                    <select
+                                        name="distributionHub"
+                                        // value={f._id || ""}
+                                        onChange={(e) => 
+                                            setCreateInputs({
+                                                ...createInputs,
+                                                distributionHubId: e.target.value,
+                                            })
+                                        }
+                                        required
+                                        className={styles.select}
+                                    >
+                                        <option value="">Please choose your distribution hub</option>
+                                            {hubs?.map((h) => (
+                                                <option key={h._id} value={h._id}>
+                                                    {h?.title || h.name || h._id}
+                                                </option>
+                                            ))}
+                                    </select>
                                 </div>
 
                                 <div className="col-12">
@@ -511,10 +540,6 @@ export default function CheckoutPage() {
                     <div className="d-flex justify-content-between">
                         <span>Shipping Fee</span>
                         <span>${formatUSD(pricing.shippingFee)}</span>
-                    </div>
-                    <div className="d-flex justify-content-between">
-                        <span>Shipping Discount</span>
-                        <span>-${formatUSD(pricing.shippingDiscount)}</span>
                     </div>
                     <hr />
                     <div

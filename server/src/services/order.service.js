@@ -92,21 +92,31 @@ class OrderService {
     static createOrder = async (req) => {
         const userId = req.userId;
         const body = req.body;
-
         // 1. Check user
         const user = await User.findById(userId);
         if (!user) throw new AuthFailureError("You are not authenticated!");
 
         // 2. Validate inputs
+        if (!body.items || body.items.length === 0)
+            throw new BadRequestError("Order must have at least one item");
+        if (!body.distributionHubId)
+            throw new BadRequestError("Distribution Hub is required");
 
         // 3. Create order
         const order = await Order.create({
-            ...body,
+            customerId: userId,
+            items: body.items,
+            distributionHubId: body.distributionHubId,
+            deliveryInformationId: body.deliveryInformation._id,
+            paymentType: body.payment || "cash",
+            placedAt: Date.now(),
+            status: "placed",
+            pricing: body.pricing,
         });
         await order.save();
-
         return {
             message: "Order created successfully",
+            order,
         };
     };
 
@@ -119,13 +129,6 @@ class OrderService {
         if (!user) throw new AuthFailureError("You are not authenticated!");
         const order = await Order.findById(orderId);
         if (!order) throw new NotFoundError("Order not found");
-        if (
-            order.customerId.toString() !== userId &&
-            order.vendorId.toString() !== userId
-        )
-            throw new AuthFailureError(
-                "You are not authorized to perform this action"
-            );
 
         // 2. Return order
         return {
@@ -203,58 +206,6 @@ class OrderService {
     };
 
     static updateOrderStatus = async (req) => {
-        const userId = req.userId;
-        const orderId = req.params.orderId;
-        const status = req.body.status;
-
-        // 1. Check user, order
-        const user = await User.findById(userId);
-        if (!user) throw new AuthFailureError("You are not authenticated!");
-        const order = await Order.findById(orderId);
-        if (!order) throw new NotFoundError("Order status not found");
-        if (
-            order.customerId.toString() !== userId &&
-            order.vendorId.toString() !== userId
-        )
-            throw new AuthFailureError(
-                "You are not authorized to perform this action"
-            );
-
-        // 2. Update order
-        const update = {
-            status: newStatus,
-            ...milestone,
-        };
-
-        // 3. Concurrency-safe update: ensure we only update if current status is unchanged
-        const updated = await Order.findOneAndUpdate(
-            { _id: orderId, status: order.status }, // precondition
-            update,
-            { new: true, runValidators: true }
-        );
-        // 4. Return order
-        return {
-            order: updated,
-        };
-    };
-
-    static createOrder = async (req) => {
-        const userId = req.userId;
-        const body = req.body;
-
-        // 1. Check user, order
-        const user = await User.findById(userId);
-        if (!user) throw new AuthFailureError("You are not authenticated!");
-
-        // 2. Create order
-        const order = await Order.create({
-            ...body,
-        });
-        await order.save();
-
-        return {
-            message: "Order created successfully",
-        };
     };
 }
 

@@ -16,7 +16,6 @@ const OrderItemSchema = new Schema(
 const OrderSchema = new Schema(
     {
         customerId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-        vendorId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
         items: {
             type: [OrderItemSchema],
             required: true,
@@ -29,9 +28,15 @@ const OrderSchema = new Schema(
             default: "placed",
             index: true,
         },
-        shippingAddress: { type: String, required: true, trim: true, minlength: 5 },
+        paymentType: { type: String, enum: ["cash", "credit_card"], default: "cash" },
+        deliveryInformationId: { type: Schema.Types.ObjectId, ref: "DeliveryInformation", required: true },
         placedAt: { type: Date, default: Date.now },
         deliveredAt: { type: Date },
+        pricing: {
+            subtotal: { type: Number, required: true, min: 0 },
+            shippingFee: { type: Number, required: true, min: 0 },
+            total: { type: Number, required: true, min: 0 },
+        }
     },
     { timestamps: true, collection: COLLECTION_NAME }
 );

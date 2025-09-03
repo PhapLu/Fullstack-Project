@@ -11,6 +11,7 @@ const DeliveryInformationSchema = new Schema(
         phoneNumber: { type: String, required: true, trim: true },
         address: { type: String, required: true, trim: true },
         isDefault: { type: Boolean, default: false },
+        distributionHubId: { type: Schema.Types.ObjectId, ref: "DistributionHub" }
     },
     { timestamps: true, collection: COLLECTION_NAME }
 );

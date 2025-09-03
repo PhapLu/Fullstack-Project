@@ -23,13 +23,6 @@ class DeliveryInformationController {
         }).send(res)
     }
 
-    updateDeliveryInformation = async (req, res, next) => {
-        return new SuccessResponse({
-            message: 'DeliveryInformation updated successfully',
-            metadata: await DeliveryInformationService.updateDeliveryInformation(req)
-        }).send(res)
-    }
-
     deleteDeliveryInformation = async (req, res, next) => {
         return new SuccessResponse({
             message: 'DeliveryInformation deleted successfully',
