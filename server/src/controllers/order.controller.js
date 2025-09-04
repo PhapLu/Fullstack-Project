@@ -43,6 +43,13 @@ class OrderController {
             metadata: await OrderService.createOrderAndGeneratePaymentUrl(req),
         }).send(res);
     }
+
+    readOrders = async(req, res, next) => {
+        return new SuccessResponse({
+            message: "Read orders successfully",
+            metadata: await OrderService.readOrders(req),
+        }).send(res);
+    }
 }
 
 export default new OrderController();

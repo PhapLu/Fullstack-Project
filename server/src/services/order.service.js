@@ -43,6 +43,23 @@ class OrderService {
         };
     };
 
+    static readOrders = async (req) => {
+        const userId = req.userId;
+        
+        // 1. Check user
+        const user = await User.findById(userId);
+        if (!user) throw new AuthFailureError("You are not authenticated!");
+
+        // 2. Read orders
+        const orders = await Order.find({customerId: userId})
+            .populate('distributionHubId', 'name address')
+            .populate('items.productId')
+            .populate('deliveryInformationId');
+        return {
+            orders,
+        }
+    }
+
     static createOrderAndGeneratePaymentUrl = async (req) => {
         const userId = req.userId;
         const body = req.body;
