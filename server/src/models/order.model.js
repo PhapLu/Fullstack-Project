@@ -24,7 +24,7 @@ const OrderSchema = new Schema(
         distributionHubId: { type: Schema.Types.ObjectId, ref: "DistributionHub", required: true, index: true },
         status: {
             type: String,
-            enum: ["placed", "at_hub", "out_for_delivery", "delivered", "cancelled"],
+            enum: ["placed", "paid", "at_hub", "out_for_delivery", "delivered", "cancelled"],
             default: "placed",
             index: true,
         },

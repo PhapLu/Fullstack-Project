@@ -11,5 +11,7 @@ router.post("/createOrder", orderController.createOrder);
 router.get("/readOrder/:orderId", orderController.readOrder);
 router.get("/readOrdersByHub/:distributionHubId", orderController.readOrdersByHub);
 router.post("/:orderId/assign-hub", orderController.assignOrderToHub);
+router.post("/createOrderAndGeneratePaymentUrl", orderController.createOrderAndGeneratePaymentUrl);
+
 
 export default router;

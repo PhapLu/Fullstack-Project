@@ -1,4 +1,3 @@
-// src/components/CheckoutPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { decryptState } from "../../utils/checkoutState.js";
@@ -20,6 +19,7 @@ export default function CheckoutPage() {
         total: 0,
     });
     const [meta, setMeta] = useState({ currency: "VND" });
+    const [submitting, setSubmitting] = useState(false);
 
     // Delivery infos
     const [deliveryInfos, setDeliveryInfos] = useState([]);
@@ -227,11 +227,11 @@ export default function CheckoutPage() {
 
     const formatUSD = (n) => n?.toLocaleString("en-US");
 
-    const handlePurchase = async () => {
-        if (!selectedDelivery) {
-            return alert("Please choose a delivery address.");
-        }
+    const handleCashPurchase = async () => {
+        if (!selectedDelivery) return alert("Please choose a delivery address.");
+    
         let orderId = null;
+        setSubmitting(true);
         try {
             const response = await apiUtils.post("/order/createOrder", {
                 deliveryInformation: selectedDelivery,
@@ -240,8 +240,8 @@ export default function CheckoutPage() {
                 pricing,
                 distributionHubId: selectedDelivery.distributionHubId,
             });
-            console.log("Order created", response);
-            if(response.data?.metadata?.order) {
+    
+            if (response.data?.metadata?.order) {
                 orderId = response.data.metadata.order._id;
                 navigate(`/payment-success?id=temp_${Date.now()}`, {
                     state: {
@@ -253,15 +253,49 @@ export default function CheckoutPage() {
                         placedAt: new Date().toISOString(),
                     },
                 });
+            } else {
+                throw new Error("Order was not returned by the server.");
             }
         } catch (error) {
             console.error("Order creation failed", error);
-            alert(
-                error?.response?.data?.message ||
-                    "Order creation failed. Please try again."
-            );
+            alert(error?.response?.data?.message || "Order creation failed. Please try again.");
+        } finally {
+            setSubmitting(false);
         }
     };
+    
+    const handleCardPurchase = async () => {
+        if (!selectedDelivery) return alert("Please choose a delivery address.");
+        if (!selectedDelivery.distributionHubId) return alert("Please choose a distribution hub.");
+    
+        setSubmitting(true);
+        try {
+            // Optional: pass return/cancel for gateway to bounce back
+            const res = await apiUtils.post("/order/createOrderAndGeneratePaymentUrl", {
+                deliveryInformation: selectedDelivery,
+                payment: "credit_card",
+                items,
+                pricing,
+                distributionHubId: selectedDelivery.distributionHubId,
+                returnUrl: `${window.location.origin}/payment-return`,
+                cancelUrl: `${window.location.origin}/payment-cancel`,
+            });
+            const paymentUrl = res?.data?.metadata?.paymentUrl;
+            if (!paymentUrl) throw new Error("No payment URL returned from server.");
+            window.location.assign(paymentUrl); // redirect out to Alepay hosted page
+        } catch (error) {
+            console.error("Card payment init failed", error);
+            alert(error?.response?.data?.message || "We couldn't start your card payment. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
+    
+    const handlePurchase = () => {
+        if (payment === "card") return handleCardPurchase();
+        return handleCashPurchase();
+    };
+    
 
     return (
         <div className="container py-4">
@@ -556,19 +590,12 @@ export default function CheckoutPage() {
 
             <div className="d-flex justify-content-end gap-2 mt-4 flex-wrap">
                 <button
-                    className="btn btn-outline-secondary px-4 py-3 fw-bold rounded-pill"
-                    style={{ fontSize: "12px" }}
-                    onClick={() => navigate("/cart")}
-                >
-                    Cancel
-                </button>
-                <button
                     className="btn btn-primary px-4 py-3 fw-bold rounded-pill"
                     style={{ fontSize: "12px" }}
                     onClick={handlePurchase}
-                    disabled={isEditing || deliveryInfos.length === 0}
+                    disabled={submitting || isEditing || deliveryInfos.length === 0}
                 >
-                    Purchase
+                    {submitting ? "Processing..." : "Purchase"}
                 </button>
             </div>
         </div>

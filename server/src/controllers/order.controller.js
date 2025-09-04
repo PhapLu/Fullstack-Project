@@ -36,6 +36,13 @@ class OrderController {
             metadata: await OrderService.createOrder(req),
         }).send(res);
     };
+
+    createOrderAndGeneratePaymentUrl = async (req, res, next) => {
+        return new SuccessResponse({
+            message: "Create order and generate payment url successfully",
+            metadata: await OrderService.createOrderAndGeneratePaymentUrl(req),
+        }).send(res);
+    }
 }
 
 export default new OrderController();
