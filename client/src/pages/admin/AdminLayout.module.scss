@@ -1,53 +1,79 @@
-/* client/src/admin/AdminLayout.module.scss */
 .wrap {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 240px 1fr;
   background: #fafafa;
 }
+
 .sidebar {
   border-right: 1px solid #e5e5e5;
   padding: 16px;
   background: #fff;
 }
+
 .brand {
   font-weight: 700;
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 16px;
 }
-.nav { 
-    display: grid; 
-    gap: 6px; 
+
+.nav {
+  display: grid;
+  gap: 6px;
 }
 
 .navItem {
   padding: 8px 10px;
   border-radius: 8px;
   text-decoration: none;
-  color: #333;
+  color: var(--muted);
+  display: block;
+
+  &:hover {
+    background: #f3f4f6;
+  }
 }
 
-.active { 
-    background: #eef2ff; 
+.active {
+  background: #eef2ff;
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
-.main { 
-    display: grid; 
-    grid-template-rows: auto 1fr; 
+.main {
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .topbar {
   padding: 14px 16px;
   border-bottom: 1px solid #e5e5e5;
   background: #fff;
-  display: flex; align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 
-.accountLink { 
-    text-decoration: underline; 
+.accountLink {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 500;
+
+  &:hover {
+    color: var(--hover-btn);
+  }
 }
 
-.content { 
-    padding: 16px; 
+.content {
+  padding: 16px;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
 }
