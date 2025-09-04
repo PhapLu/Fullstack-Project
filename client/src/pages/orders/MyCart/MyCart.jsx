@@ -4,14 +4,23 @@ import { useCart } from "../../../store/cart/CartContext.jsx";
 import { usd } from "../../../utils/currency.js";
 import styles from "./MyCart.module.scss"; // switched to CSS module
 import { encryptState } from "../../../utils/checkoutState.js";
+import { selectUser } from "../../../store/slices/authSlices.js";
+import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default function MyCart() {
     const navigate = useNavigate()
-    const { items, setQty, removeItem, clear, subtotal, addItem } = useCart();
+    const { items, removeItem, clear, subtotal, addItem } = useCart();
+    const [qty, setQty] = useState(1);
     const [coupon, setCoupon] = useState("");
     const delivery = items.length ? 2 : 0;
     const discount = coupon.trim() ? 3 : 0;
     const total = Math.max(0, subtotal + delivery - discount);
+    const user = useSelector(selectUser);
+
+    const dec = () => setQty((q) => Math.max(1, q - 1));
+    const inc = () => setQty((q) => q + 1);
 
     const goCheckout = async () => {
         const payload = {
@@ -88,49 +97,42 @@ export default function MyCart() {
                                         </div>
 
                                         <div className="d-flex align-items-center gap-2">
-                                            <button
-                                                className={`btn btn-outline-secondary btn-sm ${styles["btn-qty"]}`}
-                                                onClick={() =>
-                                                    setQty(
-                                                        p.id,
-                                                        Math.max(
-                                                            1,
-                                                            (p.qty || 1) - 1
-                                                        )
-                                                    )
-                                                }
-                                                disabled={p.qty <= 1}
-                                                aria-label="Decrease quantity"
+                                        <div className={styles.amountRow}>
+                                            <div
+                                                className={styles.stepper}
+                                                role="group"
+                                                aria-label="Quantity"
                                             >
-                                                −
-                                            </button>
-                                            <span className="px-2">
-                                                {p.qty}
-                                            </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={dec}
+                                                    aria-label="Decrease"
+                                                    className="left"
+                                                >
+                                                    –
+                                                </button>
+                                                <input
+                                                    className={styles.qty}
+                                                    value={qty}
+                                                    readOnly
+                                                    aria-live="polite"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={inc}
+                                                    aria-label="Increase"
+                                                    className="right"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
                                             <button
-                                                className={`btn btn-outline-secondary btn-sm ${styles["btn-qty"]}`}
-                                                onClick={() =>
-                                                    setQty(
-                                                        p.id,
-                                                        Math.min(
-                                                            (p.qty || 1) + 1,
-                                                            p.stock || Infinity
-                                                        )
-                                                    )
-                                                }
-                                                disabled={
-                                                    p.stock && p.qty >= p.stock
-                                                }
-                                                aria-label="Increase quantity"
-                                            >
-                                                +
-                                            </button>
-                                            <button
-                                                className="btn btn-outline-danger btn-sm ms-2"
+                                                className="btn text-danger fs-4 btn-lg ms-2"
                                                 onClick={() => removeItem(p.id)}
                                                 title="Remove item"
                                             >
-                                                x
+                                                  <FontAwesomeIcon icon={faTrash} />
                                             </button>
                                         </div>
                                     </div>
