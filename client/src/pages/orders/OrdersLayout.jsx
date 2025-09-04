@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import { apiUtils } from "../../utils/newRequest";
+import { usd } from "../../utils/currency";
 
 const ordersMock = [
   {
@@ -125,12 +126,6 @@ export default function OrdersLayout() {
 
   return (
     <div className="orders-layout container py-4">
-      {/* Navigation */}
-      {/* <nav className="orders-nav mb-4 d-flex gap-3">
-        <NavLink to="/orders/checkout">Checkout Orders</NavLink>
-        <NavLink to="/orders/success">Order Success</NavLink>
-      </nav> */}
-
       <h3 className="fw-bold mb-4">My Orders</h3>
 
       {/* Orders List */}
