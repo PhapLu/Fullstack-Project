@@ -52,3 +52,184 @@
     border-color: var(--primary-color, #007bff);
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
 }
+
+/* =========================
+   Responsive additions ONLY
+   ========================= */
+
+/* Tablet & down (≤ 992px) */
+@media (max-width: 992px) {
+  /* Nới padding container một chút trên tablet */
+  :global(.container) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Ảnh sản phẩm to hơn chút để dễ nhìn */
+  :global(.card .card-body img.rounded) {
+    width: 72px !important;
+    height: 72px !important;
+  }
+
+  /* Tăng click area radio + label Delivery */
+  :global(.list-group-item .form-check-input) {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Nút mua gọn gàng hơn trên tablet */
+  :global(.btn.btn-primary.rounded-pill) {
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+  }
+
+  /* Input/select trong form tạo địa chỉ */
+  .field input,
+  .field select {
+    height: 44px;
+    font-size: 1rem;
+    letter-spacing: 0.22em;
+  }
+
+  .select {
+    background-position: right 12px center;
+    background-size: 16px;
+  }
+}
+
+/* Mobile (≤ 768px) */
+@media (max-width: 768px) {
+  /* Đổi bố cục item trong list Delivery: nằm dọc, dễ đọc */
+  :global(.list-group-item.d-flex) {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  :global(.list-group-item .btn.btn-outline-danger) {
+    align-self: flex-end;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Item sản phẩm: xếp dọc, ảnh trên – text dưới */
+  :global(.card .card-body > .d-flex.justify-content-between.align-items-center.mb-3) {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  :global(.card .card-body img.rounded) {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 220px;
+  }
+
+  :global(.card .card-body .flex-grow-1.ms-3) {
+    margin-left: 0 !important;
+  }
+
+  /* Khối Payment Details chữ to vừa phải */
+  :global(.card .card-body.lh-lg) {
+    font-size: 0.98rem;
+  }
+  :global(.card .card-body.lh-lg h4) {
+    font-size: 1.05rem;
+  }
+
+  /* Nút Purchase full width trên mobile */
+  :global(.d-flex.justify-content-end.gap-2.mt-4.flex-wrap) {
+    gap: 10px !important;
+  }
+  :global(.d-flex.justify-content-end.gap-2.mt-4.flex-wrap .btn) {
+    width: 100%;
+    border-radius: 999px;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+  }
+
+  /* Form tạo địa chỉ: khoảng cách & tap targets tốt hơn */
+  :global(form.border.rounded.p-3.mb-3 .row.g-3 > [class*="col-"]) {
+    margin-bottom: 6px;
+  }
+  .field {
+    margin-top: 6px;
+  }
+  .field input,
+  .field select {
+    height: 44px;
+    font-size: 0.98rem;
+    letter-spacing: 0.18em;
+    padding-left: 40px; /* giữ chỗ cho icon nếu có */
+  }
+  .select {
+    padding: 10px 38px 10px 40px;
+    background-position: right 12px center;
+    background-size: 14px;
+  }
+
+  /* Radio chọn Payment method: khoảng cách lớn hơn */
+  :global(#pay-cash),
+  :global(#pay-card) {
+    width: 18px;
+    height: 18px;
+  }
+  :global(.form-check.mb-2 .form-check-label) {
+    margin-left: 6px;
+  }
+}
+
+/* Small mobile (≤ 576px) */
+@media (max-width: 576px) {
+  /* Headings gọn hơn */
+  :global(h3.fw-bold.mb-4) {
+    font-size: 1.15rem;
+    margin-bottom: 14px !important;
+  }
+  :global(h4.fw-bold) {
+    font-size: 1.02rem;
+  }
+
+  /* Card sát mép vừa đủ nhìn */
+  :global(.card.mb-3.shadow-sm) {
+    margin-bottom: 12px !important;
+  }
+  :global(.card .card-body) {
+    padding: 12px !important;
+  }
+
+  /* Dòng tổng tiền nổi bật nhưng không quá to */
+  :global(.card .card-body .d-flex.justify-content-between strong) {
+    font-size: 1.05rem !important;
+  }
+
+  /* Input/Select nhỏ gọn hơn */
+  .field input,
+  .field select {
+    height: 42px;
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* Dropdown icon dễ bấm */
+  .select {
+    background-position: right 10px center;
+    background-size: 14px;
+  }
+}
+
+/* Very small devices (≤ 360px) – chặn vỡ layout */
+@media (max-width: 360px) {
+  :global(.container) {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  :global(.btn) {
+    font-size: 13px !important;
+  }
+  .field input,
+  .field select {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+  }
+}
