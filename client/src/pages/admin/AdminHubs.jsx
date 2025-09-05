@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./AdminHubs.module.scss";
+import { apiUtils } from "../../utils/newRequest";
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "1";
 
@@ -12,42 +13,57 @@ export default function AdminHubs() {
     load();
   }, []);
 
-  function load() {
-    if (USE_MOCK) {
-      setRows([
-        { _id: "hub_hcm", name: "Ho Chi Minh", address: "HCMC" },
-        { _id: "hub_dn", name: "Da Nang", address: "Da Nang" },
-        { _id: "hub_hn", name: "Hanoi", address: "Hanoi" },
-      ]);
-      return;
+  async function load() {
+    try {
+      const res = await apiUtils.get("/adminDashboard/readHubs");
+
+      // Accept either axios response shape or plain object
+      const body = res?.data ?? res;
+      const payload = body?.metadata ?? body;
+
+      // Expect { hubs: [{ _id, name, address }, ...] }
+      const hubs = Array.isArray(payload?.hubs) ? payload.hubs : [];
+      setRows(
+        hubs.map((h) => ({
+          _id: h._id ?? h.id,
+          name: h.name ?? "",
+          address: h.address ?? "",
+        }))
+      );
+    } catch (err) {
+      console.error("Failed to load hubs:", err?.response?.data || err);
+      setRows([]);
     }
-    // TODO: gọi API thật nếu cần
   }
 
-  function add(e) {
+  const add = async (e) => {
     e.preventDefault();
     if (!name.trim() || !address.trim()) return;
-    if (USE_MOCK) {
-      const _id = "hub_" + Math.random().toString(36).slice(2, 8);
-      setRows((rs) => [...rs, { _id, name: name.trim(), address: address.trim() }]);
-      setName("");
-      setAddress("");
-      return;
+    try {
+      const res = await apiUtils.post("/distributionHub/createDistributionHub", {
+        name,
+        address,
+      });
+      const data = res.data.metadata.distributionHub;
+      setRows((prev) => [
+        ...prev,
+        {
+          _id: data._id ?? data.id,
+          name: data.name ?? "",
+          address: data.address ?? "",
+        },
+      ]);
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   function update(id, data) {
-    if (USE_MOCK) {
-      setRows((rs) => rs.map((h) => (h._id === id ? { ...h, ...data } : h)));
-      return;
-    }
+    // TODO: PATCH /adminDashboard/updateHub/:id
   }
 
   function remove(id) {
-    if (USE_MOCK) {
-      setRows((rs) => rs.filter((h) => h._id !== id));
-      return;
-    }
+    // TODO: DELETE /adminDashboard/deleteHub/:id
   }
 
   return (
@@ -123,8 +139,22 @@ function InlineEdit({ value, onSave }) {
     return (
       <span>
         <input value={v} onChange={(e) => setV(e.target.value)} />
-        <button onClick={() => { onSave(v); setEdit(false); }}>Save</button>
-        <button onClick={() => { setV(value); setEdit(false); }}>Cancel</button>
+        <button
+          onClick={() => {
+            onSave(v);
+            setEdit(false);
+          }}
+        >
+          Save
+        </button>
+        <button
+          onClick={() => {
+            setV(value);
+            setEdit(false);
+          }}
+        >
+          Cancel
+        </button>
       </span>
     );
   }
