@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { fmt, STATUS_FLOW, labelOf } from "./HubUtil.js";
+import { STATUS_FLOW, labelOf } from "./HubUtil.js";
 import { apiUtils } from "../../utils/newRequest";
+import { usd } from "../../utils/currency.js";
 
 export default function OrderDetail({
   role = "shipper",
@@ -111,9 +112,9 @@ export default function OrderDetail({
             </div>
           </div>
           <div className={styles.price}>
-            <span>Value</span>
+            <span>Price</span>
             <strong>
-              {fmt(detail.value ?? detail.total ?? detail.price ?? subtotal)}
+              {usd(detail.value ?? detail.total ?? detail.price ?? subtotal)}
             </strong>
           </div>
           <div className={`${styles["status-badge"]} ${styles[detail.status]}`}>
@@ -149,7 +150,7 @@ export default function OrderDetail({
                     fontWeight: 700,
                   }}
                 >
-                  {fmt((it.unitPrice ?? it.price) * (it.qty ?? 1))}
+                  {usd((it.unitPrice ?? it.price) * (it.qty ?? 1))}
                 </div>
               )}
             </li>
@@ -183,16 +184,16 @@ export default function OrderDetail({
           <div className={styles.summary}>
             <div>
               <span>Subtotal</span>
-              <b>{fmt(subtotal)}</b>
+              <b>{usd(subtotal)}</b>
             </div>
             <div>
               <span>Shipping Fee</span>
-              <b>{fmt(shippingFee)}</b>
+              <b>{usd(shippingFee)}</b>
             </div>
             <hr />
             <div>
               <span>Total</span>
-              <b style={{ color: "#e11d48" }}>{fmt(total)}</b>
+              <b style={{ color: "#e11d48" }}>{usd(total)}</b>
             </div>
           </div>
         </div>

@@ -180,6 +180,11 @@
   line-height: 1;
 }
 
+.status-badge.placed {
+  color: #ffffff;
+  background-color: var(--muted);
+}
+
 .status-badge.active {
   display: flex;
   align-items: center;
@@ -212,6 +217,10 @@
   background: #fdecec;
   color: #991b1b;
   border-color: #f3c5c5;
+}
+
+.status-badge.paid {
+  display: none;
 }
 
 /* ===== Customer + items ===== */
