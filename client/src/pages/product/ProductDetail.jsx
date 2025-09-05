@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import styles from "./ProductDetail.module.scss";
 import { apiUtils } from "../../utils/newRequest";
 import { getImageUrl } from "../../utils/imageUrl";
@@ -9,6 +9,9 @@ import ReviewForm from "./components/ReviewForm";
 import ReviewList from "./components/ReviewList";
 
 export default function ProductDetail({ onAddToCart }) {
+    const location = useLocation()
+    const state = location.state || {};
+
     const { addItem } = useCart()
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
@@ -17,13 +20,12 @@ export default function ProductDetail({ onAddToCart }) {
     const [qty, setQty] = useState(1);
     const [adding, setAdding] = useState(false);
     const [justAdded, setJustAdded] = useState(false);
-    const [search] = useSearchParams();
-    const orderId = search.get("orderId") || "";
+    const orderId = state.orderId;
+    console.log(state)
 
     const dec = () => setQty((q) => Math.max(1, q - 1));
     const inc = () => setQty((q) => q + 1);
     const pid = product?._id;
-
 
     useEffect(() => {
         const fecthProduct = async () => {
@@ -246,11 +248,10 @@ export default function ProductDetail({ onAddToCart }) {
             </div>
 
             {/* Review */}
-            {pid && isValidObjectId(orderId) && (
-            <ReviewForm productId={pid} orderId={orderId} />
-              )}
-            <ReviewList productId={pid} />  {/* list luôn hiện */}
-
+            {state && isValidObjectId(orderId) && (
+                <ReviewForm productId={state.productId} orderId={orderId} />
+            )}
+            <ReviewList productId={productId} />
         </>
     );
 }

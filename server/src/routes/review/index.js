@@ -7,7 +7,7 @@ const router = Router();
 router.use(verifyToken);
 
 router.post("/createReview", reviewController.createReview);
-router.get("/readReviews", reviewController.readReview);
+router.get("/readReviews/:productId", reviewController.readReviews);
 router.get("/readReview/:reviewId", reviewController.readReview);
 
 export default router;

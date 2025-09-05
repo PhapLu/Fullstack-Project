@@ -21,27 +21,48 @@ class ReviewService {
         const order = await Order.findById(body.orderId);
         if (!order) throw new NotFoundError("Order not found");
 
-        const product = await Product.findById(order.productId);
+        const product = await Product.findById(body.productId);
         if (!product) throw new NotFoundError("Product not found");
-        if (userId !== order.customerId)
+
+        if (userId !== order.customerId.toString())
             throw new BadRequestError("You can not review for this product");
-        if (product.vendorId !== order.vendorId)
-            throw new BadRequestError("You can not revew this product");
 
         // 2. Validate body
+        if (!body.rating || body.rating < 1 || body.rating > 5)
+            throw new BadRequestError("Rating must be between 1 and 5");
+        if (!body.comment || body.comment.length < 5)
+            throw new BadRequestError("Comment must be at least 5 characters");
+        const existingReview = await Review.findOne({
+            customerId: userId,
+            orderId: body.orderId,
+            productId: body.productId,
+        });
+        if (existingReview)
+            throw new BadRequestError("You have already reviewed this product");
+        if (order.status !== "delivered")
+            throw new BadRequestError("You can only review products from delivered orders");
+        const orderItem = order.items.find(
+            (item) => item.productId.toString() === body.productId
+        );
+        if (!orderItem)
+            throw new BadRequestError("This product is not in your order, you can not review it");
 
         // 3. Create review
         const review = await Review.create({
-            ...body,
+            customerId: userId,
+            orderId: body.orderId,
+            productId: body.productId,
+            rating: body.rating,
+            comment: body.comment,
         });
         await review.save();
         return {
-            message: "Create review successfully",
+            review
         };
     };
 
     static readReviews = async (req) => {
-        const productId = req.params;
+        const productId = req.params.productId;
 
         // 1. Check product exists
         const product = await Product.findById(productId);
@@ -51,7 +72,7 @@ class ReviewService {
         const reviews = await Review.find({ productId })
             .populate("customerId", "name email")
             .populate("productId", "status createdAt");
-
+        console.log(reviews)
         return {
             reviews,
         };
