@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { STATUS_FLOW, labelOf } from "./HubUtil.js";
@@ -7,14 +8,13 @@ import { usd } from "../../utils/currency.js";
 
 export default function OrderDetail({
   role = "shipper",
-  distributionHubId,
-  orderId,
   order,
   onBack,
   onAdvance,
   onDeliver,
   onCancel,
 }) {
+  const { orderId } = useParams();
   const [detail, setDetail] = useState(order || null);
   const [loading, setLoading] = useState(!order);
   const [err, setErr] = useState("");
@@ -26,14 +26,15 @@ export default function OrderDetail({
       setLoading(true);
       setErr("");
       try {
-        // assuming API expects ?orderId=<id>
-        const response = await apiUtils.get(`/order/readOrder${orderId}`);
+        const response = await apiUtils.get(`/order/readOrder/${orderId}`);
         if (alive) setDetail(response.data.metadata.order);
+        console.log(response.data.metadata.order)
       } catch (e) {
         if (alive) setErr(e?.response?.data?.message || "Failed to load order");
       } finally {
         if (alive) setLoading(false);
       }
+      
     };
     if (orderId) load();
     return () => {
@@ -75,14 +76,9 @@ export default function OrderDetail({
   }
 
   const items = Array.isArray(detail.items) ? detail.items : [];
-  const subtotalFromItems = items.reduce(
-    (s, it) => s + (it.unitPrice ?? it.price ?? 0) * (it.qty ?? 1),
-    0
-  );
-  const subtotal = detail.subtotal ?? subtotalFromItems;
-  const shippingFee =
-    detail.shippingFee ?? detail.deliveryFee ?? detail.shipping ?? 0;
-  const total = detail.total ?? detail.price ?? subtotal + shippingFee;
+  const subtotal = detail.pricing.subtotal
+  const shippingFee = detail.pricing.shippingFee
+  const total = subtotal + shippingFee
 
   return (
     <section className={`${styles.hub} ${styles.container}`}>
@@ -92,7 +88,7 @@ export default function OrderDetail({
             ⟵ Back
           </button>
           <h1 style={{ margin: 0 }}>
-            ORDER DETAIL <span className={styles.loc}>#{detail.id}</span>
+            ORDER DETAIL <span className={styles.loc}>#{detail._id}</span>
           </h1>
         </div>
         <p>Detailed information for shipment and delivery tracking.</p>
@@ -103,18 +99,15 @@ export default function OrderDetail({
           <div className={styles.route}>
             <FaMapMarkerAlt className={styles.pin} />
             <div className={styles.route__text}>
-              <div className={styles.from}>
-                From: <p>{detail.from}</p>
-              </div>
               <div>
-                To: <span>{detail.to}</span>
+                To: <span>{detail.deliveryInformationId.address}</span>
               </div>
             </div>
           </div>
           <div className={styles.price}>
             <span>Price</span>
             <strong>
-              {usd(detail.value ?? detail.total ?? detail.price ?? subtotal)}
+              {usd( total )}
             </strong>
           </div>
           <div className={`${styles["status-badge"]} ${styles[detail.status]}`}>
@@ -124,10 +117,10 @@ export default function OrderDetail({
 
         <div className={styles.customer}>
           <div>
-            <strong>Customer:</strong> {detail.customerName}
+            <strong>Customer:</strong> {detail.deliveryInformationId.name}
           </div>
           <div>
-            <strong>Phone:</strong> {detail.customerPhone}
+            <strong>Phone:</strong> {detail.deliveryInformationId.phoneNumber}
           </div>
           <div>
             <strong>Placed:</strong>{" "}
@@ -138,10 +131,10 @@ export default function OrderDetail({
         <ul className={styles.items}>
           {items.map((it, idx) => (
             <li key={idx} className={styles.item}>
-              <img src={it.image} alt={it.name} />
+              <img src={it.productId.images} alt={it.name} />
               <div className={styles.item__meta}>
-                <div className={styles.item__name}>{it.name}</div>
-                <div className={styles.item__qty}>x{it.qty}</div>
+                <div className={styles.item__name}>{it.productId.title}</div>
+                <div className={styles.item__qty}>x{it.quantity}</div>
               </div>
               {(it.unitPrice ?? it.price) != null && (
                 <div
@@ -198,10 +191,10 @@ export default function OrderDetail({
           </div>
         </div>
 
-        {role === "shipper" && (
+        {role ==! "shipper" && (
           <div className={styles["order-card__bottom"]}>
             <div className={styles.when}>
-              Order #{detail.id} • {labelOf(detail.status)}
+              Order #{detail._id} • {labelOf(detail.status)}
             </div>
             <div className={styles.actions}>
               <button

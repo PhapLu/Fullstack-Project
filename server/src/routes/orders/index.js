@@ -6,7 +6,7 @@ const router = Router();
 
 router.use(verifyToken);
 
-// tạo đơn (nếu dùng)
+
 router.post("/createOrder", orderController.createOrder);
 router.get("/readOrder/:orderId", orderController.readOrder);
 router.get("/readOrdersByHub/:distributionHubId", orderController.readOrdersByHub);

@@ -153,12 +153,14 @@ class OrderService {
     // 1. Check user, order
     const user = await User.findById(userId);
     if (!user) throw new AuthFailureError("You are not authenticated!");
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId)
+      .populate("deliveryInformationId")
+      .populate("items.productId", "title images price")
     if (!order) throw new NotFoundError("Order not found");
 
     // 2. Return order
     return {
-      order,
+      order
     };
   };
 
