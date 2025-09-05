@@ -7,7 +7,6 @@ const router = Router();
 router.use(verifyToken);
 // router.use(checkRole("vendor"));
 
-router.get("/orders", vendorDashboardController.readVendorOrders);
-router.get("/orders/:orderId", vendorDashboardController.readVendorOrderDetail);
+router.get("/readVendorOrders", vendorDashboardController.readVendorOrders);
 
 export default router;

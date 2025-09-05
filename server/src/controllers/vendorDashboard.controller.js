@@ -8,13 +8,6 @@ class VendorDashboardController {
       metadata: await VendorDashboardService.readVendorOrders(req),
     }).send(res);
   };
-
-  readVendorOrderDetail = async (req, res, next) => {
-    return new SuccessResponse({
-      message: "Read vendor order detail successfully",
-      metadata: await VendorDashboardService.readVendorOrderDetail(req),
-    }).send(res);
-  };
 }
 
 export default new VendorDashboardController();

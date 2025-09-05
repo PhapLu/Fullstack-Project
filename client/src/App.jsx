@@ -24,6 +24,7 @@ import UserProfile from "./pages/profile/UserProfile/UserProfile";
 import MyCart from "./pages/orders/MyCart/MyCart";
 import ProductDetail from "./pages/product/ProductDetail.jsx";
 import Searching from "./pages/search/Searching.jsx";
+import OrderDetail from "./components/distributionHub/OrderDetail";
 
 const routes = [
   {
@@ -82,6 +83,10 @@ const routes = [
       {
         path: "/product/:productId",
         element: <ProductDetail />,
+      },
+      {
+        path: "/order/:orderId",
+        element: <OrderDetail />,
       },
     ],
   },

@@ -2,6 +2,64 @@ import React, { useMemo, useState } from "react";
 import styles from "./VendorDashboard.module.scss";
 import { usd } from "../../utils/currency";
 
+const ORDERS = [
+  {
+    id: "ORD001",
+    product: "Wireless Earbuds",
+    customer: "Alice",
+    price: 45,
+    payment: "Prepaid",
+    deliveryDate: "2025-08-22",
+    status: "delivering",
+    items: [{ name: "Wireless Earbuds", qty: 1, price: 45 }],
+    address: "123 Market St, San Jose, CA",
+  },
+  {
+    id: "ORD002",
+    product: "Phone Case",
+    customer: "Bob",
+    price: 20,
+    payment: "Cash",
+    deliveryDate: "2025-08-21",
+    status: "delivered",
+    items: [{ name: "Phone Case", qty: 1, price: 20 }],
+    address: "88 King Rd, Seattle, WA",
+  },
+  {
+    id: "ORD003",
+    product: "Laptop Stand",
+    customer: "Clara",
+    price: 75,
+    payment: "Prepaid",
+    deliveryDate: "2025-08-19",
+    status: "paid_prepaid",
+    items: [{ name: "Laptop Stand", qty: 1, price: 75 }],
+    address: "12 Green Ave, Austin, TX",
+  },
+  {
+    id: "ORD004",
+    product: "Headphones",
+    customer: "David",
+    price: 100,
+    payment: "Cash",
+    deliveryDate: "2025-08-20",
+    status: "paid_cash",
+    items: [{ name: "Headphones", qty: 1, price: 100 }],
+    address: "901 Beach Dr, Miami, FL",
+  },
+  {
+    id: "ORD005",
+    product: "Smart Watch",
+    customer: "Elena",
+    price: 120,
+    payment: "Prepaid",
+    deliveryDate: "2025-08-18",
+    status: "complaint",
+    items: [{ name: "Smart Watch", qty: 1, price: 120 }],
+    address: "45 River St, Boston, MA",
+  },
+];
+
 /* ================= Status → Badge ================= */
 const statusMeta = {
   delivering: { text: "Delivering", cls: "badgeDelivering" },
