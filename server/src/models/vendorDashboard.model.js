@@ -10,8 +10,15 @@ const OrderItemSchema = new Schema(
     quantity: { type: Number, required: true, min: 1 },
     priceAtPurchase: { type: Number, required: true, min: 0 },
   },
-  { _id: false }
+  { _id: false, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+OrderItemSchema.virtual("product", {
+  ref: "Product",
+  localField: "productId",
+  foreignField: "_id",
+  justOne: true,
+});
 
 const OrderSchema = new Schema(
   {
@@ -35,6 +42,10 @@ const OrderSchema = new Schema(
       required: true,
       index: true,
     },
+
+    hubAssignedAt: { type: Date },
+    hubAssignedBy: { type: Schema.Types.ObjectId, ref: "User", index: true },
+
     status: {
       type: String,
       enum: [
@@ -66,8 +77,24 @@ const OrderSchema = new Schema(
       total: { type: Number, required: true, min: 0 },
     },
   },
-  { timestamps: true, collection: COLLECTION_NAME }
+  {
+    timestamps: true,
+    collection: COLLECTION_NAME,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+OrderSchema.index({ customerId: 1, createdAt: -1 });
+OrderSchema.index({ distributionHubId: 1, status: 1, createdAt: -1 });
+OrderSchema.index({ "items.productId": 1 });
+OrderSchema.methods.filterItemsByVendor = function (vendorId) {
+  const idStr = vendorId.toString();
+  const items = (this.items || []).filter(
+    (it) => it.product?.vendorId?.toString() === idStr
+  );
+  return { ...this.toObject(), items };
+};
 
 const Order = mongoose.model(DOCUMENT_NAME, OrderSchema);
 export default Order;

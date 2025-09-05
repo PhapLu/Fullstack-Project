@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { fmt, STATUS_FLOW, labelOf } from "./HubUtil.js";
+import { STATUS_FLOW, labelOf } from "./HubUtil.js";
 import { getImageUrl } from "../../utils/imageUrl";
 import { usd } from "../../utils/currency.js";
 
@@ -163,8 +163,10 @@ export default function Orders({
             </ul>
 
             <div className={styles.price}>
-              <span>Value</span>
-              <strong>{usd(order.pricing.total ?? 0)}</strong>
+              <span>Price</span>
+              <strong>
+                {usd(order.status === "paid" ? 0 : order.pricing.total ?? 0)}
+              </strong>
             </div>
 
             <div className={styles["order-card__bottom"]}>
