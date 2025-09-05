@@ -1,259 +1,329 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./VendorDashboard.module.scss";
 import { usd } from "../../utils/currency";
-
-const ORDERS = [
-  {
-    id: "ORD001",
-    product: "Wireless Earbuds",
-    customer: "Alice",
-    price: 45,
-    payment: "Prepaid",
-    deliveryDate: "2025-08-22",
-    status: "delivering",
-    items: [{ name: "Wireless Earbuds", qty: 1, price: 45 }],
-    address: "123 Market St, San Jose, CA",
-  },
-  {
-    id: "ORD002",
-    product: "Phone Case",
-    customer: "Bob",
-    price: 20,
-    payment: "Cash",
-    deliveryDate: "2025-08-21",
-    status: "delivered",
-    items: [{ name: "Phone Case", qty: 1, price: 20 }],
-    address: "88 King Rd, Seattle, WA",
-  },
-  {
-    id: "ORD003",
-    product: "Laptop Stand",
-    customer: "Clara",
-    price: 75,
-    payment: "Prepaid",
-    deliveryDate: "2025-08-19",
-    status: "paid_prepaid",
-    items: [{ name: "Laptop Stand", qty: 1, price: 75 }],
-    address: "12 Green Ave, Austin, TX",
-  },
-  {
-    id: "ORD004",
-    product: "Headphones",
-    customer: "David",
-    price: 100,
-    payment: "Cash",
-    deliveryDate: "2025-08-20",
-    status: "paid_cash",
-    items: [{ name: "Headphones", qty: 1, price: 100 }],
-    address: "901 Beach Dr, Miami, FL",
-  },
-  {
-    id: "ORD005",
-    product: "Smart Watch",
-    customer: "Elena",
-    price: 120,
-    payment: "Prepaid",
-    deliveryDate: "2025-08-18",
-    status: "complaint",
-    items: [{ name: "Smart Watch", qty: 1, price: 120 }],
-    address: "45 River St, Boston, MA",
-  },
-];
+import { apiUtils } from "../../utils/newRequest";
 
 /* ================= Status → Badge ================= */
+// Match your Order.status enum: placed, paid, at_hub, out_for_delivery, delivered, cancelled
 const statusMeta = {
-  delivering: { text: "Delivering", cls: "badgeDelivering" },
-  delivered: { text: "Delivered", cls: "badgeDelivered" },
-  paid_prepaid: { text: "Paid (Prepaid)", cls: "badgePaid" },
-  paid_cash: { text: "Paid (Cash)", cls: "badgeCash" },
-  complaint: { text: "Complaint", cls: "badgeComplaint" },
+    placed: { text: "Placed", cls: "badgeNeutral" },
+    paid: { text: "Paid", cls: "badgePaid" },
+    at_hub: { text: "At Hub", cls: "badgeNeutral" },
+    out_for_delivery: { text: "Out for delivery", cls: "badgeDelivering" },
+    delivered: { text: "Delivered", cls: "badgeDelivered" },
+    cancelled: { text: "Cancelled", cls: "badgeComplaint" }, // reuse a red style
 };
+
 function StatusBadge({ status }) {
-  const m = statusMeta[status] || { text: status, cls: "badgeNeutral" };
-  return <span className={`${styles.badge} ${styles[m.cls]}`}>{m.text}</span>;
+    const m = statusMeta[status] || { text: status, cls: "badgeNeutral" };
+    return <span className={`${styles.badge} ${styles[m.cls]}`}>{m.text}</span>;
 }
+
+/* ================= Helpers ================= */
+const fmtDate = (d) => {
+    if (!d) return "—";
+    try {
+        const dt = typeof d === "string" ? new Date(d) : d;
+        return dt.toLocaleDateString();
+    } catch {
+        return "—";
+    }
+};
+
+const joinDefined = (parts, sep = ", ") =>
+    parts
+        .filter(Boolean)
+        .map((s) => String(s).trim())
+        .filter(Boolean)
+        .join(sep);
 
 /* ================= KPI Row ================= */
 function StatsRow({ orders }) {
-  const values = orders.map((o) => o.price || 0);
-  const max = values.length ? Math.max(...values) : 0;
-  const min = values.length ? Math.min(...values) : 0;
-  const avg = values.length
-    ? Math.round(values.reduce((s, n) => s + n, 0) / values.length)
-    : 0;
+    // Use pricing.total as order value
+    const values = orders.map((o) => o?.pricing?.total || 0);
+    const max = values.length ? Math.max(...values) : 0;
+    const min = values.length ? Math.min(...values) : 0;
+    const avg = values.length
+        ? Math.round(values.reduce((s, n) => s + n, 0) / values.length)
+        : 0;
 
-  return (
-    <div className={styles.cards}>
-      <div className={`${styles.card} ${styles.cardFill}`}>
-        <div className={styles.cardTitle}>Order Value</div>
-        <div className={styles.kv}>
-          <span>Highest</span>
-          <span>{usd(max)}</span>
+    return (
+        <div className={styles.cards}>
+            <div className={`${styles.card} ${styles.cardFill}`}>
+                <div className={styles.cardTitle}>Order Value</div>
+                <div className={styles.kv}>
+                    <span>Highest</span>
+                    <span>{usd(max)}</span>
+                </div>
+                <div className={styles.kv}>
+                    <span>Lowest</span>
+                    <span>{usd(min)}</span>
+                </div>
+                <div className={styles.kv}>
+                    <span>Average</span>
+                    <span>{usd(avg)}</span>
+                </div>
+            </div>
         </div>
-        <div className={styles.kv}>
-          <span>Lowest</span>
-          <span>{usd(min)}</span>
-        </div>
-        <div className={styles.kv}>
-          <span>Average</span>
-          <span>{usd(avg)}</span>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 /* ================= Main Page ================= */
 const TABS = [
-  { key: "all", label: "All" },
-  { key: "new", label: "New Requests" },
-  { key: "delivered", label: "Delivered" },
-  { key: "payments", label: "Payments" },
-  { key: "feedback", label: "Customer Feedback" },
-  { key: "complaints", label: "Complaints" },
+    { key: "all", label: "All" },
+    { key: "new", label: "New Requests" }, // placed
+    { key: "out_for_delivery", label: "Out for delivery" },
+    { key: "delivered", label: "Delivered" },
+    { key: "paid", label: "Paid" }, // status === 'paid'
+    { key: "cancelled", label: "Cancelled" },
 ];
 
 export default function VendorDashboard() {
-  const [activeTab, setActiveTab] = useState("all");
-  const [expanded, setExpanded] = useState({});
+    const [activeTab, setActiveTab] = useState("all");
+    const [expanded, setExpanded] = useState({});
+    const [orders, setOrders] = useState([]);
 
-  const counts = useMemo(
-    () => ({
-      all: ORDERS.length,
-      new: ORDERS.filter((o) => o.status === "delivering").length,
-      delivered: ORDERS.filter((o) => o.status === "delivered").length,
-      payments: ORDERS.filter(
-        (o) => o.status === "paid_prepaid" || o.status === "paid_cash"
-      ).length,
-      feedback: ORDERS.filter((o) => o.status === "delivered").length, // demo
-      complaints: ORDERS.filter((o) => o.status === "complaint").length,
-    }),
-    []
-  );
+    // Fetch orders (make sure your backend populates needed refs)
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const res = await apiUtils.get(
+                    "/vendorDashboard/readVendorOrders"
+                );
+                const raw = res?.data?.metadata?.orders ?? [];
+                console.log(raw)
+                setOrders(raw);
+            } catch (error) {
+                console.error("Failed to fetch orders:", error);
+            }
+        };
+        fetchOrders();
+    }, []);
 
-  const filtered = useMemo(() => {
-    switch (activeTab) {
-      case "all":
-        return ORDERS;
-      case "new":
-        return ORDERS.filter((o) => o.status === "delivering");
-      case "delivered":
-        return ORDERS.filter((o) => o.status === "delivered");
-      case "payments":
-        return ORDERS.filter(
-          (o) => o.status === "paid_prepaid" || o.status === "paid_cash"
-        );
-      case "feedback":
-        return ORDERS.filter((o) => o.status === "delivered");
-      case "complaints":
-        return ORDERS.filter((o) => o.status === "complaint");
-      default:
-        return ORDERS;
-    }
-  }, [activeTab]);
+    // Count chips by status
+    const counts = useMemo(() => {
+        return {
+            all: orders.length,
+            new: orders.filter((o) => o.status === "placed").length,
+            out_for_delivery: orders.filter(
+                (o) => o.status === "out_for_delivery"
+            ).length,
+            delivered: orders.filter((o) => o.status === "delivered").length,
+            paid: orders.filter((o) => o.status === "paid").length,
+            cancelled: orders.filter((o) => o.status === "cancelled").length,
+        };
+    }, [orders]);
 
-  const toggleRow = (id) => setExpanded((m) => ({ ...m, [id]: !m[id] }));
+    // Filtered list per tab
+    const filtered = useMemo(() => {
+        switch (activeTab) {
+            case "all":
+                return orders;
+            case "new":
+                return orders.filter((o) => o.status === "placed");
+            case "out_for_delivery":
+                return orders.filter((o) => o.status === "out_for_delivery");
+            case "delivered":
+                return orders.filter((o) => o.status === "delivered");
+            case "paid":
+                return orders.filter((o) => o.status === "paid");
+            case "cancelled":
+                return orders.filter((o) => o.status === "cancelled");
+            default:
+                return orders;
+        }
+    }, [activeTab, orders]);
 
-  return (
-    <div className={styles.container}>
-      <h2 className={styles.pageTitle}>Order Management</h2>
+    const toggleRow = (id) => setExpanded((m) => ({ ...m, [id]: !m[id] }));
 
-      {/* Top KPI row with equal cards */}
-      <StatsRow orders={ORDERS} />
+    // Build a UI row from a real Order
+    const asRow = (o) => {
+        const items = Array.isArray(o?.items) ? o.items : [];
+      
+        // product titles
+        const productNames =
+            items
+                .map((it) => it?.productId?.title || "(Unknown product)")
+                .join(", ") || "—";
+      
+        // customer: prefer backend-projected `customer.name`; fallbacks provided
+        const customerName =
+            o?.deliveryInformationId?.name ||       // DeliveryInformation.name (recipient)
+            o?.customer?.name ||                    // from backend $project
+            o?.customerId?.customerProfile?.name || // only if you populate customerId elsewhere
+            o?.customerId?.username ||
+            "—";
+      
+        // DeliveryInformation: address
+        const di = o?.deliveryInformationId || {};
+        const address = di?.address || "—";
+      
+        const payment =
+            (o?.paymentType === "cash" && "Cash on Delivery") ||
+            (o?.paymentType === "credit_card" && "Credit Card") ||
+            o?.paymentType ||
+            "—";
+      
+        return {
+            _id: o?._id,
+            status: o?.status,
+            productNames,
+            customerName,
+            priceTotal: o?.pricing?.total ?? 0,
+            payment,
+            placedAt: o?.placedAt,
+            deliveredAt: o?.deliveredAt,
+            address,
+            items: items.map((it) => ({
+                name: it?.productId?.title || "(Unknown product)", // title here
+                qty: it?.quantity ?? 0,
+                price: it?.priceAtPurchase ?? 0,
+            })),
+        };
+    };
 
-      {/* Tabs */}
-      <div className={styles.tabs}>
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            className={`${styles.tab} ${
-              activeTab === t.key ? styles.active : ""
-            }`}
-            onClick={() => setActiveTab(t.key)}
-          >
-            {t.label}
-            <span className={styles.countChip}>{counts[t.key] ?? 0}</span>
-          </button>
-        ))}
-      </div>
+    return (
+        <div className={styles.container}>
+            <h2 className={styles.pageTitle}>Order Management</h2>
 
-      {/* Orders table */}
-      <div className={styles.tableCard}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Order ID</th>
-              <th>Product</th>
-              <th>Customer</th>
-              <th>Price</th>
-              <th>Payment</th>
-              <th>Delivery Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((o) => (
-              <React.Fragment key={o.id}>
-                <tr>
-                  <td>
-                    <StatusBadge status={o.status} />
-                  </td>
-                  <td>{o.id}</td>
-                  <td>{o.product}</td>
-                  <td>{o.customer}</td>
-                  <td>{usd(o.price)}</td>
-                  <td>{o.payment}</td>
-                  <td>{o.deliveryDate}</td>
-                  <td className={styles.actions}>
+            {/* Top KPI row with equal cards */}
+            <StatsRow orders={orders} />
+
+            {/* Tabs */}
+            <div className={styles.tabs}>
+                {TABS.map((t) => (
                     <button
-                      className={styles.linkBtn}
-                      onClick={() => toggleRow(o.id)}
+                        key={t.key}
+                        className={`${styles.tab} ${
+                            activeTab === t.key ? styles.active : ""
+                        }`}
+                        onClick={() => setActiveTab(t.key)}
                     >
-                      {expanded[o.id] ? "Hide Details" : "View Details"}
+                        {t.label}
+                        <span className={styles.countChip}>
+                            {counts[t.key] ?? 0}
+                        </span>
                     </button>
-                    <a href="/" className={styles.linkBtn}>
-                      Message Customer
-                    </a>
-                  </td>
-                </tr>
+                ))}
+            </div>
 
-                {expanded[o.id] && (
-                  <tr className={styles.detailsRow}>
-                    <td colSpan={8}>
-                      <div className={styles.details}>
-                        <div>
-                          <div className={styles.detailsTitle}>Items</div>
-                          <ul className={styles.items}>
-                            {o.items.map((it, idx) => (
-                              <li key={idx}>
-                                {it.name} × {it.qty} — <b>{usd(it.price)}</b>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <div className={styles.detailsTitle}>
-                            Shipping Address
-                          </div>
-                          <p>{o.address}</p>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={8} className={styles.emptyRow}>
-                  No orders
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+            {/* Orders table */}
+            <div className={styles.tableCard}>
+                <table className={styles.table}>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Order ID</th>
+                            <th>Products</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Placed</th>
+                            <th>Delivered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filtered.map((order) => {
+                            const o = asRow(order);
+                            return (
+                                <React.Fragment key={o._id}>
+                                    <tr>
+                                        <td>
+                                            <StatusBadge status={o.status} />
+                                        </td>
+                                        <td>{o._id}</td>
+                                        <td>{o.productNames}</td>
+                                        <td>{o.customerName}</td>
+                                        <td>{usd(o.priceTotal)}</td>
+                                        <td>{o.payment}</td>
+                                        <td>{fmtDate(o.placedAt)}</td>
+                                        <td>{fmtDate(o.deliveredAt)}</td>
+                                        <td className={styles.actions}>
+                                            <button
+                                                className={styles.linkBtn}
+                                                onClick={() => toggleRow(o._id)}
+                                            >
+                                                {expanded[o._id]
+                                                    ? "Hide Details"
+                                                    : "View Details"}
+                                            </button>
+                                            <a
+                                                href="/"
+                                                className={styles.linkBtn}
+                                            >
+                                                Message Customer
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    {expanded[o._id] && (
+                                        <tr className={styles.detailsRow}>
+                                            <td colSpan={9}>
+                                                <div className={styles.details}>
+                                                    <div>
+                                                        <div
+                                                            className={
+                                                                styles.detailsTitle
+                                                            }
+                                                        >
+                                                            Items
+                                                        </div>
+                                                        <ul
+                                                            className={
+                                                                styles.items
+                                                            }
+                                                        >
+                                                            {o.items.map(
+                                                                (it, idx) => (
+                                                                    <li
+                                                                        key={
+                                                                            idx
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            it.name
+                                                                        }{" "}
+                                                                        ×{" "}
+                                                                        {it.qty}{" "}
+                                                                        —{" "}
+                                                                        <b>
+                                                                            {usd(
+                                                                                it.price
+                                                                            )}
+                                                                        </b>
+                                                                    </li>
+                                                                )
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                    <div>
+                                                        <div
+                                                            className={
+                                                                styles.detailsTitle
+                                                            }
+                                                        >
+                                                            Shipping Address
+                                                        </div>
+                                                        <p>{o.address}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
+                        {filtered.length === 0 && (
+                            <tr>
+                                <td colSpan={9} className={styles.emptyRow}>
+                                    No orders
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }

@@ -9,6 +9,7 @@ import productRoute from "./product/index.js";
 import reviewRoute from "./review/index.js";
 import deliveryInformationRoute from "./deliveryInformation/index.js";
 import adminDashboardRoute from "./adminDashboard/index.js"
+import vendorDashboardRoute from "./vendorDashboard/index.js"
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use("/v1/api/conversation", conversationRoute);
 router.use("/v1/api/distributionHub", distributionHubRoute);
 router.use("/v1/api/deliveryInformation", deliveryInformationRoute);
 router.use("/v1/api/adminDashboard", adminDashboardRoute);
+router.use("/v1/api/vendorDashboard", vendorDashboardRoute);
 
 export default router;
