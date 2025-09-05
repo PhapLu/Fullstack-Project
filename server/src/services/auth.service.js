@@ -80,20 +80,58 @@ class AuthService {
         businessName,
         businessAddress,    
     }) => {
-        // 1) Validate inputs
+        // 1. Validate inputs
         if (!username) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
         if (!password) throw new BadRequestError("Invalid password policy.");
+
+        if (typeof password !== "string") {
+            throw new BadRequestError("Password is required.");
+        }
+        if (password.length < 8) {
+        throw new BadRequestError("Password must be at least 8 characters.");
+        }
+        if (password.length > 20) {
+        throw new BadRequestError("Password must be at most 20 characters.");
+        }
+        if (!/[A-Z]/.test(password)) {
+        throw new BadRequestError("Password must include at least one uppercase letter.");
+        }
+        if (!/[a-z]/.test(password)) {
+        throw new BadRequestError("Password must include at least one lowercase letter.");
+        }
+        if (!/\d/.test(password)) {
+        throw new BadRequestError("Password must include at least one digit.");
+        }
+        if (!/[!@#$%^&*]/.test(password)) {
+        throw new BadRequestError("Password must include at least one special character (!@#$%^&*).");
+        }
+        if (!/^[A-Za-z0-9!@#$%^&*]+$/.test(password)) {
+        throw new BadRequestError("Password contains invalid characters (allowed: letters, digits, !@#$%^&*).");
+        }
+
         if (!["customer", "vendor", "shipper"].includes(role)) throw new BadRequestError("Invalid role.");
         let customerProfile, vendorProfile, shipperProfile;
         if (role === "customer") {
           customerProfile = { };
         }
         if (role === "vendor") {
-            // Soft pre-checks (DB partial unique indexes will enforce hard constraints)
+            if (!businessName) {
+                throw new BadRequestError("Business name is required.");
+            }
+            if (businessName.length < 5) {
+            throw new BadRequestError("Business name must be at least 5 characters.");
+            }
+            if (!businessAddress) {
+            throw new BadRequestError("Business address is required.");
+            }
+            if (businessAddress.length < 5) {
+            throw new BadRequestError("Business address must be at least 5 characters.");
+            }
             vendorProfile = { businessName: businessName.trim(), businessAddress: businessAddress.trim() };
         }
       
         if (role === "shipper") {
+            if(!assignedHubId) throw new BadRequestError("Missing assigned hub for shipper.");
             shipperProfile = { assignedHub: assignedHubId };
         }
 

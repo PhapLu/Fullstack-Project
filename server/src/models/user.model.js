@@ -15,14 +15,18 @@ const CustomerProfileSchema = new Schema(
 const VendorProfileSchema = new Schema(
     {
         businessName: { type: String, required: true, trim: true },
-        businessAddress: { type: String, required: true, trim: true},
+        businessAddress: { type: String, required: true, trim: true },
     },
     { _id: false }
 );
 
 const ShipperProfileSchema = new Schema(
     {
-        assignedHub: { type: Schema.Types.ObjectId, ref: "DistributionHub", required: true },
+        assignedHub: {
+            type: Schema.Types.ObjectId,
+            ref: "DistributionHub",
+            required: true,
+        },
     },
     { _id: false }
 );
@@ -50,33 +54,63 @@ const UserSchema = new Schema(
         email: { type: String, trim: true, lowercase: true },
         phone: { type: String },
         country: { type: String, default: "Vietnam" },
-        bio: { type: String, default: "", maxlength: [200, "Bio cannot exceed 200 characters"] },
-        customerProfile: { type: CustomerProfileSchema, required: function () { return this.role === "customer"; } },
-        vendorProfile: { type: VendorProfileSchema, required: function () { return this.role === "vendor"; } },
-        shipperProfile: { type: ShipperProfileSchema, required: function () { return this.role === "shipper"; } },
+        bio: {
+            type: String,
+            default: "",
+            maxlength: [200, "Bio cannot exceed 200 characters"],
+        },
+        customerProfile: {
+            type: CustomerProfileSchema,
+            required: function () {
+                return this.role === "customer";
+            },
+        },
+        vendorProfile: {
+            type: VendorProfileSchema,
+            required: function () {
+                return this.role === "vendor";
+            },
+        },
+        shipperProfile: {
+            type: ShipperProfileSchema,
+            required: function () {
+                return this.role === "shipper";
+            },
+        },
     },
     { timestamps: true, collection: COLLECTION_NAME }
 );
 
-UserSchema.pre("save", function (next) {
-    if (this.isNew || this.isModified("verificationExpiry")) {
-        this.verificationExpiry = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
-    }
-    next();
+UserSchema.index({
+    "customerProfile.name": "text",
+    email: "text",
+    bio: "text",
 });
-
-UserSchema.index({ fullName: "text", email: "text", bio: "text" });
 
 UserSchema.index(
     { "vendorProfile.businessName": 1 },
-    { unique: true, partialFilterExpression: { role: "vendor", "vendorProfile.businessName": { $exists: true } } }
+    {
+        unique: true,
+        partialFilterExpression: {
+            role: "vendor",
+            "vendorProfile.businessName": { $type: "string" },
+        },
+        collation: { locale: "en", strength: 2 }, // optional but recommended
+    }
 );
 
+// 4) Vendor-only unique businessAddress (partial unique + case-insensitive)
 UserSchema.index(
     { "vendorProfile.businessAddress": 1 },
-    { unique: true, partialFilterExpression: { role: "vendor", "vendorProfile.businessAddress": { $exists: true } } }
+    {
+        unique: true,
+        partialFilterExpression: {
+            role: "vendor",
+            "vendorProfile.businessAddress": { $type: "string" },
+        },
+        collation: { locale: "en", strength: 2 }, // optional but recommended
+    }
 );
 
-const User =
-  mongoose.models[DOCUMENT_NAME] || mongoose.model(DOCUMENT_NAME, UserSchema);
+const User = mongoose.model(DOCUMENT_NAME, UserSchema);
 export default User;
