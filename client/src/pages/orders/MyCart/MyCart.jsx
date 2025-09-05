@@ -62,7 +62,7 @@ export default function MyCart() {
                       <img
                         src={p.image}
                         alt={p.name}
-                        className={`rounded ${styles["product-thumb"]}`}
+                        className={`rounded ${styles[""]}`}
                         style={{
                           width: 96,
                           height: 96,
@@ -91,36 +91,43 @@ export default function MyCart() {
                     </div>
 
                     <div className="d-flex align-items-center gap-2">
+                      {/* Amount row */}
+                      <div className={styles.amountRow}>
+                            <div
+                                className={styles.stepper}
+                                role="group"
+                                aria-label="Quantity"
+                            >
+                                <button
+                                    type="button"
+                                    onClick={dec}
+                                    aria-label="Decrease"
+                                    className="left"
+                                >
+                                    –
+                                </button>
+                                <input
+                                    className={styles.qty}
+                                    value={qty}
+                                    readOnly
+                                    aria-live="polite"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={inc}
+                                    aria-label="Increase"
+                                    className="right"
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
                       <button
-                        className={`btn btn-outline-secondary btn-sm ${styles["btn-qty"]}`}
-                        onClick={() =>
-                          setQty(p.id, Math.max(1, (p.qty || 1) - 1))
-                        }
-                        disabled={p.qty <= 1}
-                        aria-label="Decrease quantity"
-                      >
-                        −
-                      </button>
-                      <span className="px-2">{p.qty}</span>
-                      <button
-                        className={`btn btn-outline-secondary btn-sm ${styles["btn-qty"]}`}
-                        onClick={() =>
-                          setQty(
-                            p.id,
-                            Math.min((p.qty || 1) + 1, p.stock || Infinity)
-                          )
-                        }
-                        disabled={p.stock && p.qty >= p.stock}
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
-                      <button
-                        className="btn btn-outline-danger btn-sm ms-2"
+                        className="btn text-danger fs-3 ms-2"
                         onClick={() => removeItem(p.id)}
                         title="Remove item"
                       >
-                        🗑
+                        <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </div>
                   </div>
@@ -179,9 +186,9 @@ export default function MyCart() {
           <div
             className={`card p-3 shadow-sm rounded-4 border-0 ${styles["hover-card"]}`}
           >
-            <div className="fw-semibold mb-3">
+            <h3 className="fw-semibold mb-3">
               Your Order ({items.length} items)
-            </div>
+            </h3>
             <div className="d-flex justify-content-between">
               <span>Subtotal</span>
               <span>{usd(subtotal)}</span>
@@ -192,11 +199,11 @@ export default function MyCart() {
               <span>{usd(delivery)}</span>
             </div>
             <hr className="my-2" />
-            <div className="d-flex justify-content-between fw-bold">
+            <div className="d-flex justify-content-between fw-bold fs-3">
               <span>Total Payable:</span>
-              <span>{usd(total)}</span>
+              <span className="text-primary">{usd(total)}</span>
             </div>
-            <button className="btn btn-primary w-100 mt-3" onClick={goCheckout}>
+            <button className="btn btn-primary fs-4 w-100 mt-3" onClick={goCheckout}>
               Proceed to checkout
             </button>
           </div>
