@@ -123,6 +123,13 @@
     border-radius: 5px;
 }
 
+.deal-card__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .thumb {
     display: block;
     background: #f8fafc;
