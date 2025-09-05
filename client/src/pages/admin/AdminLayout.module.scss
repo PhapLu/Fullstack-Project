@@ -70,10 +70,8 @@
 
 @media (max-width: 768px) {
   .wrap {
-    grid-template-columns: 1fr;
-  }
+    display: flex;
+    flex-direction: column;
 
-  .sidebar {
-    display: none;
   }
 }

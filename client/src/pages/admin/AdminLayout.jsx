@@ -5,9 +5,6 @@ export default function AdminLayout() {
   const { pathname } = useLocation();
 
   const titleMap = [
-    { path: "/admin/users", label: "Users" },
-    { path: "/admin/products", label: "Products" },
-    { path: "/admin/orders", label: "Orders" },
     { path: "/admin/hubs", label: "Hubs" },
     { path: "/admin", label: "Overview" },
   ];
@@ -35,9 +32,6 @@ export default function AdminLayout() {
         <div className={styles.brand}>Admin Dashboard</div>
         <nav className={styles.nav}>
           <Item to="/admin" label="Overview" end />
-          <Item to="/admin/users" label="Users" />
-          <Item to="/admin/products" label="Products" />
-          <Item to="/admin/orders" label="Orders" />
           <Item to="/admin/hubs" label="Hubs" />
         </nav>
       </aside>

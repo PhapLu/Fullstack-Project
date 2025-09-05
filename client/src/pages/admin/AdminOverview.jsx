@@ -1,43 +1,78 @@
 import { useEffect, useMemo, useState } from "react";
-import { apiGet } from "../../utils/api";
 import styles from "./AdminOverview.module.scss";
-
-const USE_MOCK = true;
+import { apiUtils } from "../../utils/newRequest";
 
 export default function AdminOverview() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (USE_MOCK) {
-      setData({
-        users: { total: 7, vendors: 2, customers: 2, shippers: 2 },
-        products: { total: 4 },
-        ordersByStatus: [
-          { _id: "active", count: 1 },
-          { _id: "delivered", count: 1 },
-        ],
-        revenue7d: [
-          { _id: "2025-08-27", revenue: 109.9, orders: 1 },
-          { _id: "2025-08-29", revenue: 59.0, orders: 1 },
-        ],
-        topVendors: [
-          {
-            vendorId: "u_v1",
-            vendorName: "Anna Store",
-            revenue: 88.9,
-            items: 3,
-          },
-          {
-            vendorId: "u_v2",
-            vendorName: "Bob Mart",
-            revenue: 59.0,
-            items: 1,
-          },
-        ],
-      });
-    } else {
-      apiGet("/admin/overview").then(setData);
-    }
+    let alive = true;
+
+    (async () => {
+      try {
+        const res = await apiUtils.get("/adminDashboard/readOverview");
+        const overviewData = res.data.metadata.adminDashboard;
+        console.log(overviewData);
+
+        if (!alive) return;
+
+        // ---- normalize backend payload into existing UI shape ----
+        const users = overviewData?.users ?? {
+          total: 0,
+          vendors: 0,
+          customers: 0,
+          shippers: 0,
+        };
+
+        const products = {
+          total:
+            overviewData?.products?.total ?? overviewData?.productsTotal ?? 0,
+        };
+
+        const ordersByStatus = Array.isArray(overviewData?.ordersByStatus)
+          ? overviewData.ordersByStatus
+          : [
+              { _id: "active", count: overviewData?.orders?.active ?? 0 },
+              { _id: "delivered", count: overviewData?.orders?.delivered ?? 0 },
+            ];
+
+        const revenueSrc =
+          overviewData?.revenue7d ||
+          overviewData?.revenueByDay ||
+          overviewData?.revenue ||
+          [];
+        const revenue7d = revenueSrc.map((r) => ({
+          _id: r._id || r.date,
+          revenue: r.revenue ?? r.total ?? 0,
+          orders: r.orders ?? r.count ?? 0,
+        }));
+
+        const topVendors = (overviewData?.topVendors || []).map((v) => ({
+          vendorId: v.vendorId ?? v._id ?? v.id,
+          vendorName: v.vendorName ?? v.name ?? "Unknown",
+          revenue: v.revenue ?? v.total ?? 0,
+          items: v.items ?? v.count ?? 0,
+        }));
+
+        setData({ users, products, ordersByStatus, revenue7d, topVendors });
+      } catch (err) {
+        console.error("Failed to load admin overview:", err);
+        setData({
+          users: { total: 0, vendors: 0, customers: 0, shippers: 0 },
+          products: { total: 0 },
+          ordersByStatus: [
+            { _id: "active", count: 0 },
+            { _id: "delivered", count: 0 },
+          ],
+          revenue7d: [],
+          topVendors: [],
+        });
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const revenueMax = useMemo(() => {

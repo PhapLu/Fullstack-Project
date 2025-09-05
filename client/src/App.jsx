@@ -18,11 +18,8 @@ import SignIn from "./pages/auth/signIn/SignIn";
 import SignUp from "./pages/auth/signUp/SignUp";
 import VerifyOtp from "./pages/auth/verifyOtp/VerifyOtp.jsx";
 import AdminLayout from "./pages/admin/AdminLayout.jsx";
-import AdminOrders from "./pages/admin/AdminOrders.jsx";
 import AdminHubs from "./pages/admin/AdminHubs.jsx";
 import AdminOverview from "./pages/admin/AdminOverview.jsx";
-import AdminProducts from "./pages/admin/AdminProducts.jsx";
-import AdminUsers from "./pages/admin/AdminUsers.jsx";
 import UserProfile from "./pages/profile/UserProfile/UserProfile";
 import MyCart from "./pages/orders/MyCart/MyCart";
 import ProductDetail from "./pages/product/ProductDetail.jsx";
@@ -79,9 +76,6 @@ const routes = [
         element: <AdminLayout />,
         children: [
           { index: true, element: <AdminOverview /> },
-          { path: "users", element: <AdminUsers /> },
-          { path: "products", element: <AdminProducts /> },
-          { path: "orders", element: <AdminOrders /> },
           { path: "hubs", element: <AdminHubs /> },
         ],
       },
