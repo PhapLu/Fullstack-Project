@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import styles from "./ProductDetail.module.scss";
 import { apiUtils } from "../../utils/newRequest";
 import { getImageUrl } from "../../utils/imageUrl";
@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 import { useCart } from "../../store/cart/CartContext";
 import ReviewForm from "./components/ReviewForm";
 import ReviewList from "./components/ReviewList";
+import { buildCheckoutPayload, startCheckout } from "../../utils/checkoutState";
 
 export default function ProductDetail({ onAddToCart }) {
     const location = useLocation()
     const state = location.state || {};
+    const navigate = useNavigate();
 
     const { addItem } = useCart()
     const { productId } = useParams();
@@ -42,23 +44,6 @@ export default function ProductDetail({ onAddToCart }) {
         fecthProduct();
     }, [productId]);
 
-    const addToCartLocal = (payload) => {
-        const KEY = "cart";
-        let cart = [];
-        try {
-            cart = JSON.parse(localStorage.getItem(KEY)) || [];
-        } catch (e) {
-            console.log(e);
-        }
-        const i = cart.findIndex((x) => x.productId === payload.productId);
-        if (i >= 0) cart[i].qty += payload.qty;
-        else cart.push(payload);
-        localStorage.setItem(KEY, JSON.stringify(cart));
-        window.dispatchEvent(
-            new CustomEvent("cart:updated", { detail: { cart } })
-        );
-    };
-
     const handleAddToCart = async () => {
         if (!product || adding) return;
         setAdding(true);
@@ -81,6 +66,25 @@ export default function ProductDetail({ onAddToCart }) {
     // Helper: kiểm tra ObjectId 24 hex
     const isValidObjectId = (v) => /^[a-f\d]{24}$/i.test(String(v || ""));
 
+    const handleBuyNow = async () => {
+        if (!product) return;
+      
+        // Build one-item payload consistent with Cart payload
+        const oneItem = {
+            id: productId,
+            qty,
+            price: product.price,
+            name: product.title || product.name,
+            image: getImageUrl(product?.images?.[0] || product?.thumbnail),
+        };
+      
+        const payload = buildCheckoutPayload({
+            items: [oneItem],
+            currency: "USD",
+        });
+      
+        await startCheckout(navigate, payload);
+    };
 
     return (
         <>
@@ -220,7 +224,7 @@ export default function ProductDetail({ onAddToCart }) {
                                 {adding ? "Adding…" : "Add to cart"}
                             </button>
 
-                            <button type="button" className={styles.buyNow}>
+                            <button type="button" onClick={handleBuyNow} disabled={loading || !product} className={styles.buyNow}>
                                 Buy now
                             </button>
                             <span

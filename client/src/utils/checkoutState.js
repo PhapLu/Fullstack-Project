@@ -70,3 +70,31 @@ export async function decryptState(token) {
     );
     return JSON.parse(dec.decode(plain));
 }
+
+export function buildCheckoutPayload({
+    items,
+    currency = "USD",
+    deliveryPerOrder = 2,
+    discount = 0,         
+}) {
+    const subtotal = items.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 0), 0);
+    const delivery = items.length ? deliveryPerOrder : 0;
+    const total = Math.max(0, subtotal + delivery - discount);
+
+    return {
+        ts: Date.now(),
+        currency,
+        items,
+        pricing: { subtotal, delivery, discount, total },
+    };
+}
+
+export async function startCheckout(navigate, payload) {
+    try {
+        const token = await encryptState(payload);
+        navigate(`/checkout?state=${encodeURIComponent(token)}`);
+    } catch (e) {
+        console.error("Failed to build checkout state", e);
+        navigate("/checkout");
+    }
+}

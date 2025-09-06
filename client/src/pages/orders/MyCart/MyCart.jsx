@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../../store/cart/CartContext.jsx";
 import { usd } from "../../../utils/currency.js";
 import styles from "./MyCart.module.scss"; // switched to CSS module
-import { encryptState } from "../../../utils/checkoutState.js";
+import { buildCheckoutPayload, encryptState, startCheckout } from "../../../utils/checkoutState.js";
 import { selectUser } from "../../../store/slices/authSlices.js";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,25 +21,11 @@ export default function MyCart() {
   const inc = () => setQty((q) => q + 1);
 
   const goCheckout = async () => {
-    const payload = {
-      ts: Date.now(),
-      currency: "USD",
-      items: items.map(({ id, qty, price, name, image }) => ({
-        id,
-        qty,
-        price,
-        name,
-        image,
-      })),
-      pricing: { subtotal, delivery, total },
-    };
-    try {
-      const token = await encryptState(payload);
-      navigate(`/checkout?state=${encodeURIComponent(token)}`);
-    } catch (e) {
-      console.error("Failed to build checkout state", e);
-      navigate("/checkout"); // graceful fallback
-    }
+    const itemsForPayload = items.map(({ id, qty, price, name, image }) => ({
+      id, qty, price, name, image,
+    }));
+    const payload = buildCheckoutPayload({ items: itemsForPayload, currency: "USD" });
+    await startCheckout(navigate, payload);
   };
 
   return (
