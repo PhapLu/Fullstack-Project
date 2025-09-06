@@ -18,7 +18,7 @@ class OrderService {
     // 1. Check user
     const user = await User.findById(userId);
     if (!user) throw new AuthFailureError("You are not authenticated!");
-
+    console.log("BODY", body);
     // 2. Validate inputs
     if (!body.items || body.items.length === 0)
       throw new BadRequestError("Order must have at least one item");
@@ -39,6 +39,42 @@ class OrderService {
     await order.save();
     return {
       message: "Order created successfully",
+      order,
+    };
+  };
+
+  static updateOrderStatus = async (req) => {
+    const orderId = req.params.orderId;
+    const userId = req.userId;
+    const { status } = req.body;
+    console.log("START");
+    // 1. Check shipper, order
+    const shipper = await User.findById(userId);
+    console.log("START2");
+
+    if (!shipper)
+      throw new AuthFailureError(
+        "You are not authorized to perform this action"
+      );
+    const order = await Order.findById(orderId).populate("items.productId");
+    if (!order) throw new NotFoundError("Order not found");
+
+    // 2. Validate body
+    console.log("START3");
+
+    if (status !== "delivered" && status !== "cancelled")
+      throw new BadRequestError("Invalid status");
+
+    // 3. Update order status
+    console.log(orderId);
+    console.log(order);
+
+    order.status = status;
+    order.save();
+
+    console.log("UPDATE ORER ", order);
+
+    return {
       order,
     };
   };
@@ -155,12 +191,12 @@ class OrderService {
     if (!user) throw new AuthFailureError("You are not authenticated!");
     const order = await Order.findById(orderId)
       .populate("deliveryInformationId")
-      .populate("items.productId", "title images price")
+      .populate("items.productId", "title images price");
     if (!order) throw new NotFoundError("Order not found");
 
     // 2. Return order
     return {
-      order
+      order,
     };
   };
 
@@ -231,8 +267,6 @@ class OrderService {
       order: updated,
     };
   };
-
-  static updateOrderStatus = async (req) => {};
 }
 
 export default OrderService;
