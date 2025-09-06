@@ -75,13 +75,7 @@ export default function Orders({
             </header>
 
             <div className={styles.controls}>
-                <input
-                    className={styles.searchbar}
-                    placeholder="Search by order id, customer, address…"
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                />
-
+                
                 <div className={styles.filters}>
                     {[
                         ["all", "All"],
@@ -118,7 +112,12 @@ export default function Orders({
             {toast && <div className={styles.toast}>{toast}</div>}
 
             <div className={styles.hub__grid}>
-                {filtered.map((order) => (
+                {filtered.length === 0 ? (
+                    <p className={styles.noOrders}>
+                        No orders found. Please adjust your filters.
+                    </p>
+                ) : (
+                    filtered.map((order) => (
                     <article className={styles["order-card"]} key={order.id}>
                         <div className={styles["order-card__top"]}>
                             <div className={styles.route}>
@@ -253,7 +252,8 @@ export default function Orders({
                             </div>
                         </div>
                     </article>
-                ))}
+                ))
+                )}
             </div>
         </section>
     );
