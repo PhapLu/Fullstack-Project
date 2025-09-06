@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { STATUS_FLOW, labelOf } from "./HubUtil.js";
 import { apiUtils } from "../../utils/newRequest";
 import { usd } from "../../utils/currency.js";
+import { getImageUrl } from "../../utils/imageUrl.js";
 
 export default function OrderDetail({
   role = "shipper",
   order,
-  onBack,
   onAdvance,
   onDeliver,
   onCancel,
 }) {
+  const navigate = useNavigate();
+  const onBack = () => {
+    navigate(-1);
+  }
   const { orderId } = useParams();
   const [detail, setDetail] = useState(order || null);
   const [loading, setLoading] = useState(!order);
@@ -77,7 +81,7 @@ export default function OrderDetail({
 
   const items = Array.isArray(detail.items) ? detail.items : [];
   const subtotal = detail.pricing.subtotal
-  const shippingFee = detail.pricing.shippingFee
+  const shippingFee = parseFloat(detail.pricing.shippingFee)
   const total = subtotal + shippingFee
 
   return (
@@ -131,21 +135,19 @@ export default function OrderDetail({
         <ul className={styles.items}>
           {items.map((it, idx) => (
             <li key={idx} className={styles.item}>
-              <img src={it.productId.images} alt={it.name} />
+              <img src={getImageUrl(it.productId.images[0])} alt={it.name} />
               <div className={styles.item__meta}>
                 <div className={styles.item__name}>{it.productId.title}</div>
                 <div className={styles.item__qty}>x{it.quantity}</div>
               </div>
-              {(it.unitPrice ?? it.price) != null && (
                 <div
                   style={{
                     marginLeft: "auto",
                     fontWeight: 700,
                   }}
                 >
-                  {usd((it.unitPrice ?? it.price) * (it.qty ?? 1))}
+                  {usd((it.productId.price) * (it.quantity ?? 1))}
                 </div>
-              )}
             </li>
           ))}
         </ul>

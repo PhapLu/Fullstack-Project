@@ -32,13 +32,6 @@ const fmtDate = (d) => {
   }
 };
 
-const joinDefined = (parts, sep = ", ") =>
-  parts
-    .filter(Boolean)
-    .map((s) => String(s).trim())
-    .filter(Boolean)
-    .join(sep);
-
 /* ================= KPI Row ================= */
 function StatsRow({ orders }) {
   // Use pricing.total as order value
@@ -253,10 +246,6 @@ export default function VendorDashboard() {
                           View Details
                         </Link>
                       )}
-
-                      <a href="/" className={styles.linkBtn}>
-                        Message Customer
-                      </a>
                     </td>
                   </tr>
 

@@ -77,35 +77,6 @@ export default function DistributionHub() {
     [orders, orderId]
   );
 
-  const advanceStatus = (oid) => {
-    setOrders((list) =>
-      list.map((o) => {
-        if (String(o.id) !== String(oid)) return o;
-        const i = STATUS_FLOW.indexOf(o.status);
-        if (i === -1 || i === STATUS_FLOW.length - 1) return o;
-        return { ...o, status: STATUS_FLOW[i + 1] };
-      })
-    );
-  };
-
-  const markDelivered = (oid) => {
-    setOrders((list) =>
-      list.map((o) =>
-        String(o.id) === String(oid) ? { ...o, status: "delivered" } : o
-      )
-    );
-  };
-
-  const cancelOrder = (oid) => {
-    const ok = window.confirm(`Cancel order ${oid}?`);
-    if (!ok) return;
-    setOrders((list) =>
-      list.map((o) =>
-        String(o.id) === String(oid) ? { ...o, status: "cancelled" } : o
-      )
-    );
-  };
-
   if (loading.hub || loading.orders) {
     return <div style={{ padding: 16 }}>Loading…</div>;
   }
@@ -123,9 +94,6 @@ export default function DistributionHub() {
         orderId={orderId}
         order={currentOrder}
         onBack={() => navigate(-1)}
-        onAdvance={() => advanceStatus(orderId)}
-        onDeliver={() => markDelivered(orderId)}
-        onCancel={() => cancelOrder(orderId)}
       />
     );
   }
@@ -135,14 +103,12 @@ export default function DistributionHub() {
       hub={hub}
       role={role}
       orders={orders}
+      setOrders={setOrders}
       onOpenOrder={(oid) =>
         navigate(
           `/distributionHub/${distributionHubId}/orders/${oid}?role=${role}`
         )
       }
-      onAdvance={advanceStatus}
-      onDeliver={markDelivered}
-      onCancel={cancelOrder}
     />
   );
 }

@@ -250,7 +250,7 @@
 .table td {
   padding: 12px;
   border-bottom: 1px solid color-mix(in oklab, var(--border-color) 60%, var(--surface));
-  text-align: left;
+  text-align: center;
   color: var(--text);
 }
 
@@ -260,10 +260,12 @@
 }
 
 .linkBtn {
+  width: 108px;
   background: transparent;
   border: 1px solid var(--border-color);
   padding: 6px 10px;
-  border-radius: 10px;
+  border-radius: 5px;
+  text-align: left;
   cursor: pointer;
   color: var(--text-color);
   text-decoration: none;

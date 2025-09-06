@@ -127,10 +127,6 @@ export default function ProductDetail({ onAddToCart }) {
                                     </Link>
                                 </div>
                             </div>
-
-                            <button type="button" className={styles.chatBtn}>
-                                Chat with shop
-                            </button>
                         </div>
 
                         {/* Title */}

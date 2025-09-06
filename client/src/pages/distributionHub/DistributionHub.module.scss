@@ -22,7 +22,7 @@
 
 .hub__head p {
   color: var(--muted);
-  margin: 0 0 16px;
+  margin: 14px 0;
 }
 
 /* ===== Controls ===== */
@@ -171,7 +171,7 @@
 /* ===== Status badge ===== */
 .status-badge {
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 5px;
   font-weight: 700;
   font-size: 13px;
   border: 1px solid transparent;
@@ -258,7 +258,7 @@
   align-items: center;
   background: var(--surface);
   border: 1px solid #e6edf3;
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 8px 12px;
   margin-top: 8px;
 }
@@ -328,7 +328,8 @@
 
 .actions_mark,
 .actions_cancel {
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
   border: 1px solid transparent;
   transition: 0.25s;
@@ -380,7 +381,7 @@
 .step {
   background: #f5f7fb;
   border: 1px solid #e6edf3;
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 10px;
   text-align: center;
   color: var(--muted);

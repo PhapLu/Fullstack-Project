@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
-import { vi } from 'date-fns/locale';
+import { vi } from 'date-fns/locale'; 
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration.js';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
@@ -15,6 +15,10 @@ export const formatEmailToName = (email) => {
     const username = email.split('@')[0];
     return `@${username}`;
 };
+
+export const capitalizeFirst = (str) =>
+  str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
 
 export function bytesToKilobytes(bytes) {
     const kilobytes = bytes / 1024;
