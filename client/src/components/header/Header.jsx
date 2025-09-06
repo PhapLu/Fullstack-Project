@@ -145,6 +145,19 @@ export default function Header() {
                     />
                     <span>Vendor Dashboard</span>
                   </button>
+                ) : user?.role === "shipper" ? (
+                  <button
+                    type="button"
+                    className={styles.menuItem}
+                    role="menuitem"
+                    onClick={() => navigate("/dis")}
+                  >
+                    <FontAwesomeIcon
+                      icon={["fas", "gauge"]}
+                      className={styles.menuIcon}
+                    />
+                    <span>Shipper Dashboard</span>
+                  </button>
                 ) : (
                   <button
                     type="button"
