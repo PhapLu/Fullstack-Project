@@ -265,7 +265,7 @@ export default function UserProfile() {
                     <div className={styles["sheet-row"]}>
                         <label className={styles["label"]}>Phone</label>
                         <input
-                            type="number"
+                            type="string"
                             className="form-control form-control-sm"
                             value={form.phone}
                             onChange={(e) =>
@@ -376,7 +376,7 @@ export default function UserProfile() {
                                         },
                                     }))
                                 }
-                                disabled={!editingProfile}
+                                readOnly
                             />
                             {err("shipperProfile.assignedHub") && (
                                 <div className="invalid-feedback d-block">

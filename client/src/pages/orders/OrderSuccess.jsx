@@ -50,7 +50,7 @@ export default function OrderSuccess() {
         aria-live="polite"
         aria-label="Order placed successfully"
       >
-        <div className="card-body d-flex align-items-center gap-3 p-4">
+        <div className="card-body d-flex flex-column align-items-center text-center gap-3 p-4">
           <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="11" stroke="var(--primary-color)" />
             <path
@@ -63,8 +63,7 @@ export default function OrderSuccess() {
           <div className="flex-grow-1">
             <h2 className="mb-2 fs-1 fs-md-2">Order placed successfully</h2>
             <div className="mb-0 text-body-secondary fs-4 fs-md-5">
-              {" "}
-              Placed at {placedAtStr}{" "}
+              Placed at {placedAtStr}
             </div>
           </div>
         </div>
@@ -153,15 +152,15 @@ export default function OrderSuccess() {
 
           <div className="d-flex justify-content-end gap-2 mt-3 flex-wrap">
             <button
-              className="btn btn-outline-secondary rounded-pill px-4"
+              className="btn btn-outline-secondary rounded px-4"
               style={{ fontSize: "12px" }}
               onClick={() => navigate("/")}
             >
               Continue shopping
             </button>
             <Link
-              to={`/user/${user?._id}/order-history`}
-              className="btn btn-primary rounded-pill px-4"
+              to={`/user/${user?._id}/tory`}
+              className="btn btn-primary rounded px-4"
               style={{ fontSize: "12px" }}
             >
               View my orders →

@@ -4,6 +4,8 @@ import Orders from "../../components/distributionHub/Orders"; // renamed
 import OrderDetail from "../../components/distributionHub/OrderDetail"; // renamed
 import { STATUS_FLOW } from "../../components/distributionHub/HubUtil.js";
 import { apiUtils } from "../../utils/newRequest";
+import styles from "../../pages/distributionHub/DistributionHub.module.scss";
+
 
 export default function DistributionHub() {
   const { distributionHubId, orderId } = useParams();
@@ -127,6 +129,26 @@ export default function DistributionHub() {
         onDeliver={() => markDelivered(orderId)}
         onCancel={() => cancelOrder(orderId)}
       />
+    );
+  }
+
+  if (!loading.orders && (!orders || orders.length === 0) && !orderId) {
+    return (
+      <section className={`${styles.hub} ${styles.container}`}>
+        <header className={styles.hub__head}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <h1 style={{ margin: 0 }}>
+              Distibution Hub: {" "}
+              {hub && (
+                <span className={styles.loc}>
+                  @ {hub.title || hub.name || hub._id}
+                </span>
+              )}
+            </h1>
+          </div>
+          <p>This hub has no orders to show right now.</p>
+        </header>
+      </section>
     );
   }
 

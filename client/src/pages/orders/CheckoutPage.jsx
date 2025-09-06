@@ -318,7 +318,7 @@ export default function CheckoutPage() {
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h4 className="fw-bold mb-0">Delivery Information</h4>
                         <button
-                            className="btn btn-md btn-outline-primary"
+                            className={`btn btn-lg fs-5 btn-outline-primary ${styles['fw-500']}`}
                             onClick={() => setShowCreateForm((v) => !v)}
                         >
                             {showCreateForm ? "Close" : "+ New Address"}
@@ -503,7 +503,7 @@ export default function CheckoutPage() {
 
                                     <button
                                         type="button"
-                                        className="btn btn-md btn-outline-danger"
+                                        className={`btn fs-5 btn-md btn-outline-danger ${styles['fw-500']}`}
                                         onClick={() => onDelete(d._id)}
                                         disabled={deletingId === String(d._id)}
                                     >
@@ -606,7 +606,7 @@ export default function CheckoutPage() {
 
             <div className="d-flex justify-content-end gap-2 mt-4 flex-wrap">
                 <button
-                    className="btn btn-lg btn-primary px-4 py-3 fw-bold rounded-pill"
+                    className="btn btn-lg btn-primary px-3 py-3 fw-bold rounded"
                     style={{ fontSize: "12px" }}
                     onClick={handlePurchase}
                     disabled={

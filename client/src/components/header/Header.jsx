@@ -61,7 +61,7 @@ export default function Header() {
           <HashLink smooth to="/#contact">
             Contact us
           </HashLink>
-          <div className={styles.header__social}>
+          <div className={`${styles.header__social} ps-3`}>
             <a href="#">
               <FontAwesomeIcon
                 icon={faFacebook}

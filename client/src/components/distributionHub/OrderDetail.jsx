@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { STATUS_FLOW, labelOf } from "./HubUtil.js";
@@ -9,11 +9,15 @@ import { usd } from "../../utils/currency.js";
 export default function OrderDetail({
   role = "shipper",
   order,
-  onBack,
   onAdvance,
   onDeliver,
   onCancel,
 }) {
+
+  const navigate = useNavigate()
+  const onBack = () => {
+    navigate(-1);
+  }
   const { orderId } = useParams();
   const [detail, setDetail] = useState(order || null);
   const [loading, setLoading] = useState(!order);
@@ -91,7 +95,7 @@ export default function OrderDetail({
             ORDER DETAIL <span className={styles.loc}>#{detail._id}</span>
           </h1>
         </div>
-        <p>Detailed information for shipment and delivery tracking.</p>
+        <p className="pt-3">Detailed information for shipment and delivery tracking.</p>
       </header>
 
       <article className={styles["order-card"]}>
