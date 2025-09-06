@@ -1,11 +1,10 @@
 .hover-card {
     transition: box-shadow .2s ease, transform .2s ease;
+    box-shadow: var(--shadow);
+    min-height: 40vh;
+    display: flex;
+    justify-content: space-between;
   }
-  .hover-card:hover {
-    box-shadow: 0 12px 28px rgba(0, 0, 0, .12) !important;
-    transform: translateY(-2px);
-  }
-  
   .product-thumb {
     outline: 3px solid transparent;
     transition: outline-color .2s ease;
@@ -45,6 +44,9 @@
     font-weight: 600;
   }
 
+.checkout {
+  transition: 0.15s;
+}
 .coupon-row{
     display: grid;
     grid-template-columns: 1fr auto;  
