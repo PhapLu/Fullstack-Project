@@ -44,7 +44,7 @@ const AuthLayout = () => {
            </header>
 
           <div className={styles["auth__tagline"]}>
-            <p>Enjoy your shopping as a</p>
+            <p>Enjoy your shopping</p>
             <h2>{ROLE_TITLE[role] || "Customer"}</h2>
           </div>
 

@@ -34,6 +34,11 @@ const apiUtils = {
         return newRequest.patch(url, data, requestConfig);
     },
 
+    async put(url, data = {}, config = {}) {
+        const requestConfig = { ...getLoggedInRequestConfig(data), ...config };
+        return newRequest.put(url, data, requestConfig);
+    },
+
     async delete(url, config = {}) {
         const requestConfig = { ...getLoggedInRequestConfig(), ...config };
         return newRequest.delete(url, requestConfig);

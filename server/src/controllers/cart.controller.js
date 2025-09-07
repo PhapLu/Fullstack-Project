@@ -22,6 +22,13 @@ class CartController {
             metadata: await CartService.removeFromCart(req)
         }).send(res)
     }
+
+    snapshot = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Cart snapshot updated successfully',
+            metadata: await CartService.snapshot(req)
+        }).send(res)
+    }
 }
 
 export default new CartController()

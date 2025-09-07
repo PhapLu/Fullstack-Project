@@ -92,8 +92,7 @@ export default function AdminOverview() {
           <div className={styles.cardTitle}>Users</div>
           <div className={styles.cardValue}>{users.total}</div>
           <div className={styles.cardSub}>
-            V:{users.vendors} / C:{users.customers} / S:
-            {users.shippers}
+            Ven: {users.vendors} / Cus: {users.customers} / Ship: {users.shippers}
           </div>
         </div>
         <div className={styles.card}>

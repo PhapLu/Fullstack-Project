@@ -8,7 +8,7 @@ export const signIn = createAsyncThunk(
     async (payload, { rejectWithValue }) => {
         try {
             const { data } = await newRequest.post("/auth/login", payload);
-            return data; // maybe return { success: true } or { metadata: { user } }
+            return data;
         } catch (e) {
             return rejectWithValue(e.response?.data?.message || "Login failed");
         }
@@ -33,7 +33,7 @@ export const fetchMe = createAsyncThunk(
 export const openSocket = createAsyncThunk(
     "auth/openSocket",
     async (_, { getState }) => {
-        const s = connectSocket(); // no need to pass token, cookie auth will handle it if your socket handshake checks cookies
+        const s = connectSocket();
         return new Promise((resolve) => {
             if (s.connected) return resolve({ connected: true, id: s.id });
             s.once("connect", () => resolve({ connected: true, id: s.id }));

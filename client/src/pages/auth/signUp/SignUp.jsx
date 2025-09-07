@@ -298,7 +298,7 @@ const SignUp = () => {
                         Have an account?{" "}
                         <Link
                             className={styles.link}
-                            to={`/auth/signin/${role}`}
+                            to={`/auth/signin`}
                         >
                             Sign In
                         </Link>

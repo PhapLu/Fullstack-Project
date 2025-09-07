@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {signIn, openSocket, selectAuth, fetchMe} from "../../../store/slices/authSlices";
 
 const SignIn = () => {
-    const { role } = useParams(); // customer | vendor | shipper
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { status, error } = useSelector(selectAuth);
@@ -85,13 +84,6 @@ const SignIn = () => {
                     src={logo}
                     alt="Logo"
                 />
-
-                {/* Server/global error */}
-                {(errors.server || error) && (
-                    <div className={styles.formError} role="alert">
-                        {errors.server || error}
-                    </div>
-                )}
 
                 <form
                     className={styles["auth__form"]}
@@ -172,13 +164,13 @@ const SignIn = () => {
                         Don’t have an account yet{" "}
                         <Link
                             className={styles.link}
-                            to={`/auth/signup/${role}`}
+                            to={`/auth/signup/customer`}
                         >
                             Sign Up
                         </Link>
                     </div>
 
-                    <div className={`${styles.help} ${styles.small}`}>
+                    {/* <div className={`${styles.help} ${styles.small}`}>
                         Or sign in an account as a{" "}
                         <div className={styles["help__role-selection"]}>
                             {["customer", "vendor", "shipper"]
@@ -195,7 +187,7 @@ const SignIn = () => {
                                     </span>
                                 ))}
                         </div>
-                    </div>
+                    </div> */}
                 </form>
             </div>
         </div>

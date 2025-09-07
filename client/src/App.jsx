@@ -95,7 +95,7 @@ const routes = [
     element: <AuthLayout />,
     children: [
       { index: true, element: <Navigate to="signin/customer" replace /> },
-      { path: "signin/:role", element: <SignIn /> },
+      { path: "signin", element: <SignIn /> },
       { path: "signup/:role", element: <SignUp /> },
       { path: "otp", element: <VerifyOtp /> },
     ],

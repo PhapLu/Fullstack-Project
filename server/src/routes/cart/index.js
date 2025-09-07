@@ -9,8 +9,9 @@ const router = express.Router();
 
 router.use(verifyToken)
 
-router.get("/readCart/:cartId", asyncHandler(CartController.readCart));
+router.get("/readCart", asyncHandler(CartController.readCart));
 router.post("/addToCart", asyncHandler(CartController.addToCart));
 router.post("/removeFromCart", asyncHandler(CartController.removeFromCart));
+router.put("/snapshot", asyncHandler(CartController.snapshot));
 
 export default router;

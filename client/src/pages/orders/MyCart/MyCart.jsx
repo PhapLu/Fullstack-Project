@@ -8,22 +8,26 @@ import {
     encryptState,
     startCheckout,
 } from "../../../utils/checkoutState.js";
+import noneCartItemImage from '../../../assets/customer_img/no-cart-item-image.png'
 import { selectUser } from "../../../store/slices/authSlices.js";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { getImageUrl } from "../../../utils/imageUrl.js";
 
 export default function MyCart() {
     const navigate = useNavigate();
-    const { items, removeItem, clear, subtotal, addItem } = useCart();
-    const [qty, setQty] = useState(1);
+    const { items, removeItem, clear, subtotal, setQty } = useCart();
     const delivery = items.length ? 2 : 0;
     const total = Math.max(0, subtotal + delivery);
     const user = useSelector(selectUser);
 
-    const dec = () => setQty((q) => Math.max(1, q - 1));
-    const inc = () => setQty((q) => q + 1);
-
+    const dec = (id, current) => setQty(id, Math.max(1, (current || 1) - 1));
+    const inc = (id, current, stock) => {
+        const next = (current || 0) + 1;
+        setQty(id, stock ? Math.min(next, stock) : next);
+    };
+    console.log('Items', items)
     const goCheckout = async () => {
         const itemsForPayload = items.map(
             ({ id, qty, price, name, image }) => ({
@@ -48,9 +52,31 @@ export default function MyCart() {
                 {/* LEFT */}
                 <div className="row-lg-7">
                     {items.length === 0 ? (
-                        <div className="alert alert-info">
-                            Your cart is empty.
-                        </div>
+                        <section className="flex-grow-1 d-flex align-items-center justify-content-center">
+                            <div className="card border-0 shadow-sm px-4 py-5 text-center w-100">
+                                {/* Illustration — replace src with your asset path */}
+                                <img
+                                    src={noneCartItemImage}
+                                    alt="No orders"
+                                    className="img-fluid mx-auto mb-4"
+                                    style={{ maxWidth: 220 }}
+                                />
+                                <h4 className="fw-bold mb-2">
+                                    Your cart is empty
+                                </h4>
+                                <p className="text-muted mb-4 fs-5">
+                                    Let's explore our products and shop now!
+                                </p>
+                                <div className="d-grid d-sm-flex justify-content-center gap-2 mb-4">
+                                    <button
+                                        className="btn btn-primary fs-5"
+                                        onClick={() => navigate("/")}
+                                    >
+                                        Browse products
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
                     ) : (
                         <div className="vstack gap-3">
                             {items.map((p) => (
@@ -65,7 +91,7 @@ export default function MyCart() {
                                             aria-label={`View ${p.name}`}
                                         >
                                             <img
-                                                src={p.image}
+                                                src={getImageUrl(p.image)}
                                                 alt={p.name}
                                                 className={`rounded ${styles[""]}`}
                                                 style={{
@@ -109,7 +135,7 @@ export default function MyCart() {
                                                 >
                                                     <button
                                                         type="button"
-                                                        onClick={dec}
+                                                        onClick={() => dec(p.id, p.qty)}
                                                         aria-label="Decrease"
                                                         className="left"
                                                     >
@@ -123,7 +149,7 @@ export default function MyCart() {
                                                     />
                                                     <button
                                                         type="button"
-                                                        onClick={inc}
+                                                        onClick={() => inc(p.id, p.qty, p.stock)}
                                                         aria-label="Increase"
                                                         className="right"
                                                     >

@@ -8,18 +8,26 @@ class CartService {
     static addToCart = async (req) => {
         const customerId = req.userId;
         let { productId, quantity } = req.body;
-      
+
         // 1) Validate
         if (!productId) throw new BadRequestError("Product ID is required");
         quantity = Math.max(1, Number(quantity) || 1);
-      
-        // 2) Check customer & product
+        
+        // 2) Check customer & product & cart
         const customer = await User.findById(customerId);
         if (!customer) throw new AuthFailureError("You are not authenticated!");
       
         const product = await Product.findById(productId).select("stock price title thumbnail");
         if (!product) throw new NotFoundError("Product not found");
-      
+        const cart = await Cart.findOne({ customerId });
+        if (!cart) {
+            // Create cart for customer
+            await Cart.create({
+                customerId,
+                items: [],
+            });
+        }
+
         // 3) Read existing qty once to enforce stock cap
         const existing = await Cart.findOne(
             { customerId, "items.productId": productId },
@@ -33,13 +41,15 @@ class CartService {
       
         if (delta <= 0) {
             // nothing to change (already at stock cap)
-            const cart = await this.readCart(customerId);
+            const cart = await this.readCart(req);
             return { message: "No change (stock limit reached)", cart };
         }
-      
+        
+        let updatedCart
+
         // 4) Increment if exists, else push
         if (prevQty > 0) {
-          await Cart.updateOne(
+            updatedCart = await Cart.updateOne(
             { customerId, "items.productId": productId },
             {
               $inc: { "items.$.quantity": delta, version: 1 },
@@ -47,7 +57,7 @@ class CartService {
             }
           );
         } else {
-            await Cart.updateOne(
+            updatedCart = await Cart.updateOne(
                 { customerId },
                 {
                     $push: { items: { productId, quantity: delta } },
@@ -59,9 +69,7 @@ class CartService {
             );
         }
       
-        // 5) Return enriched cart (so FE can optionally replace local)
-        const cart = await this.readCart(customerId);
-        return { message: "Product added to cart", cart };
+        return { cart: updatedCart };
     };
 
     static readCart = async(req) => {
@@ -72,42 +80,48 @@ class CartService {
         if(!customer) throw new AuthFailureError('You are not authenticated!');
 
         // 2. Get cart items
-        const cart = await Cart.findOne({ customerId })
+        let cart = await Cart.findOne({ customerId })
             .populate('items.productId', 'title price images')
             .lean();
-        if (!cart) throw new NotFoundError('Cart not found');
+        console.log('CART', cart)
+        if (!cart){
+            // Create cart for customer
+            cart = await Cart.create({
+                customerId,
+            })
+            cart.save()
+        }
+
         // 3. Return cart items
         return {
             cart
         }
     }
 
-    static readCart = async (customerId) => {
-        const cart = await Cart.findOne({ customerId }).lean();
-        if (!cart) return { items: [], version: 0 };
+    static snapshot = async (req) => {
+        const customerId = req.userId;
+        const { items = [] } = req.body;
       
-        const ids = cart.items.map((it) => it.productId);
-        const products = await Product.find({ _id: { $in: ids } })
-            .select("title price thumbnail stock")
+        const customer = await User.findById(customerId);
+        if (!customer) throw new AuthFailureError("You are not authenticated!");
+      
+        const normalized = items
+            .filter((x) => x?.productId && Number(x.quantity) > 0)
+            .map((x) => ({ productId: x.productId, quantity: Number(x.quantity) }));
+      
+        await Cart.updateOne(
+            { customerId },
+            { $set: { items: normalized, updatedAt: new Date() }, $inc: { version: 1 } },
+            { upsert: true }
+        );
+      
+        const cart = await Cart.findOne({ customerId })
+            .populate("items.productId", "title price images thumbnail stock classification")
             .lean();
       
-        const byId = new Map(products.map((p) => [String(p._id), p]));
+        return { cart };
+    };
       
-        return {
-            items: cart.items.map((it) => {
-                const p = byId.get(String(it.productId)) || {};
-                return {
-                    id: String(it.productId),
-                    name: p.title,
-                    price: p.price,
-                    image: p.thumbnail,
-                    stock: p.stock,
-                    qty: it.quantity,
-                };
-            }),
-            version: cart.version || 0,
-        };
-      };
 }
 
 export default CartService;

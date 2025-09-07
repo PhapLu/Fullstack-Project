@@ -83,9 +83,6 @@ const otpTemplate = (toEmail, message="", verificationCode) => {
         </head>
         <body>
             <div class="container">
-                <div class="header">
-                    <img style="width: 40px; height: auto; object-fit: cover" src="https://res.cloudinary.com/fiyonce/image/upload/w_60/v1743152687/MKT_materials__5_-removebg-preview_1_ohm7lc.png" alt="Pastal">
-                </div>
                 <div class="content">
                     <div class="content_container">
                         <p class="content_head">Hello ${toEmail},</p>
@@ -95,16 +92,16 @@ const otpTemplate = (toEmail, message="", verificationCode) => {
                     </div>
                 </div>
                 <div style='font-size: 12px; text-align: justify;' class="footer">
-                    <p>Pastal is Vietnam’s leading platform for custom illustrations, bringing together talented young artists from a variety of art styles.</p>
-                    <span>We're currently in beta and always looking to improve. Your feedback and suggestions are incredibly valuable to us. We look forward to seeing you on Pastal!</span>
+                    <p>Bloomart is Vietnam’s marketplace platform, bringing together buyers and customer accross the globe.</p>
+                    <span>We're currently in beta and always looking to improve. Your feedback and suggestions are incredibly valuable to us. We look forward to seeing you on Bloomart!</span>
                     <span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>
 
                     <span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>
                     <p>If you have any questions or feedback, feel free to contact us at 
                         <span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>
-                        <a href="mailto:pastalltd@gmail.com">pastalltd@gmail.com</a>
+                        <a href="mailto:bloomart@gmail.com">bloomart@gmail.com</a>
                     </p>
-                    <a style='color: #6B07EE; font-size: 12px;' class="fiyonce_help" href="mailto:pastalltd@gmail.com">pastalltd@gmail.com</a></p>
+                    <a style='color: #6B07EE; font-size: 12px;' class="fiyonce_help" href="mailto:bloomart@gmail.com">bloomart@gmail.com</a></p>
                     <!-- <div class="social-icons">
                         <a href="#" target="_blank" style='margin-right:12px;'><img height="22" src="https://res.cloudinary.com/fiyonce/image/upload/v1718068817/fiyonce/system/facebook_icon_sk9jnu.png" style="object-fit: cover; border-radius:0px;display:block" class="CToWUd" data-bit="iit" /></a>
                         <a href="#" target="_blank" style='margin-right:12px;'><img height="22" src="https://res.cloudinary.com/fiyonce/image/upload/v1718064053/fiyonce/system/tiktok_icon_zkvjzu.png" style="border-radius:0px;display:block" width="22" class="CToWUd" data-bit="iit"/></a>

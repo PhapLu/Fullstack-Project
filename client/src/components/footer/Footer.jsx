@@ -75,7 +75,7 @@ export default function Footer() {
                     <h4>Account</h4>
                     <ul>
                         <li>
-                            <Link to="/auth/signin/customer">Sign In</Link>
+                            <Link to="/auth/signin">Sign In</Link>
                         </li>
                         <li>
                             <Link to="/cart">View Cart</Link>
