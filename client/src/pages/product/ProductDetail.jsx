@@ -1,60 +1,74 @@
-import { useEffect, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 import styles from "./ProductDetail.module.scss";
 import { apiUtils } from "../../utils/newRequest";
 import { getImageUrl } from "../../utils/imageUrl";
-import { Link } from "react-router-dom";
 import { useCart } from "../../store/cart/CartContext";
 import ReviewForm from "./components/ReviewForm";
 import ReviewList from "./components/ReviewList";
 import { buildCheckoutPayload, startCheckout } from "../../utils/checkoutState";
 
-export default function ProductDetail({ onAddToCart }) {
+export default function ProductDetail() {
   const location = useLocation();
   const state = location.state || {};
   const navigate = useNavigate();
-
   const { addItem } = useCart();
-  const { productId } = useParams();
+
+  // ✅ Lấy id từ route TRƯỚC khi dùng ở bất kỳ hook nào
+  const { productId: routeProductId } = useParams();
+
   const [product, setProduct] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [qty, setQty] = useState(1);
   const [adding, setAdding] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+
   const orderId = state.orderId;
-  console.log(state);
 
   const dec = () => setQty((q) => Math.max(1, q - 1));
   const inc = () => setQty((q) => q + 1);
-  const pid = product?._id;
 
+  // ✅ helper còn dùng ở dưới
+  const isValidObjectId = (v) => /^[a-f\d]{24}$/i.test(String(v || ""));
+
+  // Reset ảnh khi đổi sản phẩm
+  useEffect(() => setActiveIndex(0), [routeProductId]);
+
+  // Danh sách ảnh gallery
+  const gallery = useMemo(() => {
+    const arr = Array.isArray(product?.images) ? product.images : [];
+    return arr.length ? arr : product?.thumbnail ? [product.thumbnail] : [];
+  }, [product]);
+
+  // Fetch product
   useEffect(() => {
-    const fecthProduct = async () => {
+    let cancelled = false;
+    (async () => {
       try {
         setLoading(true);
-        const res = await apiUtils.get(`/product/readProduct/${productId}`);
-        setProduct(res.data.metadata.product);
+        const res = await apiUtils.get(
+          `/product/readProduct/${routeProductId}`
+        );
+        if (!cancelled) setProduct(res.data.metadata.product);
       } catch (e) {
-        if (e.name !== "AbortError") setError(e);
+        if (!cancelled && e.name !== "AbortError") setError(e);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
+    })();
+    return () => {
+      cancelled = true;
     };
-    fecthProduct();
-  }, [productId]);
+  }, [routeProductId]);
 
   const handleAddToCart = async () => {
     if (!product || adding) return;
     setAdding(true);
     try {
       await addItem({
-        id: productId,
+        id: routeProductId,
         name: product.title || product.name,
         price: product.price,
         image: getImageUrl(product.images?.[0] || product.thumbnail),
@@ -69,24 +83,16 @@ export default function ProductDetail({ onAddToCart }) {
     }
   };
 
-  const isValidObjectId = (v) => /^[a-f\d]{24}$/i.test(String(v || ""));
-
   const handleBuyNow = () => {
     if (!product) return;
-
     const oneItem = {
-      id: productId,
+      id: routeProductId,
       qty,
       price: product.price,
       name: product.title || product.name,
       image: getImageUrl(product?.images?.[0] || product?.thumbnail),
     };
-
-    const payload = buildCheckoutPayload({
-      items: [oneItem],
-      currency: "USD",
-    });
-
+    const payload = buildCheckoutPayload({ items: [oneItem], currency: "USD" });
     startCheckout(navigate, payload);
   };
 
@@ -97,17 +103,36 @@ export default function ProductDetail({ onAddToCart }) {
           {/* Left: Gallery */}
           <section className={styles.gallery} aria-label="Product gallery">
             <div className={styles.hero} aria-hidden="true">
-              {product?.images?.[0] && (
+              {gallery[activeIndex] && (
                 <img
-                  src={getImageUrl(product.images[0])}
+                  src={getImageUrl(gallery[activeIndex])}
                   alt={product?.title || "Product image"}
                 />
               )}
             </div>
 
-            <div className={styles.thumbs}>
-              {product?.images?.map((img, i) => (
-                <button type="button" key={i} className={styles.thumb}>
+            <div
+              className={styles.thumbs}
+              role="listbox"
+              aria-label="Thumbnails"
+            >
+              {gallery.map((img, i) => (
+                <button
+                  type="button"
+                  key={i}
+                  className={`${styles.thumb} ${
+                    i === activeIndex ? styles.active : ""
+                  }`}
+                  aria-pressed={i === activeIndex}
+                  aria-label={`Show image ${i + 1}`}
+                  onClick={() => setActiveIndex(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActiveIndex(i);
+                    }
+                  }}
+                >
                   <img src={getImageUrl(img)} alt={`Thumbnail ${i + 1}`} />
                 </button>
               ))}
@@ -116,11 +141,10 @@ export default function ProductDetail({ onAddToCart }) {
 
           {/* Right: Info */}
           <section className={styles.info}>
-            {/* Seller row */}
             <div className={styles.sellerRow}>
               <div className={styles.sellerLeft}>
-                <div className={styles.avatar} aria-hidden>
-                  <img src={getImageUrl(product?.vendorId?.avatar)} />
+                <div className={styles.avatar} aria-hidden="true">
+                  <img src={getImageUrl(product?.vendorId?.avatar)} alt="" />
                 </div>
                 <div className={styles.sellerMeta}>
                   <div className={styles.sellerName}>
@@ -136,21 +160,17 @@ export default function ProductDetail({ onAddToCart }) {
               </div>
             </div>
 
-            {/* Title */}
             <h1 className={styles.title}>{product?.title}</h1>
 
-            {/* Price box */}
             <div className={styles.field}>
               <div id="price" className={styles.price}>
                 ${product?.price}
               </div>
             </div>
 
-            {/* Delivery row */}
             <div className={styles.deliveryRow}>
               <span className={styles.deliveryLabel}>Delivery on:</span>
-              <span className={styles.deliveryIcon} aria-hidden>
-                {/* Truck icon (inline SVG) */}
+              <span className={styles.deliveryIcon} aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="18" height="18">
                   <path
                     d="M3 7h11v6h2.5l2-3H21v7h-1a2 2 0 1 1-4 0H9a2 2 0 1 1-4 0H3V7z"
@@ -163,7 +183,6 @@ export default function ProductDetail({ onAddToCart }) {
               </span>
             </div>
 
-            {/* Amount row */}
             <div className={styles.amountRow}>
               <span className={styles.amountLabel}>Amount</span>
               <div
@@ -196,7 +215,6 @@ export default function ProductDetail({ onAddToCart }) {
               </div>
             </div>
 
-            {/* Actions */}
             <div className={styles.actions}>
               <button
                 type="button"
@@ -204,7 +222,7 @@ export default function ProductDetail({ onAddToCart }) {
                 onClick={handleAddToCart}
                 disabled={loading || !product || adding}
               >
-                <span className={styles.cartIcon} aria-hidden>
+                <span className={styles.cartIcon} aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="18" height="18">
                     <path
                       d="M7 4h-2l-1 2v2h2l3.6 7.59L8.25 18a1 1 0 0 0 0 2H19v-2H9.42l1-2H18a1 1 0 0 0 .92-.62L22 9H7.42L6.16 6H22V4H7z"
@@ -230,18 +248,16 @@ export default function ProductDetail({ onAddToCart }) {
           </section>
         </div>
 
-        {/* Product detail section */}
         <section className={styles.detailPanel}>
           <h3 className={styles.detailTitle}>PRODUCT DETAIL</h3>
           <p className={styles.detailText}>{product?.description}</p>
         </section>
       </div>
 
-      {/* Review */}
       {state && isValidObjectId(orderId) && (
         <ReviewForm productId={state.productId} orderId={orderId} />
       )}
-      <ReviewList productId={productId} />
+      <ReviewList productId={routeProductId} />
     </>
   );
 }
