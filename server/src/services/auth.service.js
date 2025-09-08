@@ -1,27 +1,29 @@
-import bcrypt from "bcrypt"
-import crypto from "crypto"
-import jwt from "jsonwebtoken"
-import role from "../middlewares/role.middleware.js"
-import ForgotPasswordOTP from "../models/forgotPasswordOTP.model.js"
-import UserOTPVerification from "../models/userOTPVerification.model.js"
-import User from "../models/user.model.js"
-import { AuthFailureError, BadRequestError } from "../core/error.response.js"
-import { sendOtpEmail } from "../configs/brevo.config.js"
-import { isValidPassword, isAllowedEmail } from "../models/repositories/auth.repo.js" 
-import Conversation from "../models/conversation.model.js"
-import DistributionHub from "../models/distributionHub.model.js"
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import role from "../middlewares/role.middleware.js";
+import ForgotPasswordOTP from "../models/forgotPasswordOTP.model.js";
+import UserOTPVerification from "../models/userOTPVerification.model.js";
+import User from "../models/user.model.js";
+import { AuthFailureError, BadRequestError } from "../core/error.response.js";
+import { sendOtpEmail } from "../configs/brevo.config.js";
+import Conversation from "../models/conversation.model.js";
+import DistributionHub from "../models/distributionHub.model.js";
+import { isFilled, isValidEmail, isValidPassword, isValidUsername, minLength } from "../utils/validator.js";
+import mongoose from "mongoose";
 
 class AuthService {
-    //-------------------CRUD----------------------------------------------------
+    //---CRUD----
     static login = async ({ username, password }) => {
         // 1. Check user
         const user = await User.findOne({ username });
         if (!user) throw new BadRequestError("User not found");
-        
+
         // 2. Login validation
         const match = await bcrypt.compare(password, user.password);
-        if (!match) throw new AuthFailureError("Account or password is invalid");
-    
+        if (!match)
+            throw new AuthFailureError("Account or password is invalid");
+
         let token = jwt.sign(
             {
                 id: user._id,
@@ -34,7 +36,7 @@ class AuthService {
 
         // 3. Check unseen conversations
         const userId = user._id;
-          
+
         const [filteredUnSeenConversations] = await Promise.all([
             // Conversations with at least 1 message
             Conversation.find({
@@ -58,143 +60,250 @@ class AuthService {
                 ),
         ]);
         const userData = user.toObject();
-    
+
         userData.unSeenConversations = filteredUnSeenConversations;
-    
+
         return {
             code: 200,
             metadata: {
                 user: { ...userData },
-                token
+                token,
             },
         };
-    };    
+    };
+
+    // static signUp = async ({
+    //     // common
+    //     username,
+    //     email,
+    //     password,
+    //     role,
+    //     assignedHubId,
+    //     businessName,
+    //     businessAddress,
+    // }) => {
+    //     // 1. Validate inputs
+    //     if (!username) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
+    //     if (!password) throw new BadRequestError("Invalid password policy.");
+
+    //     if (typeof password !== "string") {
+    //         throw new BadRequestError("Password is required.");
+    //     }
+    //     if (password.length < 8) {
+    //         throw new BadRequestError("Password must be at least 8 characters.");
+    //     }
+    //     if (password.length > 20) {
+    //         throw new BadRequestError("Password must be at most 20 characters.");
+    //     }
+    //     if (!/[A-Z]/.test(password)) {
+    //         throw new BadRequestError("Password must include at least one uppercase letter.");
+    //     }
+    //     if (!/[a-z]/.test(password)) {
+    //         throw new BadRequestError("Password must include at least one lowercase letter.");
+    //     }
+    //     if (!/\d/.test(password)) {
+    //         throw new BadRequestError("Password must include at least one digit.");
+    //     }
+    //     if (!/[!@#$%^&*]/.test(password)) {
+    //         throw new BadRequestError("Password must include at least one special character (!@#$%^&*).");
+    //     }
+    //     if (!/^[A-Za-z0-9!@#$%^&*]+$/.test(password)) {
+    //         throw new BadRequestError("Password contains invalid characters (allowed: letters, digits, !@#$%^&*).");
+    //     }
+
+    //     if (!["customer", "vendor", "shipper"].includes(role)) throw new BadRequestError("Invalid role.");
+    //     let customerProfile, vendorProfile, shipperProfile;
+    //     if (role === "customer") {
+    //         customerProfile = { };
+    //     }
+    //     if (role === "vendor") {
+    //         if (!businessName) {
+    //             throw new BadRequestError("Business name is required.");
+    //         }
+    //         if (businessName.length < 5) {
+    //             throw new BadRequestError("Business name must be at least 5 characters.");
+    //         }
+    //         if (!businessAddress) {
+    //             throw new BadRequestError("Business address is required.");
+    //         }
+    //         if (businessAddress.length < 5) {
+    //             throw new BadRequestError("Business address must be at least 5 characters.");
+    //         }
+    //         vendorProfile = { businessName: businessName.trim(), businessAddress: businessAddress.trim() };
+    //     }
+
+    //     if (role === "shipper") {
+    //         if(!assignedHubId) throw new BadRequestError("Missing assigned hub for shipper.");
+    //         shipperProfile = { assignedHub: assignedHubId };
+    //     }
+
+    //     // 4) hash password
+    //     const passwordHash = await bcrypt.hash(password, 10);
+
+    //     // 5) Upsert/insert OTP record (with daily caps if you want)
+    //     const otp = crypto.randomInt(100000, 999999).toString();
+    //     const now = new Date();
+    //     try {
+    //         await UserOTPVerification.findOneAndUpdate(
+    //             { email },
+    //             {
+    //                 $set: {
+    //                     email,
+    //                     username,
+    //                     role,
+    //                     password: passwordHash,
+    //                     customerProfile,
+    //                     vendorProfile,
+    //                     shipperProfile,
+    //                     otp,
+    //                     lastRequestDate: now,
+    //                     isVerified: false
+    //                 },
+    //                 $inc: { requestCount: 1 }
+    //             },
+    //             { upsert: true, new: true }
+    //         );
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+
+    //     // 6) send OTP
+    //     try {
+    //         await sendOtpEmail(
+    //             email,
+    //             "[Pastal] OTP for Account Registration",
+    //             "Your verification code to complete account registration is:",
+    //             otp
+    //         );
+    //     } catch (err) {
+    //         console.error("Error sending OTP:", err);
+    //         throw new BadRequestError("Failed to send verification email");
+    //     }
+
+    //     return {
+    //         code: 201,
+    //         metadata: { email }
+    //     };
+    // };
 
     static signUp = async ({
-        // common
         username,
         email,
         password,
-        role,             
+        role,
         assignedHubId,
         businessName,
-        businessAddress,    
+        businessAddress,
     }) => {
-        // 1. Validate inputs
-        if (!username) throw new BadRequestError("Invalid username: 8-15 letters/digits only.");
-        if (!password) throw new BadRequestError("Invalid password policy.");
+        // 1) Normalize
+        username = typeof username === "string" ? username.trim() : "";
+        email = typeof email === "string" ? email.trim() : "";
+        businessName = typeof businessName === "string" ? businessName.trim() : "";
+        businessAddress = typeof businessAddress === "string" ? businessAddress.trim() : "";
+    
+        // 2) Validate (same helpers as FE)
+        if (!isFilled(username) || !isValidUsername(username))
+            throw new BadRequestError("Invalid username: 8–15 letters/digits only.");
+        if (!isFilled(email) || !isValidEmail(email))
+            throw new BadRequestError("Invalid email.");
+        if (!isValidPassword(password))
+            throw new BadRequestError("Password must be 8–20 chars, include upper, lower, digit, and one of !@#$%^&*, and use only allowed characters.");
 
-        if (typeof password !== "string") {
-            throw new BadRequestError("Password is required.");
-        }
-        if (password.length < 8) {
-            throw new BadRequestError("Password must be at least 8 characters.");
-        }
-        if (password.length > 20) {
-            throw new BadRequestError("Password must be at most 20 characters.");
-        }
-        if (!/[A-Z]/.test(password)) {
-            throw new BadRequestError("Password must include at least one uppercase letter.");
-        }
-        if (!/[a-z]/.test(password)) {
-            throw new BadRequestError("Password must include at least one lowercase letter.");
-        }
-        if (!/\d/.test(password)) {
-            throw new BadRequestError("Password must include at least one digit.");
-        }
-        if (!/[!@#$%^&*]/.test(password)) {
-            throw new BadRequestError("Password must include at least one special character (!@#$%^&*).");
-        }
-        if (!/^[A-Za-z0-9!@#$%^&*]+$/.test(password)) {
-            throw new BadRequestError("Password contains invalid characters (allowed: letters, digits, !@#$%^&*).");
-        }
-
-        if (!["customer", "vendor", "shipper"].includes(role)) throw new BadRequestError("Invalid role.");
+        if (!["customer", "vendor", "shipper"].includes(role)) 
+            throw new BadRequestError("Invalid role.");
+    
         let customerProfile, vendorProfile, shipperProfile;
+    
         if (role === "customer") {
-            customerProfile = { };
+            customerProfile = {};
         }
+    
         if (role === "vendor") {
-            if (!businessName) {
-                throw new BadRequestError("Business name is required.");
-            }
-            if (businessName.length < 5) {
+            if (!isFilled(businessName) || !minLength(businessName, 5))
                 throw new BadRequestError("Business name must be at least 5 characters.");
-            }
-            if (!businessAddress) {
-                throw new BadRequestError("Business address is required.");
-            }
-            if (businessAddress.length < 5) {
+            if (!isFilled(businessAddress) || !minLength(businessAddress, 5)) 
                 throw new BadRequestError("Business address must be at least 5 characters.");
-            }
-            vendorProfile = { businessName: businessName.trim(), businessAddress: businessAddress.trim() };
+            vendorProfile = { businessName, businessAddress };
         }
-      
+    
         if (role === "shipper") {
-            if(!assignedHubId) throw new BadRequestError("Missing assigned hub for shipper.");
+            if (!isFilled(assignedHubId))
+                throw new BadRequestError("Missing assigned hub for shipper.");
+            if (!mongoose.Types.ObjectId.isValid(assignedHubId))
+                throw new BadRequestError("Invalid distribution hub id.");
+            const hubExists = await DistributionHub.exists({ _id: assignedHubId });
+            if (!hubExists) throw new BadRequestError("Assigned distribution hub not found.");
+
             shipperProfile = { assignedHub: assignedHubId };
         }
+    
+        // 3) Uniqueness (simple)
+        if (await User.exists({ username })) 
+            throw new BadRequestError("Username already exists.");
+        if (await User.exists({ email })) 
+            throw new BadRequestError("Email already registered.");
 
-        // 4) hash password
+        if (role === "vendor") {
+            if (await User.exists({ role: "vendor", "vendorProfile.businessName": businessName }))
+                throw new BadRequestError("Business name already in use by another vendor.");
+            if (await User.exists({ role: "vendor", "vendorProfile.businessAddress": businessAddress })) 
+                throw new BadRequestError("Business address already in use by another vendor.");
+        }
+    
+        // 4) Hash password
         const passwordHash = await bcrypt.hash(password, 10);
-      
-        // 5) Upsert/insert OTP record (with daily caps if you want)
+    
+        // 5) Upsert OTP record
         const otp = crypto.randomInt(100000, 999999).toString();
         const now = new Date();
+    
         try {
-            await UserOTPVerification.findOneAndUpdate(
-                { email },
-                {
-                    $set: {
-                        email,
-                        username,
-                        role,
-                        password: passwordHash,
-                        customerProfile,
-                        vendorProfile,
-                        shipperProfile,
-                        otp,
-                        lastRequestDate: now,
-                        isVerified: false
-                    },
-                    $inc: { requestCount: 1 }
+        await UserOTPVerification.findOneAndUpdate(
+            { email },
+            {
+                $set: {
+                    email,
+                    username,
+                    role,
+                    password: passwordHash,
+                    customerProfile,
+                    vendorProfile,
+                    shipperProfile,
+                    otp,
+                    lastRequestDate: now,
+                    isVerified: false,
                 },
-                { upsert: true, new: true }
-            );
+                $inc: { requestCount: 1 },
+            },
+            { upsert: true, new: true }
+        );
         } catch (error) {
-            console.log(error)
+            console.error("OTP upsert error:", error);
+            throw new BadRequestError("Could not start verification.");
         }
-      
-        // 6) send OTP
+    
+        // 6) Send OTP
         try {
-            await sendOtpEmail(
-                email,
-                "[Pastal] OTP for Account Registration",
-                "Your verification code to complete account registration is:",
-                otp
-            );
+            await sendOtpEmail(email, "[Pastal] OTP for Account Registration", "Your verification code to complete account registration is:", otp);
         } catch (err) {
             console.error("Error sending OTP:", err);
             throw new BadRequestError("Failed to send verification email");
         }
-      
-        return {
-            code: 201,
-            metadata: { email }
-        };
+    
+        return { code: 201, metadata: { email } };
     };
 
     static verifyOtp = async ({ email, otp }) => {
         // 1. Find the OTP in the database
-        const otpRecord = await UserOTPVerification.findOne({ email }).lean()
+        const otpRecord = await UserOTPVerification.findOne({ email }).lean();
         // 2. Check if the OTP is correct
         if (!otpRecord || otpRecord.otp !== otp) {
-            throw new BadRequestError("Invalid OTP code")
+            throw new BadRequestError("Invalid OTP code");
         }
 
         // 3. Check if the OTP is expired
         if (otpRecord.expiredAt < new Date()) {
-            throw new BadRequestError("OTP code has expired")
+            throw new BadRequestError("OTP code has expired");
         }
 
         // 4. Create user by otpVerification
@@ -202,7 +311,7 @@ class AuthService {
         const userData = {
             username: otpRecord.username,
             email: otpRecord.email,
-            password: otpRecord.password, // match schema!
+            password: otpRecord.password,
             role: otpRecord.role,
         };
 
@@ -218,47 +327,59 @@ class AuthService {
         }
         if (otpRecord.role === "shipper") {
             const assignedHub = otpRecord.shipperProfile?.assignedHub;
-            if (!assignedHub) throw new BadRequestError("Missing assigned hub for shipper.");
+            if (!assignedHub)
+                throw new BadRequestError("Missing assigned hub for shipper.");
             userData.shipperProfile = { assignedHub };
         }
 
         const newUser = new User(userData);
         await newUser.save();
-        
+
         //7. Delete the OTP record
         await UserOTPVerification.deleteOne({ email });
 
-        const token = jwt.sign({ id: newUser._id, email: newUser.email }, process.env.JWT_SECRET);
+        const token = jwt.sign(
+            { id: newUser._id, email: newUser.email },
+            process.env.JWT_SECRET
+        );
         return {
             code: 200,
             metadata: {
-                user: newUser.toObject({ versionKey: false, transform: (_, ret) => { delete ret.password; return ret } }),
+                user: newUser.toObject({
+                    versionKey: false,
+                    transform: (_, ret) => {
+                        delete ret.password;
+                        return ret;
+                    },
+                }),
                 token,
             },
         };
-    }
+    };
 
     static forgotPassword = async ({ email }) => {
         // 1. Find the user by email
-        const user = await User.findOne({ email }).select('email').lean()
-        if (!user) throw new BadRequestError("Account has not been registered")
+        const user = await User.findOne({ email }).select("email").lean();
+        if (!user) throw new BadRequestError("Account has not been registered");
 
-        const oldOtp = await ForgotPasswordOTP.findOne({ email }).lean()
-        const today = new Date()
-        today.setHours(0, 0, 0, 0) // Set to the start of the day
+        const oldOtp = await ForgotPasswordOTP.findOne({ email }).lean();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to the start of the day
 
-        let otp
+        let otp;
         if (oldOtp) {
-            const lastRequestDate = new Date(oldOtp.lastRequestDate)
-            lastRequestDate.setHours(0, 0, 0, 0) // Set to the start of the day
+            const lastRequestDate = new Date(oldOtp.lastRequestDate);
+            lastRequestDate.setHours(0, 0, 0, 0); // Set to the start of the day
 
             if (lastRequestDate.getTime() === today.getTime()) {
                 // Same day request
                 if (oldOtp.requestCount >= 10) {
-                    throw new BadRequestError("You have exceeded the maximum number of requests for today. Please try again tomorrow.")
+                    throw new BadRequestError(
+                        "You have exceeded the maximum number of requests for today. Please try again tomorrow."
+                    );
                 } else {
                     // Increment request count and generate new OTP
-                    otp = crypto.randomInt(100000, 999999).toString()
+                    otp = crypto.randomInt(100000, 999999).toString();
                     await ForgotPasswordOTP.updateOne(
                         { email },
                         {
@@ -271,11 +392,11 @@ class AuthService {
                                 lastRequestDate: new Date(),
                             },
                         }
-                    )
+                    );
                 }
             } else {
                 // Different day request, reset count and generate new OTP
-                otp = crypto.randomInt(100000, 999999).toString()
+                otp = crypto.randomInt(100000, 999999).toString();
                 await ForgotPasswordOTP.updateOne(
                     { email },
                     {
@@ -286,19 +407,19 @@ class AuthService {
                             expiredAt: new Date(Date.now() + 30 * 60 * 1000),
                         },
                     }
-                )
+                );
             }
         } else {
             // New OTP request
-            otp = crypto.randomInt(100000, 999999).toString()
+            otp = crypto.randomInt(100000, 999999).toString();
             const forgotPasswordOTP = new ForgotPasswordOTP({
                 email,
                 otp,
                 expiredAt: new Date(Date.now() + 30 * 60 * 1000), // OTP expires in 30 minutes
                 requestCount: 1,
                 lastRequestDate: new Date(),
-            })
-            await forgotPasswordOTP.save()
+            });
+            await forgotPasswordOTP.save();
         }
 
         // 3. Send OTP email
@@ -318,78 +439,80 @@ class AuthService {
             metadata: {
                 email,
             },
-        }
-    }
+        };
+    };
 
     static verifyResetPasswordOtp = async ({ email, otp }) => {
         //1. Find, check the OTP and user in the database
-        const otpRecord = await ForgotPasswordOTP.findOne({ email })
+        const otpRecord = await ForgotPasswordOTP.findOne({ email });
 
         // 2. Check if the OTP is correct
         if (!otpRecord || otpRecord.otp !== otp) {
-            throw new BadRequestError("Invalid OTP code")
+            throw new BadRequestError("Invalid OTP code");
         }
         if (otpRecord.expiredAt < new Date())
-            throw new BadRequestError("OTP code has expired")
+            throw new BadRequestError("OTP code has expired");
 
         //3. Mark the otp is verified
-        otpRecord.isVerified = true
-        otpRecord.save()
+        otpRecord.isVerified = true;
+        otpRecord.save();
 
         return {
             message: "OTP verified successfully",
-        }
-    }
+        };
+    };
 
     static resetPassword = async ({ email, password }) => {
         //1. Find and check the OTP and user in the database
-        const otpRecord = await ForgotPasswordOTP.findOne({ email })
-        const user = await User.findOne({ email }).select('email password')
+        const otpRecord = await ForgotPasswordOTP.findOne({ email });
+        const user = await User.findOne({ email }).select("email password");
 
         // 2. Check if the OTP is correct
-        if (!otpRecord)
-            throw new BadRequestError("Invalid OTP code")
+        if (!otpRecord) throw new BadRequestError("Invalid OTP code");
 
         if (otpRecord.expiredAt < new Date())
-            throw new BadRequestError("OTP code has expired")
+            throw new BadRequestError("OTP code has expired");
 
-        if (!user) throw new BadRequestError("Account has not been registered")
+        if (!user) throw new BadRequestError("Account has not been registered");
 
         //2. Check if the OTP is verified
         if (!otpRecord.isVerified)
-            throw new BadRequestError("OTP has not been verified")
+            throw new BadRequestError("OTP has not been verified");
 
         //3. Hash the new password
-        if (!isValidPassword(password)) throw new BadRequestError('Invalid password')
-        const hashedPassword = await bcrypt.hash(password, 10)
-        user.password = hashedPassword
+        if (!isValidPassword(password))
+            throw new BadRequestError("Invalid password");
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
 
-        await user.save()
+        await user.save();
 
         //4. Delete the OTP record
-        await ForgotPasswordOTP.deleteOne({ email })
+        await ForgotPasswordOTP.deleteOne({ email });
 
         return {
             message: "Password reset successfully",
-        }
-    }
+        };
+    };
 
     static grantAccess(action, resource) {
         return async (req, res, next) => {
             try {
-                const userInfo = await User.findById(req.userId).select('role').lean()
-                const userRole = userInfo.role
-                const permission = role.can(userRole)[action](resource)
+                const userInfo = await User.findById(req.userId)
+                    .select("role")
+                    .lean();
+                const userRole = userInfo.role;
+                const permission = role.can(userRole)[action](resource);
                 if (!permission.granted) {
                     return res.status(401).json({
                         error: "You are not authorized to perform this action",
-                    })
+                    });
                 }
-                next()
+                next();
             } catch (error) {
-                next(error)
+                next(error);
             }
-        }
+        };
     }
 }
 

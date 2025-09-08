@@ -191,16 +191,10 @@
   border: 1px solid rgba(239, 68, 68, 0.25);
   color: #b91c1c;       
   margin-top: 20px;         
-  font-size: 1.2rem;               
+  font-size: 1.3rem;               
   line-height: 1.35;
   animation: err-pop 0.18s ease-out;
   word-break: break-word;
-}
-
-.form-field__error::before {
-  content: "⚠️";
-  font-size: 1.2rem;
-  line-height: 1;
 }
 
 /* red input when .field has error  */

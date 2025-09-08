@@ -12,14 +12,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { apiUtils } from "../../../utils/newRequest";
-import { isFilled, isMatch, isValidPassword } from "../../../utils/validator";
+import {
+    isFilled,
+    isMatch,
+    isValidEmail,
+    isValidPassword,
+    isValidUsername,
+    minLength,
+} from "../../../utils/validator";
 
 const SignUp = () => {
-    const { role } = useParams(); // role: customer|vendor|shipper
+    const { role } = useParams();
     const [show1, setShow1] = useState(false);
     const [show2, setShow2] = useState(false);
     const [errors, setErrors] = useState({});
-    const [isSubmitRegisterLoading, setIsSubmitRegisterLoading] = useState(false);
+    const [isSubmitRegisterLoading, setIsSubmitRegisterLoading] =
+        useState(false);
     const [hubs, setHubs] = useState([]);
     const [inputs, setInputs] = useState({
         username: "",
@@ -28,18 +36,13 @@ const SignUp = () => {
         confirmPassword: "",
         businessName: "",
         businessAddress: "",
-        distributionHub: "" // will be mapped to assignedHubId for shipper
+        distributionHub: "",
     });
     const navigate = useNavigate();
 
     const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
-    // role-based extra fields
     const extraSignupFields = {
-        customer: [
-            // Example if you later want to re-enable:
-            // { key: "name", placeholder: "Name", icon: <FontAwesomeIcon icon={faUser} /> },
-            // { key: "address", placeholder: "Address", icon: <FontAwesomeIcon icon={faLocationDot} /> },
-        ],
+        customer: [],
         vendor: [
             {
                 key: "businessName",
@@ -67,7 +70,9 @@ const SignUp = () => {
     useEffect(() => {
         const fetchHubs = async () => {
             try {
-                const response = await apiUtils.get("/distributionHub/readDistributionHubs");
+                const response = await apiUtils.get(
+                    "/distributionHub/readDistributionHubs"
+                );
                 setHubs(response?.data?.metadata.distributionHubs || []);
             } catch (error) {
                 console.error("Error fetching distribution hubs:", error);
@@ -76,40 +81,65 @@ const SignUp = () => {
         if (role === "shipper") fetchHubs();
     }, [role]);
 
-    const validateInputs = () => {
-        let errors = {};
-
-        // Validate email
-        if (!isFilled(inputs.username)) {
-            errors.username = "Please fill username";
-        } else if (!inputs.username) {
-            errors.username = "Usrename is not valid";
+    const validateInputs = (values) => {
+        const nextErrors = {};
+        const roleNorm = (role ?? "").toLowerCase();
+      
+        // Username
+        if (!isFilled(values.username)) {
+            nextErrors.username = "Username is required";
+        } else if (!isValidUsername(values.username)) {
+            nextErrors.username =
+                "Username must be 8–15 letters/digits (no spaces or symbols)";
         }
-
-        // Validate passwords
-        if (!isFilled(inputs.password)) {
-            errors.password = "Password is required";
-        } else if (!isValidPassword(inputs.password)) {
-            errors.password =
-                "Password must be at least 6 characters long and include at least one number and one special character.";
+      
+        // Email (optional in spec; only check if provided)
+        if (isFilled(values.email) && !isValidEmail(values.email)) {
+            nextErrors.email = "Invalid email format";
         }
-
-        if (!isFilled(inputs.confirmPassword)) {
-            errors.confirmPassword = "Confirm password is required";
-        } else if (!isMatch(inputs.confirmPassword, inputs.password)) {
-            errors.confirmPassword = "Confirm password is incorrect";
+      
+        // Password
+        if (!isFilled(values.password)) {
+            nextErrors.password = "Password is required";
+        } else if (!isValidPassword(values.password)) {
+            nextErrors.password =
+                "8–20 chars, include ≥1 uppercase, ≥1 lowercase, ≥1 digit, ≥1 special (!@#$%^&*), and only allowed characters.";
         }
-
-        if (
-            isFilled(inputs.password) &&
-            isFilled(inputs.confirmPassword) &&
-            !isMatch(inputs.confirmPassword, inputs.password)
-        ) {
-            errors.password = "Password is invalid";
-            errors.confirmPassword = "Confirm password is incorrect";
+      
+        // Confirm password
+        if (!isFilled(values.confirmPassword)) {
+            nextErrors.confirmPassword = "Confirm password is required";
+        } else if (!isMatch(values.confirmPassword, values.password)) {
+            nextErrors.confirmPassword = "Passwords do not match";
         }
-        return errors;
-    };
+      
+        // Role-specific
+        const needsMin5 = (v) => isFilled(v) && !minLength(v, 5);
+      
+        if (roleNorm === "vendor") {
+            if (!isFilled(values.businessName)) {
+                nextErrors.businessName = "Business name is required";
+            } else if (needsMin5(values.businessName)) {
+                nextErrors.businessName = "Business name must be at least 5 characters";
+            }
+        
+            if (!isFilled(values.businessAddress)) {
+                nextErrors.businessAddress = "Business address is required";
+            } else if (needsMin5(values.businessAddress)) {
+                nextErrors.businessAddress =
+                "Business address must be at least 5 characters";
+            }
+        }
+      
+        if (roleNorm === "shipper") {
+            if (!isFilled(values.distributionHub)) {
+                nextErrors.distributionHub = "Please select a distribution hub";
+            }
+        }
+      
+        return nextErrors;
+      };
+           
 
     const handleChange = (e) => {
         const name = e.target.name;
@@ -122,43 +152,36 @@ const SignUp = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Initialize loading effect for the submit button
         setIsSubmitRegisterLoading(true);
-
-        // Validate user inputs
-        const validationErrors = validateInputs();
+      
+        // make a trimmed snapshot
+        const trimmed = Object.fromEntries(
+            Object.entries(inputs).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
+        );
+        const validationErrors = validateInputs(trimmed);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
-            // Clear the loading effect if validation failed
             setIsSubmitRegisterLoading(false);
             return;
         }
-
-        // Handle register request
+      
         try {
-            const {
-                confirmPassword,
-                distributionHub, // FE field for shipper
-                businessName,
-                businessAddress,
-                ...rest
-            } = inputs;
-
+            const { confirmPassword, distributionHub, businessName, businessAddress, ...rest } = trimmed;
             const payload = { ...rest, role };
-
+        
             if (role === "vendor") {
                 payload.businessName = businessName;
                 payload.businessAddress = businessAddress;
             }
-
             if (role === "shipper") {
-                payload.assignedHubId = distributionHub; // BE expects assignedHubId
+                payload.assignedHubId = distributionHub;
             }
-
+        
             const response = await apiUtils.post("/auth/signUp", payload);
+        
             if (response) {
                 navigate("/auth/otp", {
-                    state: { username: inputs.username, email: inputs.email, password: inputs.password } // no need to pass password
+                    state: { username: trimmed.username, email: trimmed.email, password: trimmed.password }
                 });
             }
         } catch (error) {
@@ -171,6 +194,7 @@ const SignUp = () => {
             setIsSubmitRegisterLoading(false);
         }
     };
+      
 
     return (
         <div className={styles["auth__card"]}>
@@ -189,16 +213,41 @@ const SignUp = () => {
                         <label htmlFor="username" className={styles.ico}>
                             <FontAwesomeIcon icon={faUser} />
                         </label>
-                        <input type="text" id="username" name="username" value={inputs.username || ""} onChange={handleChange} placeholder="Username" autoComplete="on" />
-                        {errors.username && <span className={styles["form-field__error"]}>{errors.username}</span>}
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={inputs.username || ""}
+                            onChange={handleChange}
+                            placeholder="Username"
+                            autoComplete="on"
+                        />
+                        {errors.username && (
+                            <span className="form-field__error">
+                                {errors.username}
+                            </span>
+                        )}
                     </div>
 
                     <div className={styles.field}>
                         <label htmlFor="email" className={styles.ico}>
                             <FontAwesomeIcon icon={faEnvelope} />
                         </label>
-                        <input type="email" id="email" name="email" value={inputs.email || ""} onChange={handleChange} className="form-field__input" placeholder="Email" autoComplete="on" />
-                        {errors.email && <span className={styles["form-field__error"]}>{errors.email}</span>}
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={inputs.email || ""}
+                            onChange={handleChange}
+                            className="form-field__input"
+                            placeholder="Email"
+                            autoComplete="on"
+                        />
+                        {errors.email && (
+                            <span className="form-field__error">
+                                {errors.email}
+                            </span>
+                        )}
                     </div>
 
                     <div className={styles.field}>
@@ -218,15 +267,20 @@ const SignUp = () => {
                         <button
                             type="button"
                             className={styles.eye}
-                            onClick={() => setShow1(v => !v)}
+                            onClick={() => setShow1((v) => !v)}
                         >
-                            <FontAwesomeIcon icon={show1 ? faEyeSlash : faEye} />
+                            <FontAwesomeIcon
+                                icon={show1 ? faEyeSlash : faEye}
+                            />
                         </button>
-                        {errors.password && <span className={styles["form-field__error"]}>{errors.password}</span>}
-                        
-                        </div>
+                        {errors.password && (
+                            <span className="form-field__error">
+                                {errors.password}
+                            </span>
+                        )}
+                    </div>
 
-                        <div className={styles.field}>
+                    <div className={styles.field}>
                         <label className={styles.ico}>
                             <FontAwesomeIcon icon={faLock} />
                         </label>
@@ -240,14 +294,20 @@ const SignUp = () => {
                             autoComplete="on"
                             required
                         />
-                        {errors.confirmPassword && <span className={styles["form-field__error"]}>{errors.confirmPassword}</span>}
+                        {errors.confirmPassword && (
+                            <span className="form-field__error">
+                                {errors.confirmPassword}
+                            </span>
+                        )}
 
                         <button
                             type="button"
                             className={styles.eye}
-                            onClick={() => setShow2(v => !v)}
+                            onClick={() => setShow2((v) => !v)}
                         >
-                            <FontAwesomeIcon icon={show2 ? faEyeSlash : faEye} />
+                            <FontAwesomeIcon
+                                icon={show2 ? faEyeSlash : faEye}
+                            />
                         </button>
                     </div>
 
@@ -280,9 +340,11 @@ const SignUp = () => {
                                 />
                             )}
 
-                            {errors.distributionHub && (
-                                <span className={styles["form-field__error"]}>{errors.distributionHub}</span>
-                            )}
+                             {errors[f.key] && (
+                                <span className="form-field__error">
+                                    {errors[f.key]}
+                                </span>
+                             )}
                         </div>
                     ))}
 
@@ -291,15 +353,20 @@ const SignUp = () => {
                         type="submit"
                         disabled={isSubmitRegisterLoading}
                     >
-                        {isSubmitRegisterLoading ? "Creating..." : "Create Account"}
+                        {isSubmitRegisterLoading
+                            ? "Creating..."
+                            : "Create Account"}
                     </button>
+
+                    {errors.serverError && (
+                        <div className="form-field__error" role="alert" aria-live="polite">
+                            {errors.serverError}
+                        </div>
+                    )}
 
                     <div className={styles.help}>
                         Have an account?{" "}
-                        <Link
-                            className={styles.link}
-                            to={`/auth/signin`}
-                        >
+                        <Link className={styles.link} to={`/auth/signin`}>
                             Sign In
                         </Link>
                     </div>

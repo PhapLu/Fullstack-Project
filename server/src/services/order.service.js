@@ -211,7 +211,7 @@ class OrderService {
     if (!hub) throw new NotFoundError("Distribution Hub not found");
 
     //2. Read orders
-    const orders = await Order.find({ distributionHubId: hubId })
+    const orders = await Order.find({ distributionHubId: hubId, status: "placed" })
       .populate("customerId", "customerProfile avatar")
       .populate("distributionHubId", "name address")
       .populate("items.productId")

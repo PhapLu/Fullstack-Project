@@ -215,29 +215,6 @@
   }
 }
 
-
-.form-field__error {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(239, 68, 68, 0.06);  
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  color: #b91c1c;       
-  margin-top: 10px;         
-  font-size: 1.2rem;               
-  line-height: 1.35;
-  animation: err-pop 0.18s ease-out;
-  word-break: break-word;
-}
-
-.form-field__error::before {
-  content: "⚠️";
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
 /* red input when .field has error  */
 @supports selector(:has(*)) {
   .field:has(.form-field__error) input {

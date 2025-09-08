@@ -1,3 +1,5 @@
+import { minLength } from "../../utils/validator";
+
 const removeAccents = (str) => {
     return str
         .normalize("NFD") // remove accents
