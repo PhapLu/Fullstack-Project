@@ -226,6 +226,42 @@ export function CartProvider({ children }) {
         removeItem: (id) => dispatch({ type: "REMOVE", id }), // local only
         clear: () => dispatch({ type: "CLEAR" }), // local only
 
+        applyPurchase: async (purchasedItems = []) => {
+            // Build a quick lookup: productId -> total purchased qty
+            const decMap = new Map();
+            for (const it of purchasedItems) {
+                const pid = String(it?.productId);
+                const q = Number(it?.quantity) || 0;
+                if (!pid || q <= 0) continue;
+                decMap.set(pid, (decMap.get(pid) || 0) + q);
+            }
+
+            // Compute next cart items
+            const current = stateRef.current.items || [];
+            const nextItems = current
+                .map((it) => {
+                    const dec = decMap.get(String(it.id)) || 0;
+                    const nextQty = Math.max(0, (it.qty || 0) - dec);
+                    return nextQty > 0 ? { ...it, qty: nextQty } : null;
+                })
+                .filter(Boolean);
+
+            // Locally update & persist to localStorage
+            dispatch({ type: "RESET", state: { items: nextItems } });
+            writeLocal(storageKey, { items: nextItems });
+
+            // Also persist to DB if logged in
+            if (userId) {
+                try {
+                    await apiUtils.put("/cart/snapshot", {
+                        items: toServerItems(nextItems),
+                    });
+                } catch (e) {
+                    console.warn("applyPurchase snapshot failed", e);
+                }
+            }
+        },
+
         // optional: expose a manual saver if you ever want to force-save
         saveNow: async () => {
             if (!userId) return;

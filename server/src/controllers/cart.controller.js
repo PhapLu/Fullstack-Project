@@ -29,6 +29,13 @@ class CartController {
             metadata: await CartService.snapshot(req)
         }).send(res)
     }
+
+    applyPurchase = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Cart purchase applied successfully',
+            metadata: await CartService.applyPurchase(req)
+        }).send(res)
+    }
 }
 
 export default new CartController()

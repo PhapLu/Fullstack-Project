@@ -13,5 +13,6 @@ router.get("/readCart", asyncHandler(CartController.readCart));
 router.post("/addToCart", asyncHandler(CartController.addToCart));
 router.post("/removeFromCart", asyncHandler(CartController.removeFromCart));
 router.put("/snapshot", asyncHandler(CartController.snapshot));
+router.put("/applyPurchase", asyncHandler(CartController.applyPurchase));
 
 export default router;

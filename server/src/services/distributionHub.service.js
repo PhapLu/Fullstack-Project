@@ -15,8 +15,8 @@ class DistributionHubService {
 
         // 2. Verify admin
         const admin = await User.findById(adminId)
-        // if (!admin || admin.role !== 'admin') 
-        //     throw new AuthFailureError('You are not authorized to create a DistributionHub')
+        if (!admin || admin.role !== 'admin') 
+            throw new AuthFailureError('You are not authorized to create a DistributionHub')
 
         // 3. Check if DistributionHub already exists
         const existingDistributionHub = await DistributionHub.findOne({name})

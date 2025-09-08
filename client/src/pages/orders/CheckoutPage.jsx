@@ -9,7 +9,7 @@ import { getImageUrl } from "../../utils/imageUrl.js";
 export default function CheckoutPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { items: cartItems } = useCart();
+    const { items: cartItems, applyPurchase  } = useCart();
 
     const [items, setItems] = useState([]);
     const [hubs, setHubs] = useState([]);
@@ -248,6 +248,7 @@ export default function CheckoutPage() {
 
             if (response.data?.metadata?.order) {
                 orderId = response.data.metadata.order._id;
+                await applyPurchase(items);
                 navigate(`/payment-success?id=temp_${Date.now()}`, {
                     state: {
                         orderId,
@@ -294,8 +295,8 @@ export default function CheckoutPage() {
                 }
             );
             const paymentUrl = res?.data?.metadata?.paymentUrl;
-            if (!paymentUrl)
-                throw new Error("No payment URL returned from server.");
+            if (!paymentUrl) throw new Error("No payment URL returned from server.");
+            await applyPurchase(items);
             window.location.assign(paymentUrl);
         } catch (error) {
             console.error("Card payment init failed", error);
