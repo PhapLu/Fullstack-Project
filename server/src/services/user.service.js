@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import fs from "fs/promises";
 import path from "path";
 import { UPLOADS_DIR } from '../configs/multer.config.js';
+import { isFilled, isValidPhone, minLength } from '../utils/validator.js';
 
 const AVATARS_DIR = path.join(UPLOADS_DIR, "avatars");
 const publicUrlFor = (filename) => `/uploads/avatars/${filename}`;
@@ -72,33 +73,66 @@ class UserService {
       
         user.avatar = url;
         await user.save();
-        console.log("Avatar uploaded:", url);
         return { avatar: url};
     };
 
-    static updateUserProfile = async(req) => {
-        const userId = req.userId
-
-        // 1. Validate inputs
-
-        // 2. Check user
-        const user = await User.findById(userId)
-        if (!user) throw new AuthFailureError('User not found')
+    static updateUserProfile = async (req) => {
+        const userId = req.userId;
+        const body = req.body || {};
+        
+        // 1. Check user
+        const user = await User.findById(userId);
+        if (!user) throw new AuthFailureError("User not found");
+        
+        // 2. Validate and prepare update document
+        const baseFields = ["bio", "phone", "country"];
+        const roleFields = {
+            customer: ["customerProfile.name", "customerProfile.address"],
+            vendor: ["vendorProfile.businessName", "vendorProfile.businessAddress"],
+            shipper: [],
+        };
+    
+        const allowed = [...baseFields, ...(roleFields[user.role] || [])];
+      
+        const updateDoc = {};
+        for (const f of allowed) {
+            const parts = f.split(".");
+            if (parts.length === 1) {
+                updateDoc[parts[0]] = body[parts[0]];
+            } else {
+                const [outer, inner] = parts;
+                updateDoc[outer] = { ...(updateDoc[outer] || {}) };
+                updateDoc[outer][inner] = body[outer]?.[inner];
+            }
+        }
+      
+        if (isFilled(updateDoc.phone) && !isValidPhone(updateDoc.phone))
+            throw new BadRequestError("Invalid phone format");
+        if ((updateDoc.bio || "").length > 200)
+            throw new BadRequestError("Bio max 200 chars");
+      
+        if (user.role === "customer") {
+            if (!minLength(updateDoc.customerProfile?.name, 5))
+                throw new BadRequestError("The minimum name length is 5 characters");
+            if (!minLength(updateDoc.customerProfile?.address, 5))
+                throw new BadRequestError("The minimum address length is 5 characters");
+        }
+        if (user.role === "vendor") {
+            if (!minLength(updateDoc.vendorProfile?.businessName, 5))
+                throw new BadRequestError("The minimum business name length is 5 characters");
+            if (!minLength(updateDoc.vendorProfile?.businessAddress, 5))
+                throw new BadRequestError("The minimum business address length is 5 characters");
+        }
 
         // 3. Update user profile
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            {
-                ...req.body
-            },
+            { $set: updateDoc },
             { new: true }
-        )
-
-        // 4. Return updated user profile
-        return {
-            user: updatedUser,
-        }
-    }
+        );
+      
+        return { user: updatedUser };
+    };
 
     static readBrands = async(req) => {
         // 1. Read brands - which are vendors started selling more than 1 year ago

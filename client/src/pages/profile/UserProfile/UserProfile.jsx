@@ -6,9 +6,7 @@ import { apiUtils } from "../../../utils/newRequest";
 import Avatar from "../../../components/profile/avatar/Avatar";
 import { getImageUrl } from "../../../utils/imageUrl";
 import { useParams } from "react-router-dom";
-
-const PHONE_RE = /^\d{0,10}$/;
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { isFilled, isValidPhone, minLength } from "../../../utils/validator";
 
 export default function UserProfile() {
     const user = useSelector(selectUser);
@@ -42,8 +40,6 @@ export default function UserProfile() {
     });
 
     const [form, setForm] = useState(toForm(user));
-    const [editingAvatar, setEditingAvatar] = useState(false);
-    const [editingUsername, setEditingUsername] = useState(false);
     const [editingProfile, setEditingProfile] = useState(false);
     const [saving, setSaving] = useState(false);
 
@@ -61,103 +57,48 @@ export default function UserProfile() {
 
     if (!user) return <div className="container-xl py-4">Loading profile…</div>;
 
-    /** ------------ Avatar ------------- */
-    const handleAvatarChange = (e) => {
-        const file = e.target.files?.[0];
-        const MAX = 2 * 1024 * 1024;
-        if (file.size > MAX) {
-            setErrors({ __api: "Max size 2MB" });
-            return;
-        }
-
-        if (!file) return;
-
-        setAvatarFile(file);
-        const url = URL.createObjectURL(file);
-        setPreviewAvatar(url);
-    };
-
-    const saveAvatar = async () => {
-        if (!avatarFile) return;
-
-        setSaving(true);
-        try {
-            const fd = new FormData();
-            fd.append("avatar", avatarFile);
-
-            await apiUtils.patch("/user/updateUserProfile", fd, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-
-            setEditingAvatar(false);
-            setAvatarFile(null);
-            setErrors({});
-        } catch (err) {
-            const apiErr = err?.response?.data;
-            setErrors((prev) => ({
-                ...prev,
-                __api: apiErr?.message || "Failed to update avatar.",
-                ...(apiErr?.errors || {}),
-            }));
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    /** ------------ Username ------------- */
-    const saveUsername = async () => {
-        if (!form.username.trim()) {
-            setErrors({ username: "Username is required." });
-            return;
-        }
-        setSaving(true);
-        try {
-            await apiUtils.patch("/user/updateUserProfile", {
-                username: form.username,
-            });
-            setEditingUsername(false);
-            setErrors({});
-        } catch (err) {
-            const apiErr = err?.response?.data;
-            setErrors((prev) => ({
-                ...prev,
-                __api: apiErr?.message || "Failed to update username.",
-                ...(apiErr?.errors || {}),
-            }));
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    /** ------------ Profile info ------------- */
-    const validateProfile = (f) => {
+const validateProfile = (f) => {
         const e = {};
-        const t = (s) => String(s || "").trim();
-        if (t(f.phone) && !PHONE_RE.test(t(f.phone)))
-            e["phone"] = "Phone contains invalid characters.";
-        if (!EMAIL_RE.test(form.email)) {
-            setErrors({ email: "Invalid email address." });
-        }
-        if (!t(f.country)) e["country"] = "Country is required.";
+        const t = (s) => String(s ?? "").trim();
+
+        // Phone (optional): if filled, must be a valid VN phone
+        if (isFilled(f.phone) && !isValidPhone(t(f.phone)))
+            e["phone"] = "Invalid phone. Use VN format (0/ +84 + carrier + 8 digits).";
+
+        // Country: required
+        if (!isFilled(f.country))
+            e["country"] = "Country is required.";
+
+        // Bio: max 200 chars
         if (t(f.bio).length > 200)
             e["bio"] = "Bio must be at most 200 characters.";
+
+        // Role-specific
         if (user.role === "customer") {
-            if (!t(f.customerProfile?.name))
-                e["customerProfile.name"] = "Customer name is required.";
+            if (!minLength(f.customerProfile?.name, 5)) {
+                e["customerProfile.name"] = "Customer name is required (min 5 characters).";
+            }
+            if (!minLength(f.customerProfile?.address, 5)) {
+                e["customerProfile.address"] = "Customer address is required (min 5 characters).";
+            }
         }
+
         if (user.role === "shipper") {
             const hub =
                 typeof f.shipperProfile?.assignedHub === "object"
                     ? f.shipperProfile?.assignedHub?._id ||
-                      f.shipperProfile?.assignedHub?.name
+                        f.shipperProfile?.assignedHub?.name
                     : f.shipperProfile?.assignedHub;
-            if (!t(hub))
+            if (!isFilled(hub)) {
                 e["shipperProfile.assignedHub"] = "Assigned hub is required.";
+            }
         }
+
         return e;
     };
 
     const saveProfile = async () => {
+        if (!isOwner) return;
         const nextErrors = validateProfile(form);
         setErrors(nextErrors);
         if (Object.keys(nextErrors).length) return;
@@ -219,7 +160,8 @@ export default function UserProfile() {
                                 <button
                                     type="button"
                                     className={styles["edit-btn"]}
-                                    onClick={() => setEditingProfile(true)}
+                                    onClick={() => isOwner && setEditingProfile(true)}
+                                    disabled={!isOwner}
                                 >
                                     Edit information
                                 </button>
@@ -265,7 +207,7 @@ export default function UserProfile() {
                     <div className={styles["sheet-row"]}>
                         <label className={styles["label"]}>Phone</label>
                         <input
-                            type="string"
+                            type="tel"
                             className="form-control form-control-sm"
                             value={form.phone}
                             onChange={(e) =>
@@ -286,6 +228,7 @@ export default function UserProfile() {
                         <textarea
                             className="form-control form-control-sm"
                             rows={3}
+                            maxLength={200}
                             value={form.bio}
                             onChange={(e) =>
                                 setForm({ ...form, bio: e.target.value })
@@ -345,6 +288,11 @@ export default function UserProfile() {
                                     }
                                     disabled={!editingProfile}
                                 />
+                                {err("customerProfile.address") && (
+                                    <div className="invalid-feedback d-block">
+                                        {err("customerProfile.address")}
+                                    </div>
+                                )}
                             </div>
                         </>
                     )}
@@ -366,15 +314,6 @@ export default function UserProfile() {
                                               ?._id ||
                                           ""
                                         : form.shipperProfile?.assignedHub || ""
-                                }
-                                onChange={(e) =>
-                                    setForm((prev) => ({
-                                        ...prev,
-                                        shipperProfile: {
-                                            ...(prev.shipperProfile || {}),
-                                            assignedHub: e.target.value,
-                                        },
-                                    }))
                                 }
                                 readOnly
                             />

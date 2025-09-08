@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-// import styles from "../../../pages/profile/vendorProfile/VendorProfile.module.scss";
 import styles from "./Avatar.module.scss";
 import { apiUtils } from "../../../utils/newRequest";
 import { getImageUrl } from "../../../utils/imageUrl";
 
-const bust = (u) =>
-    u ? `${u}${u.includes("?") ? "&" : "?"}v=${Date.now()}` : "";
+const bust = (u) => u ? `${u}${u.includes("?") ? "&" : "?"}v=${Date.now()}` : "";
 
 export default function Avatar({ isOwner, url, onSaveImage }) {
     const inputRef = useRef(null);
@@ -66,9 +64,7 @@ export default function Avatar({ isOwner, url, onSaveImage }) {
     const handleImgError = (e) => {
         // Image load failed: print the exact broken URL and who initiated it
         const broken = e?.currentTarget?.src;
-        console.error("[Avatar] <img> onError — failed URL:", broken);
-        // Optional: fallback
-        const fallback = getImageUrl("/default-avatar.png");
+        const fallback = getImageUrl("/uploads/avatars/default-avatar.png");
         if (broken !== fallback) setImgSrc(fallback);
     };
 
