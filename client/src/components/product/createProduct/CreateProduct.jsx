@@ -24,27 +24,52 @@ export default function CreateProduct({ onCancel, onDone }) {
 
     const validate = (data = inputs) => {
         const next = {};
-        if (!data.title?.trim()) next.title = "Product title is required.";
-        if (!data.description?.trim())
+
+        // Title: 10–20 characters
+        if (!data.title?.trim()) {
+            next.title = "Product title is required.";
+        } else if (
+            data.title.trim().length < 10 ||
+            data.title.trim().length > 20
+        ) {
+            next.title = "Title must be between 10 and 20 characters.";
+        }
+
+        // Description: required, ≤500 chars
+        if (!data.description?.trim()) {
             next.description = "Description is required.";
-        if (!data.images?.length) next.images = "At least 1 image is required.";
-        if ((data.images?.length || 0) > MAX_IMAGES)
+        } else if (data.description.trim().length > 500) {
+            next.description = "Description must be at most 500 characters.";
+        }
+
+        // Images: at least 1 required (max already handled by MAX_IMAGES)
+        if (!data.images?.length) {
+            next.images = "At least 1 image is required.";
+        } else if ((data.images?.length || 0) > MAX_IMAGES) {
             next.images = `Up to ${MAX_IMAGES} images allowed.`;
+        }
 
-        if (!isNumberLike(data.price))
+        // Price: required, positive number
+        if (!isNumberLike(data.price)) {
             next.price = "Price must be a valid number.";
-        else if (toNumber(data.price) < 0)
-            next.price = "Price cannot be negative.";
+        } else if (toNumber(data.price) <= 0) {
+            next.price = "Price must be greater than 0.";
+        }
 
-        if (!isNumberLike(data.stock))
+        // Stock: required, integer ≥ 0
+        if (!isNumberLike(data.stock)) {
             next.stock = "Stock must be a valid number.";
-        else if (!Number.isInteger(toNumber(data.stock)))
+        } else if (!Number.isInteger(toNumber(data.stock))) {
             next.stock = "Stock must be an integer.";
-        else if (toNumber(data.stock) < 0)
+        } else if (toNumber(data.stock) < 0) {
             next.stock = "Stock cannot be negative.";
+        }
 
-        if (!["active", "inactive"].includes(data.status))
+        // Status: must be active|inactive
+        if (!["active", "inactive"].includes(data.status)) {
             next.status = "Invalid status.";
+        }
+
         return next;
     };
 
@@ -143,12 +168,16 @@ export default function CreateProduct({ onCancel, onDone }) {
         try {
             const formData = buildFormData();
 
-            const response = await apiUtils.post("/product/createProduct", formData, {
-                headers: { "Content-Type": "multipart/form-data" }, // axios will set boundary for you; safe to include or omit
-            });
+            const response = await apiUtils.post(
+                "/product/createProduct",
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" }, // axios will set boundary for you; safe to include or omit
+                }
+            );
 
             // Shape: prefer created product object
-            const created = response?.data?.metadata?.product
+            const created = response?.data?.metadata?.product;
 
             // Notify parent if provided (so it can prepend + close)
             onDone?.(created);
