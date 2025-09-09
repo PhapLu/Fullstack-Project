@@ -121,7 +121,7 @@ export default function OrdersLayout() {
               <ul className="list-group list-group-flush">
                 {(order.items || []).map((item, idx) => {
                   const product = item.productId || {};
-                  const name = product.name || item.name || "Unnamed product";
+                  const name = product.title || item.title || "Unnamed product";
                   const img =
                     product.thumbnail ||
                     (Array.isArray(product.images) && product.images[0]) ||

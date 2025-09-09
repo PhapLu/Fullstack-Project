@@ -2,6 +2,8 @@ import React from "react";
 import styles from "../../../pages/profile/vendorProfile/VendorProfile.module.scss";
 import { getImageUrl } from "../../../utils/imageUrl";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const formatPrice = (n, currency = "USD") =>
   n == null
@@ -36,7 +38,22 @@ export default function ProductCard({ product, onDelete }) {
 
   return (
     <Link to={`/product/${product._id}`} className={styles.card}>
-      {/* Image / media */}
+      {onDelete && (
+        <button
+          type="button"
+          className={styles["delete-btn"]}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onDelete();
+          }}
+          title="Delete"
+        >
+          <FontAwesomeIcon icon={faXmark} size="sm" />{" "}
+          {/* size: "sm", "lg", "xl" */}
+        </button>
+      )}
+
       <div
         className={`${styles["card-media"]} ${cover ? styles["has-img"] : ""}`}
       >
@@ -48,15 +65,6 @@ export default function ProductCard({ product, onDelete }) {
           />
         ) : (
           <span className={styles["media-badge"]}>{title}</span>
-        )}
-        {onDelete && (
-          <button
-            className={styles["delete-btn"]}
-            onClick={onDelete}
-            title="Delete"
-          >
-            ✕
-          </button>
         )}
       </div>
 

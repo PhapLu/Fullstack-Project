@@ -237,6 +237,7 @@
 }
 
 .card {
+    position: relative;
     box-shadow: var(--shadow);
     border: 1px solid var(--border-color);
     background: var(--surface);
@@ -324,14 +325,20 @@
     right: 8px;
     width: 28px;
     height: 28px;
-    border-radius: 999px;
+    border-radius: 50%;
     border: 1px solid var(--border-color);
     background: var(--surface);
     cursor: pointer;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     opacity: 0;
     transition: 0.15s;
+    z-index: 10;
+
+    svg {
+        font-size: 16px;
+    }
 }
 
 .card:hover .delete-btn {
@@ -343,7 +350,7 @@
     display: flex;
     align-items: center;
     background: var(--surface);
-    border: 1px solid #d3e2f8 ;
+    border: 1px solid #d3e2f8;
     border-radius: 16px;
     padding: 8px 12px;
     box-shadow: var(--shadow);
@@ -563,20 +570,6 @@
     padding: 0 8px;
 }
 
-.delete-btn {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    border: none;
-    background: var(--text);
-    color: var(--surface);
-    width: 22px;
-    height: 22px;
-    line-height: 22px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
 .wizard-actions {
     display: flex;
     justify-content: flex-end;
@@ -652,23 +645,89 @@
     white-space: nowrap;
 }
 
-/* rating */
-/* Block 3 */
-// .ratingRow {
-//     display: flex;
-//     align-items: center;
-//     justify-content: flex-end;
-//     margin-top: auto;
-//     min-height: 28px;
-// }
+/* ===== Responsive ===== */
 
-// .ratingLink {
-//     font-size: 12px;
-//     font-weight: 600;
-//     color: var(--primary-color);
-//     text-decoration: none;
-// }
+/* Tablet (<= 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        padding: 24px 20px 60px;
+    }
 
-// .ratingLink:hover {
-//     text-decoration: underline;
-// }
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+    }
+
+    .card-img {
+        max-height: 180px;
+    }
+
+    .title {
+        font-size: 13px;
+    }
+
+    .desc {
+        font-size: 12px;
+    }
+}
+
+/* Mobile (<= 768px) */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 16px 40px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 14px;
+    }
+
+    .card-img {
+        max-height: 160px;
+    }
+
+    .delete-btn {
+        opacity: 1;
+        width: 24px;
+        height: 24px;
+
+        svg {
+            font-size: 14px;
+        }
+    }
+
+    .price {
+        font-size: 13px;
+    }
+
+    .stock {
+        font-size: 12px;
+    }
+}
+
+/* Small mobile (<= 480px) */
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        /* 2 card 1 hàng */
+        gap: 12px;
+    }
+
+    .card-body {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .delete-btn {
+        top: 6px;
+        right: 6px;
+    }
+
+    .title {
+        font-size: 12px;
+    }
+
+    .desc {
+        font-size: 11px;
+    }
+}
