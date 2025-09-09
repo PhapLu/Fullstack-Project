@@ -1,25 +1,26 @@
 .select {
-	width: 100%;
-	padding: 10px 12px 10px 40px;
-	border: 1px solid var(--border-color);
-	border-radius: 8px;
-	background: var(--surface);
-	font-size: 14px;
-	color: var(--text);
-	appearance: none;
-	background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-	background-repeat: no-repeat;
-	background-position: right 10px center;
-	background-size: 16px;
-	cursor: pointer;
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 14px;
+  color: var(--text);
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  cursor: pointer;
 }
 
 .field {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
-.field input, .field select {
+.field input,
+.field select {
   width: 100%;
   height: 46px;
   padding: 0 14px;
@@ -27,7 +28,8 @@
   border-radius: 12px;
   background: var(--surface, #fff);
   transition: box-shadow 0.2s, border-color 0.2s;
-  letter-spacing: 0.28em; /* OTP vibe */
+  letter-spacing: 0.28em;
+  /* OTP vibe */
   text-align: start;
   padding-left: 40px;
   font-weight: 600;
@@ -36,7 +38,7 @@
 }
 
 .field input::placeholder {
-    color: var(--placeholder);
+  color: var(--placeholder);
 }
 
 .field select:invalid {
@@ -48,14 +50,14 @@
 }
 
 .field input:focus {
-    outline: none;
-    border-color: var(--primary-color, #007bff);
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+  outline: none;
+  border-color: var(--primary-color, #007bff);
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
 }
 
 .fw-500 {
-  font-weight: 500; 
-  font-size: 14px;       
+  font-weight: 500;
+  font-size: 14px;
 }
 
 /* =========================
@@ -64,6 +66,7 @@
 
 /* Tablet & down (≤ 992px) */
 @media (max-width: 992px) {
+
   /* Nới padding container một chút trên tablet */
   :global(.container) {
     padding-left: 16px;
@@ -104,6 +107,7 @@
 
 /* Mobile (≤ 768px) */
 @media (max-width: 768px) {
+
   /* Đổi bố cục item trong list Delivery: nằm dọc, dễ đọc */
   :global(.list-group-item.d-flex) {
     flex-direction: column !important;
@@ -117,7 +121,6 @@
     font-size: 12px;
   }
 
-  /* Item sản phẩm: xếp dọc, ảnh trên – text dưới */
   :global(.card .card-body > .d-flex.justify-content-between.align-items-center.mb-3) {
     flex-direction: column !important;
     align-items: stretch !important;
@@ -138,6 +141,7 @@
   :global(.card .card-body.lh-lg) {
     font-size: 0.98rem;
   }
+
   :global(.card .card-body.lh-lg h4) {
     font-size: 1.05rem;
   }
@@ -146,6 +150,7 @@
   :global(.d-flex.justify-content-end.gap-2.mt-4.flex-wrap) {
     gap: 10px !important;
   }
+
   :global(.d-flex.justify-content-end.gap-2.mt-4.flex-wrap .btn) {
     width: 100%;
     border-radius: 999px;
@@ -157,16 +162,20 @@
   :global(form.border.rounded.p-3.mb-3 .row.g-3 > [class*="col-"]) {
     margin-bottom: 6px;
   }
+
   .field {
     margin-top: 6px;
   }
+
   .field input,
   .field select {
     height: 44px;
     font-size: 0.98rem;
     letter-spacing: 0.18em;
-    padding-left: 40px; /* giữ chỗ cho icon nếu có */
+    padding-left: 40px;
+    /* giữ chỗ cho icon nếu có */
   }
+
   .select {
     padding: 10px 38px 10px 40px;
     background-position: right 12px center;
@@ -179,6 +188,7 @@
     width: 18px;
     height: 18px;
   }
+
   :global(.form-check.mb-2 .form-check-label) {
     margin-left: 6px;
   }
@@ -186,11 +196,13 @@
 
 /* Small mobile (≤ 576px) */
 @media (max-width: 576px) {
+
   /* Headings gọn hơn */
   :global(h3.fw-bold.mb-4) {
     font-size: 1.15rem;
     margin-bottom: 14px !important;
   }
+
   :global(h4.fw-bold) {
     font-size: 1.02rem;
   }
@@ -199,6 +211,7 @@
   :global(.card.mb-3.shadow-sm) {
     margin-bottom: 12px !important;
   }
+
   :global(.card .card-body) {
     padding: 12px !important;
   }
@@ -229,9 +242,11 @@
     padding-left: 12px;
     padding-right: 12px;
   }
+
   :global(.btn) {
     font-size: 13px !important;
   }
+
   .field input,
   .field select {
     font-size: 0.9rem;
