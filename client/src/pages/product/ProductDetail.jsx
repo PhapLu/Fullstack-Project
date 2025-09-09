@@ -14,7 +14,6 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  // ✅ Lấy id từ route TRƯỚC khi dùng ở bất kỳ hook nào
   const { productId: routeProductId } = useParams();
 
   const [product, setProduct] = useState(null);
@@ -30,13 +29,10 @@ export default function ProductDetail() {
   const dec = () => setQty((q) => Math.max(1, q - 1));
   const inc = () => setQty((q) => q + 1);
 
-  // ✅ helper còn dùng ở dưới
   const isValidObjectId = (v) => /^[a-f\d]{24}$/i.test(String(v || ""));
 
-  // Reset ảnh khi đổi sản phẩm
   useEffect(() => setActiveIndex(0), [routeProductId]);
 
-  // Danh sách ảnh gallery
   const gallery = useMemo(() => {
     const arr = Array.isArray(product?.images) ? product.images : [];
     return arr.length ? arr : product?.thumbnail ? [product.thumbnail] : [];

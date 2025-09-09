@@ -9,7 +9,7 @@ import { usd } from "../../utils/currency";
 export default function PopularProducts() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(18);
+  const [productsPerPage, setProductsPerPage] = useState(15);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,6 +30,14 @@ export default function PopularProducts() {
     indexOfFirstProduct,
     indexOfLastProduct
   );
+
+  function formatStock(stock) {
+    if (stock >= 1000) {
+      const k = Math.floor(stock / 1000);
+      return `${k}k+`;
+    }
+    return stock.toString();
+  }
 
   // Change page of pagination
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -62,7 +70,7 @@ export default function PopularProducts() {
                 <div className={styles.info__bottom}>
                   <span className={styles["price-link"]}>{usd(p.price)}</span>
                   <span className={styles["stock-link"]}>
-                    In stock: {p.stock}
+                    In stock: {formatStock(p.stock)}
                   </span>
                 </div>
               </div>
