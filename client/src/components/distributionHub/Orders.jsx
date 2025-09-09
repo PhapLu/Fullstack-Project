@@ -50,7 +50,6 @@ export default function Orders({
   }, [orders, filter, q, sort]);
 
   const handleSubmit = async (order, nextStatus) => {
-    console.log(order);
 
     try {
       const { data } = await apiUtils.patch(
