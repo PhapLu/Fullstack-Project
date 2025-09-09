@@ -9,7 +9,7 @@ import { getImageUrl } from "../../utils/imageUrl.js";
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { items: cartItems, applyPurchase  } = useCart();
+  const { items: cartItems, applyPurchase } = useCart();
 
   const [items, setItems] = useState([]);
   const [hubs, setHubs] = useState([]);
@@ -242,7 +242,7 @@ export default function CheckoutPage() {
 
       if (response.data?.metadata?.order) {
         orderId = response.data.metadata.order._id;
-                await applyPurchase(items);
+        await applyPurchase(items);
         navigate(`/payment-success?id=temp_${Date.now()}`, {
           state: {
             orderId,
@@ -272,35 +272,35 @@ export default function CheckoutPage() {
     if (!selectedDelivery.distributionHubId)
       return alert("Please choose a distribution hub.");
 
-        setSubmitting(true);
-        try {
-            // Optional: pass return/cancel for gateway to bounce back
-            const res = await apiUtils.post(
-                "/order/createOrderAndGeneratePaymentUrl",
-                {
-                    deliveryInformation: selectedDelivery,
-                    payment: "credit_card",
-                    items,
-                    pricing,
-                    distributionHubId: selectedDelivery.distributionHubId,
-                    returnUrl: `${window.location.origin}/payment-return`,
-                    cancelUrl: `${window.location.origin}/payment-cancel`,
-                }
-            );
-            const paymentUrl = res?.data?.metadata?.paymentUrl;
-            if (!paymentUrl) throw new Error("No payment URL returned from server.");
-            await applyPurchase(items);
-            window.location.assign(paymentUrl);
-        } catch (error) {
-            console.error("Card payment init failed", error);
-            alert(
-                error?.response?.data?.message ||
-                    "We couldn't start your card payment. Please try again."
-            );
-        } finally {
-            setSubmitting(false);
+    setSubmitting(true);
+    try {
+      // Optional: pass return/cancel for gateway to bounce back
+      const res = await apiUtils.post(
+        "/order/createOrderAndGeneratePaymentUrl",
+        {
+          deliveryInformation: selectedDelivery,
+          payment: "credit_card",
+          items,
+          pricing,
+          distributionHubId: selectedDelivery.distributionHubId,
+          returnUrl: `${window.location.origin}/payment-return`,
+          cancelUrl: `${window.location.origin}/payment-cancel`,
         }
-    };
+      );
+      const paymentUrl = res?.data?.metadata?.paymentUrl;
+      if (!paymentUrl) throw new Error("No payment URL returned from server.");
+      await applyPurchase(items);
+      window.location.assign(paymentUrl);
+    } catch (error) {
+      console.error("Card payment init failed", error);
+      alert(
+        error?.response?.data?.message ||
+          "We couldn't start your card payment. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handlePurchase = () => {
     if (payment === "card") return handleCardPurchase();

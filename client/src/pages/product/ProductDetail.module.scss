@@ -108,19 +108,18 @@
 }
 
 .seeProfile {
-    border: 1px solid var(--accent);
-    background: #fff5cd;
+    background: var(--primary-color);
     border-radius: 4px;
     padding: 4px 10px;
     font-size: 12px;
     height: 100%;
     line-height: 1;
-    color: var(--text-color);
-    transition: background 0.15s ease, border-color 0.15s ease;
+    color: #fff;
+    transition: background 0.15s ease;
     text-decoration: none;
 
     &:hover {
-        background: #f7eab8;
+        background: var(--hover-btn);
     }
 }
 

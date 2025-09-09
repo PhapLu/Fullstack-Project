@@ -14,11 +14,10 @@ export default function OrderDetail({
   onDeliver,
   onCancel,
 }) {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const onBack = () => {
     navigate(-1);
-  }
+  };
   const { orderId } = useParams();
   const [detail, setDetail] = useState(order || null);
   const [loading, setLoading] = useState(!order);
@@ -33,13 +32,12 @@ export default function OrderDetail({
       try {
         const response = await apiUtils.get(`/order/readOrder/${orderId}`);
         if (alive) setDetail(response.data.metadata.order);
-        console.log(response.data.metadata.order)
+        console.log(response.data.metadata.order);
       } catch (e) {
         if (alive) setErr(e?.response?.data?.message || "Failed to load order");
       } finally {
         if (alive) setLoading(false);
       }
-      
     };
     if (orderId) load();
     return () => {
@@ -81,9 +79,9 @@ export default function OrderDetail({
   }
 
   const items = Array.isArray(detail.items) ? detail.items : [];
-  const subtotal = detail.pricing.subtotal
-  const shippingFee = parseFloat(detail.pricing.shippingFee)
-  const total = subtotal + shippingFee
+  const subtotal = detail.pricing.subtotal;
+  const shippingFee = parseFloat(detail.pricing.shippingFee);
+  const total = subtotal + shippingFee;
 
   return (
     <section className={`${styles.hub} ${styles.container}`}>
@@ -96,7 +94,9 @@ export default function OrderDetail({
             ORDER DETAIL <span className={styles.loc}>#{detail._id}</span>
           </h1>
         </div>
-        <p className="pt-3">Detailed information for shipment and delivery tracking.</p>
+        <p className="pt-3">
+          Detailed information for shipment and delivery tracking.
+        </p>
       </header>
 
       <article className={styles["order-card"]}>
@@ -109,25 +109,19 @@ export default function OrderDetail({
               </div>
             </div>
           </div>
-          <div className={styles.price}>
-            <span>Price</span>
-            <strong>
-              {usd( total )}
-            </strong>
-          </div>
           <div className={`${styles["status-badge"]} ${styles[detail.status]}`}>
             {labelOf(detail.status)}
           </div>
         </div>
 
         <div className={styles.customer}>
-          <div>
+          <div className="col-4">
             <strong>Customer:</strong> {detail.deliveryInformationId.name}
           </div>
-          <div>
+          <div className="col-4">
             <strong>Phone:</strong> {detail.deliveryInformationId.phoneNumber}
           </div>
-          <div>
+          <div className="col-4">
             <strong>Placed:</strong>{" "}
             {new Date(detail.placedAt).toLocaleString()}
           </div>
@@ -141,20 +135,20 @@ export default function OrderDetail({
                 <div className={styles.item__name}>{it.productId.title}</div>
                 <div className={styles.item__qty}>x{it.quantity}</div>
               </div>
-                <div
-                  style={{
-                    marginLeft: "auto",
-                    fontWeight: 700,
-                  }}
-                >
-                  {usd((it.productId.price) * (it.quantity ?? 1))}
-                </div>
+              <div
+                className={styles.item__price}
+                style={{
+                  fontWeight: 700,
+                }}
+              >
+                {usd(it.productId.price * (it.quantity ?? 1))}
+              </div>
             </li>
           ))}
         </ul>
 
         <div style={{ paddingTop: 12 }}>
-          <div style={{ fontWeight: 700, marginBottom: 6 }}>
+          <div style={{ fontWeight: 700, marginBottom: 10 }}>
             Status timeline
           </div>
           <div className={styles.timeline}>
@@ -194,7 +188,7 @@ export default function OrderDetail({
           </div>
         </div>
 
-        {role ==! "shipper" && (
+        {role == !"shipper" && (
           <div className={styles["order-card__bottom"]}>
             <div className={styles.when}>
               Order #{detail._id} • {labelOf(detail.status)}

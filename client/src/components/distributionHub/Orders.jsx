@@ -85,47 +85,6 @@ export default function Orders({
         </p>
       </header>
 
-      <div className={styles.controls}>
-        <input
-          className={styles.searchbar}
-          placeholder="Search by order id, customer, address…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-
-        <div className={styles.filters}>
-          {[
-            ["all", "All"],
-            ["active", "Active"],
-            ["at_hub", "At hub"],
-            ["out_for_delivery", "Out for delivery"],
-            ["delivered", "Delivered"],
-            ["cancelled", "Cancelled"],
-          ].map(([key, label]) => (
-            <button
-              key={key}
-              className={`${styles.chip} ${
-                filter === key ? styles["chip--active"] : ""
-              }`}
-              onClick={() => setFilter(key)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <select
-          className={styles.sorter}
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-        >
-          <option value="newest">Newest</option>
-          <option value="price_desc">Price: high → low</option>
-          <option value="price_asc">Price: low → high</option>
-          <option value="status">Status</option>
-        </select>
-      </div>
-
       <div className={styles.hub__grid}>
         {filtered.map((order) => (
           <article className={styles["order-card"]} key={order.id}>
