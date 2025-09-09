@@ -1,0 +1,60 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+button {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.btnDelete {
+    background: var(--red-2-color);
+    cursor: pointer;
+}
+
+.btnDelete:hover {
+    background: var(--danger);
+    cursor: pointer;
+}
+
+.btnCancel {
+    background: #f7f7f7;
+    border-color: #e7e7e7;
+}
+
+.btnCancel:hover {
+    background: var(--muted);
+}
+
+.modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error {
+    color: var(--danger);
+    margin-top: 10px;
+}
