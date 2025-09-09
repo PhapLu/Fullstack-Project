@@ -96,7 +96,7 @@ export default function OrdersLayout() {
                       ? "bg-success"
                       : order.status === "cancelled"
                       ? "bg-danger"
-                      : order.status === "out_for_delivery"
+                      : order.status === "paid"
                       ? "bg-warning text-dark"
                       : "bg-secondary"
                   } fs-5`}

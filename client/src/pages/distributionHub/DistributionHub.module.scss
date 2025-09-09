@@ -185,7 +185,7 @@
   background-color: var(--muted);
 }
 
-.status-badge.active {
+.status-badge.paid {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -193,18 +193,6 @@
   background: #fff5cd;
   color: #916a00;
   border-color: #ffc107;
-}
-
-.status-badge.at_hub {
-  background: #e8f4ff;
-  color: #084c9e;
-  border-color: #b6dbff;
-}
-
-.status-badge.out_for_delivery {
-  background: #fff0db;
-  color: #a35400;
-  border-color: #ffd3a3;
 }
 
 .status-badge.delivered {
@@ -215,12 +203,8 @@
 
 .status-badge.cancelled {
   background: #fdecec;
-  color: #991b1b;
+  color: var(--danger);
   border-color: #f3c5c5;
-}
-
-.status-badge.paid {
-  display: none;
 }
 
 /* ===== Customer + items ===== */

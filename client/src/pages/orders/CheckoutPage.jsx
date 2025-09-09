@@ -574,7 +574,9 @@ export default function CheckoutPage() {
             style={{ fontSize: "18px" }}
           >
             <strong>Total</strong>
-            <strong className="text-danger">${formatUSD(pricing.total)}</strong>
+            <strong style={{ color: "var(--primary-color)" }}>
+              ${formatUSD(pricing.total)}
+            </strong>
           </div>
         </div>
       </div>

@@ -4,14 +4,11 @@ import { usd } from "../../utils/currency";
 import { apiUtils } from "../../utils/newRequest";
 import { Link } from "react-router-dom";
 
-
 /* ================= Status → Badge ================= */
 // Match your Order.status enum: placed, paid, at_hub, out_for_delivery, delivered, cancelled
 const statusMeta = {
   placed: { text: "Placed", cls: "badgeNeutral" },
   paid: { text: "Paid", cls: "badgePaid" },
-  at_hub: { text: "At Hub", cls: "badgeNeutral" },
-  out_for_delivery: { text: "Out for delivery", cls: "badgeDelivering" },
   delivered: { text: "Delivered", cls: "badgeDelivered" },
   cancelled: { text: "Cancelled", cls: "badgeComplaint" }, // reuse a red style
 };
@@ -66,8 +63,7 @@ function StatsRow({ orders }) {
 /* ================= Main Page ================= */
 const TABS = [
   { key: "all", label: "All" },
-  { key: "new", label: "New Requests" }, // placed
-  { key: "out_for_delivery", label: "Out for delivery" },
+  { key: "placed", label: "Placed" }, // placed
   { key: "delivered", label: "Delivered" },
   { key: "paid", label: "Paid" }, // status === 'paid'
   { key: "cancelled", label: "Cancelled" },

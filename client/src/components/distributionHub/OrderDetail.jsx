@@ -183,7 +183,9 @@ export default function OrderDetail({
             <hr />
             <div>
               <span>Total</span>
-              <b style={{ color: "#e11d48" }}>{usd(total)}</b>
+              <b className="fs-2" style={{ color: "var(--primary-color)" }}>
+                {usd(total)}
+              </b>
             </div>
           </div>
         </div>
