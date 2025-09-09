@@ -15,10 +15,19 @@
 .gallery {
     .hero {
         width: 100%;
+        aspect-ratio: 4 / 3;
         overflow: hidden;
         border-radius: var(--radius);
         background: var(--surface);
         border: 1px solid var(--border-color);
+    }
+
+    .hero img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
     }
 
     .thumbs {
@@ -35,12 +44,15 @@
         background: var(--bg-color);
         cursor: pointer;
         transition: transform 0.12s ease, box-shadow 0.12s ease;
+
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: calc(var(--radius) - 4px);
+            display: block;
         }
+
         &:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow);
@@ -76,6 +88,7 @@
     background: var(--bg-color);
     border: 1px solid var(--border-color);
     flex-shrink: 0;
+
     img {
         border-radius: 50%;
         width: 100%;
@@ -192,19 +205,29 @@
     height: 36px;
     overflow: hidden;
 
-    > button {
+    >button {
         width: 36px;
         height: 36px;
         background: var(--bg-color);
         font-size: 18px;
         cursor: pointer;
         border: 0;
-    
-        &:first-child { border-right: 1px solid var(--border-color); } // ✅ use &
-        &:last-child  { border-left:  1px solid var(--border-color); } // ✅ use &
-        &:hover       { background: var(--surface); }
+
+        &:first-child {
+            border-right: 1px solid var(--border-color);
+        }
+
+        // ✅ use &
+        &:last-child {
+            border-left: 1px solid var(--border-color);
+        }
+
+        // ✅ use &
+        &:hover {
+            background: var(--surface);
+        }
     }
-    
+
     .qty {
         width: 56px;
         height: 36px;
@@ -290,12 +313,10 @@
 .skelLines {
     height: 96px;
     border-radius: calc(var(--radius) - 8px);
-    background: linear-gradient(
-        90deg,
-        var(--bg-color) 25%,
-        var(--surface) 37%,
-        var(--bg-color) 63%
-    );
+    background: linear-gradient(90deg,
+            var(--bg-color) 25%,
+            var(--surface) 37%,
+            var(--bg-color) 63%);
     background-size: 400% 100%;
     animation: skel 1.2s ease-in-out infinite;
 }
@@ -304,6 +325,7 @@
     0% {
         background-position: 100% 0;
     }
+
     100% {
         background-position: 0 0;
     }
@@ -314,9 +336,11 @@
     .layout {
         grid-template-columns: 1fr;
     }
+
     .gallery .thumbs {
         grid-template-columns: repeat(5, minmax(48px, 1fr));
     }
+
     .chatBtn {
         white-space: nowrap;
     }

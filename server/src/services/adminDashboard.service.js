@@ -157,7 +157,7 @@ class AdminDashboardService {
     //1. Check admin
     // const admin = await User.findById(req.userId);
     // if (!admin) throw new BadRequestError('You are not authorized to perform this action');
-    
+
     const hubs = await DistributionHub.find();
     return {
       hubs,

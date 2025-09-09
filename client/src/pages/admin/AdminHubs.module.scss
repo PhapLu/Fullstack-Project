@@ -1,11 +1,11 @@
-.wrap { 
-  display: grid; 
-  gap: 16px; 
+.wrap {
+  display: grid;
+  gap: 16px;
 }
 
-.form { 
-  display: flex; 
-  gap: 8px; 
+.form {
+  display: flex;
+  gap: 8px;
 }
 
 .form input {
@@ -13,6 +13,7 @@
   border: 1px solid #ddd;
   border-radius: 6px;
 }
+
 .form button {
   padding: 6px 10px;
   border: 1px solid #ddd;
@@ -28,28 +29,30 @@
   overflow: hidden;
 }
 
-.table { 
-  width: 100%; 
-  border-collapse: collapse; 
+.table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   padding: 10px 12px;
   border-bottom: 1px solid #f1f1f1;
   font-size: 14px;
   vertical-align: middle;
 }
-.table thead { 
-  background: #fafafa; 
+
+.table thead {
+  background: #fafafa;
 }
 
-.center { 
-  text-align: center; 
+.center {
+  text-align: center;
 }
 
 .danger {
   background: #ffe9e9;
-  border: 1px solid #ffcaca;
+  border: 1px solid var(--danger);
   padding: 4px 8px;
   border-radius: 6px;
   cursor: pointer;
@@ -57,10 +60,73 @@
 }
 
 .linkBtn {
-  background: none;
-  border: none;
-  text-decoration: underline;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--primary-color);
+  color: #fff;
   cursor: pointer;
-  padding: 0 4px;
   font-size: 13px;
+  line-height: 1;
+  margin-right: 5px;
+}
+
+.linkBtn:hover {
+  background-color: var(--hover-btn);
+}
+
+
+.inlineEdit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.inlineInput {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 220px;
+}
+
+.inlineActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnSave {
+  background: var(--primary-color);
+  border-color: #cdeedb;
+  color: #fff;
+  margin-right: 5px;
+}
+
+.btnSave:hover {
+  background: var(--hover-btn);
+}
+
+.btnCancel {
+  background: #f7f7f7;
+  border-color: #e7e7e7;
+}
+
+.btnCancel:hover {
+  background: #f0f0f0;
 }
