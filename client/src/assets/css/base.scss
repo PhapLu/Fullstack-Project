@@ -29,11 +29,20 @@ html {
     // font-family: "Roboto", sans-serif;
     box-sizing: border-box;
     scroll-behavior: smooth;
-    scroll-padding-top: var(--sticky-offset, 150px);
+    // scroll-padding-top: var(--sticky-offset, 150px);
 }
+  
 html,
 body {
     height: 100vh;
+}
+
+#about {
+    scroll-margin-top: var(--sticky-offset, 150px);
+}
+
+#contact {
+    scroll-margin-top: var(--sticky-offset, 150px);
 }
 
 *,

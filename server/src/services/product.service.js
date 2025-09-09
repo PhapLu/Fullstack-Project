@@ -117,23 +117,59 @@ class ProductService {
 
     static searchProducts = async (req) => {
         const q = req.query;
-        const filters = {
-            ...((q.min || q.max) && {
-                price: { ...(q.min && { $gt: q.min }), ...(q.max && { $lt: q.max }) },
-            }),
-            ...(q.search && { title: { $regex: q.search, $options: "i" } }),
-        };
+    
+        // --- Base filters ---
+        const filters = {};
+    
+        // Title search
+        if (q.search) {
+            filters.title = { $regex: q.search, $options: "i" };
+        }
+    
+        // Vendor filter
+        if (q.vendorId) {
+            filters.vendorId = q.vendorId;
+        }
+    
+        // Price filters
+        if (q.min || q.max) {
+            filters.price = {};
+            if (q.min) filters.price.$gte = Number(q.min);
+            if (q.max) filters.price.$lte = Number(q.max);
+        }
+    
+        // --- Sorting logic ---
+        let sort = {};
+        switch (q.sort) {
+            case "newest": // newest = most recently created
+                sort = { createdAt: -1 };
+                break;
+            case "latest": // latest = last updated
+                sort = { updatedAt: -1 };
+                break;
+            case "asc": // price low → high
+                sort = { price: 1 };
+                break;
+            case "desc": // price high → low
+                sort = { price: -1 };
+                break;
+            default:
+                sort = { createdAt: -1 }; // fallback: newest
+        }
+    
         try {
-            const products = await Product.find(filters).lean();
-            return {
-                products,
-            };
+            const products = await Product.find(filters)
+                .sort(sort)
+                .populate("vendorId")
+                .lean();
+    
+            return { products };
         } catch (error) {
-            console.error("Error parsing query parameters:", error);
+            console.error("Error in searchProducts:", error);
             throw new BadRequestError("Invalid query parameters");
         }
-        
-    }
+    };
+    
 
     static readProducts = async (req) => {
         const userId = req.userId;
