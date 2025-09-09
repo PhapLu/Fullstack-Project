@@ -129,37 +129,45 @@ export default function OrdersLayout() {
                   const price = Number(item.priceAtPurchase || 0);
                   const qty = Number(item.quantity || 0);
 
-                  return (
-                    <li
-                      key={`${product._id || item.productId || idx}`}
-                      className="list-group-item d-flex align-items-center justify-content-between"
-                    >
-                      <div className="d-flex align-items-center mt-2">
-                        {img ? (
-                          <img
-                            src={getImageUrl(img)}
-                            alt={name}
-                            style={{
-                              width: 48,
-                              height: 48,
-                              objectFit: "cover",
-                            }}
-                            className="rounded me-2"
-                          />
-                        ) : (
-                          <div
-                            className="me-2 bg-light border rounded"
-                            style={{
-                              width: 48,
-                              height: 48,
-                            }}
-                          />
-                        )}
-                        <div className="ms-3">
-                          <div className="fw-semibold">{name}</div>
-                          <small className="text-muted">× {qty}</small>
-                        </div>
-                      </div>
+                                    return (
+                                        <li
+                                            key={`${
+                                                product._id ||
+                                                item.productId ||
+                                                idx
+                                            }`}
+                                            className="list-group-item d-flex align-items-center justify-content-between"
+                                        >
+                                            <div className="d-flex align-items-center gap-3">
+                                                {img ? (
+                                                    <img
+                                                        src={getImageUrl(img)}
+                                                        alt={name}
+                                                        style={{
+                                                            width: 60,
+                                                            height: 60,
+                                                            objectFit: "cover",
+                                                        }}
+                                                        className="rounded me-2"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        className="me-2 bg-light border rounded"
+                                                        style={{
+                                                            width: 48,
+                                                            height: 48,
+                                                        }}
+                                                    />
+                                                )}
+                                                <div>
+                                                    <div className="fw-semibold">
+                                                        {name}
+                                                    </div>
+                                                    <small className="text-muted">
+                                                        × {qty}
+                                                    </small>
+                                                </div>
+                                            </div>
 
                       <div className="d-flex align-items-center gap-2">
                         {order.status === "delivered" && (
