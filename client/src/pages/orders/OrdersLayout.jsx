@@ -154,14 +154,14 @@ export default function OrdersLayout() {
                                             }`}
                                             className="list-group-item d-flex align-items-center justify-content-between"
                                         >
-                                            <div className="d-flex align-items-center">
+                                            <div className="d-flex align-items-center gap-3">
                                                 {img ? (
                                                     <img
                                                         src={getImageUrl(img)}
                                                         alt={name}
                                                         style={{
-                                                            width: 48,
-                                                            height: 48,
+                                                            width: 60,
+                                                            height: 60,
                                                             objectFit: "cover",
                                                         }}
                                                         className="rounded me-2"
