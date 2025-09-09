@@ -120,10 +120,10 @@ export default function OrdersLayout() {
                             </div>
 
                             {/* Address + Date */}
-                            <p className="mb-1">
+                            <p className="mb-3 mt-3">
                                 <strong>Address:</strong> {buildAddress(order)}
                             </p>
-                            <p className="mb-2">
+                            <p className="mb-3">
                                 <strong>Placed At:</strong> {placedAt(order)}
                             </p>
 
