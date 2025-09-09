@@ -106,7 +106,7 @@ export default function DistributionHub() {
         <header className={styles.hub__head}>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <h1 style={{ margin: 0 }}>
-              Distibution Hub: {" "}
+              Distribution Hub: {" "}
               {hub && (
                 <span className={styles.loc}>
                   {hub.name}
@@ -114,7 +114,7 @@ export default function DistributionHub() {
               )}
             </h1>
           </div>
-          <p>This hub has no orders to show right now.</p>
+          <p className="fs-3">This hub has no orders to show right now.</p>
         </header>
       </section>
     );

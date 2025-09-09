@@ -8,6 +8,7 @@ const router = express.Router()
 
 router.get('/readProducts', asyncHandler(productController.readProducts))
 router.get('/readProfileProducts/:vendorId', asyncHandler(productController.readProfileProducts))
+router.get('/searchProducts', asyncHandler(productController.searchProducts))
 
 //Authentication
 router.use(verifyToken)

@@ -155,12 +155,58 @@ class AdminDashboardService {
 
   static readHubs = async (req) => {
     //1. Check admin
-    // const admin = await User.findById(req.userId);
-    // if (!admin) throw new BadRequestError('You are not authorized to perform this action');
+    const admin = await User.findById(req.userId);
+    if (!admin)
+      throw new BadRequestError(
+        "You are not authorized to perform this action"
+      );
 
+    //2. Find and read Hubs
     const hubs = await DistributionHub.find();
     return {
       hubs,
+    };
+  };
+
+  static updateHub = async (req) => {
+    const hubId = req.params.distributionHubId;
+
+    //1. Check admin
+    const admin = await User.findById(req.userId);
+    if (!admin)
+      throw new BadRequestError(
+        "You are not authorized to perform this action"
+      );
+
+    //2. Find hub by id 
+    const hub = await DistributionHub.findByIdAndUpdate(hubId);
+
+    // 3. Update fields from req.body
+    const updates = req.body; 
+    Object.assign(hub, updates);
+
+    // 4. Save updated hub
+    await hub.save();
+    
+    return {
+      hub,
+    };
+  };
+
+  static deleteHub = async (req) => {
+    const hubId = req.params.distributionHubId;
+    //1. Check admin
+    const admin = await User.findById(req.userId);
+    if (!admin)
+      throw new BadRequestError(
+        "You are not authorized to perform this action"
+      );
+
+    //2. Find hub by id
+    const hub = await DistributionHub.findByIdAndDelete(hubId);
+
+    return {
+      hub,
     };
   };
 }
