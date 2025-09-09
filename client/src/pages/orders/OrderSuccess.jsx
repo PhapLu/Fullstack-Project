@@ -159,7 +159,7 @@ export default function OrderSuccess() {
               Continue shopping
             </button>
             <Link
-              to={`/user/${user?._id}/tory`}
+              to={`/user/${user?._id}/order-history`}
               className="btn btn-primary rounded px-4"
               style={{ fontSize: "12px" }}
             >
