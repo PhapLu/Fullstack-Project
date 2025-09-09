@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./HotDeals.module.scss"; // switched to CSS module
+import styles from "./HotDeals.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFire } from "@fortawesome/free-solid-svg-icons";
 
@@ -56,6 +56,14 @@ export default function HotDeals() {
     return () => el.removeEventListener("scroll", updateEnds);
   });
 
+  function formatStock(stock) {
+    if (stock >= 1000) {
+      const k = Math.floor(stock / 1000);
+      return `${k}k+`;
+    }
+    return stock.toString();
+  }
+
   return (
     <section className={`${styles.hotdeals} ${styles.container}`} id="deals">
       <header className={styles.hotdeals__head}>
@@ -91,7 +99,7 @@ export default function HotDeals() {
                       </span>
                     </div>
                     <span className={styles["stock-link"]}>
-                      In Stock: {p.stock}
+                      In Stock: {formatStock(p.stock)}
                     </span>
                   </div>
                 </div>
