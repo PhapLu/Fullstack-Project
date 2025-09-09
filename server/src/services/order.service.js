@@ -47,32 +47,23 @@ class OrderService {
         const orderId = req.params.orderId;
         const userId = req.userId;
         const { status } = req.body;
-        console.log("START");
         // 1. Check shipper, order
         const shipper = await User.findById(userId);
-        console.log("START2");
-
-        if (!shipper)
-            throw new AuthFailureError(
-                "You are not authorized to perform this action"
-            );
-        const order = await Order.findById(orderId).populate("items.productId");
+        if (!shipper) throw new AuthFailureError("You are not authorized to perform this action");
+        const order = await Order.findById(orderId)
+            .populate("items.productId")
+            .populate("deliveryInformationId")
+            .populate("distributionHubId", "name address")
+            .populate("customerId", "customerProfile avatar")
         if (!order) throw new NotFoundError("Order not found");
 
         // 2. Validate body
-        console.log("START3");
-
         if (status !== "delivered" && status !== "cancelled")
             throw new BadRequestError("Invalid status");
 
         // 3. Update order status
-        console.log(orderId);
-        console.log(order);
-
         order.status = status;
         order.save();
-
-        console.log("UPDATE ORER ", order);
 
         return {
             order,
@@ -90,7 +81,10 @@ class OrderService {
         const orders = await Order.find({ customerId: userId })
             .populate("distributionHubId", "name address")
             .populate("items.productId")
-            .populate("deliveryInformationId");
+            .populate("deliveryInformationId")
+            .sort({ createdAt: -1 })
+            .lean()
+        
         return {
             orders,
         };

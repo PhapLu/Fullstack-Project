@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";  
 import { apiUtils } from "../../../utils/newRequest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as faStarSolid } from "@fortawesome/free-solid-svg-icons";
@@ -11,6 +12,9 @@ const isValidObjectId = (v) => /^[a-f\d]{24}$/i.test(String(v || ""));
 
 export default function ReviewForm({ productId, orderId = "" }) {
   const qc = useQueryClient();
+  const navigate = useNavigate();                           
+  const user = useSelector(selectUser);
+
   const [rating, setRating] = useState(4);
   const [comment, setComment] = useState("");
 
@@ -23,8 +27,15 @@ export default function ReviewForm({ productId, orderId = "" }) {
     {
       onSuccess: () => {
         setComment("");
-        setRating(40);
+        setRating(4);
         qc.invalidateQueries(["reviews", productId]);
+
+        // Navigate
+        const target =
+          user && user._id
+            ? `/user/${user._id}/order-history`
+            : `/order-history`;
+        navigate(target);
       },
     }
   );
@@ -64,6 +75,9 @@ export default function ReviewForm({ productId, orderId = "" }) {
             />
           </button>
         ))}
+
+        <span className="ms-1 fs-4">({rating}/5)</span>
+
       </div>
 
       <textarea
@@ -82,7 +96,7 @@ export default function ReviewForm({ productId, orderId = "" }) {
         </div>
       )}
 
-      <button className="btn btn-primary btn-lg">Submit review</button>
+      <button className="btn btn-primary btn-lg" disabled={isLoading}>{isLoading ? "Submitting..." : "Submit review"}</button>
     </form>
   );
 }

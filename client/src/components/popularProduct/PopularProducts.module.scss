@@ -2,8 +2,124 @@
   margin: 3% 0;
   margin-inline: auto;
 }
+.popular__header {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
 
-.popular h2 {
+}
+
+.filterWrap {
+  margin-left: auto;
+  position: relative;
+  display: flex;
+  justify-items: end;
+}
+
+.filterBtn {
+  padding: 8px 12px;
+  border: 1px solid var(--primary-color);
+  color: var(--surface);
+  background: var(--primary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.filterBtn:hover {
+  background: #0051a8;
+}
+
+.filterPanel {
+  right: 0;
+  position: absolute;
+  top: calc(100% + 8px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 14px;
+  z-index: 5;
+}
+
+.option { margin-bottom: 10px; }
+
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  margin: 8px 0;
+  cursor: pointer;
+
+  input { cursor: pointer; }
+}
+
+.rangeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.priceInput {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  outline: none;
+}
+
+.applyBtn, .clearBtn {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.applyBtn { 
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 400; 
+  background: #f0f7ff;
+}
+
+.applyBtn:hover {
+  background: var(--primary-color);
+  color: var(--surface);
+}
+
+.clearBtn {
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+.clearBtn:hover {
+  background: var(--danger);
+  color: var(--surface);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border, #e5e7eb);
+  margin: 10px 0;
+}
+
+.dash { opacity: 0.6; }
+
+.popular__header h4 {
+  display: flex;
+  justify-content: flex-end;
+}
+.popular__header h2 {
+  display: flex;
+  justify-content: flex-start;
   font-size: 24px;
   font-weight: 700;
   color: var(--text-color);

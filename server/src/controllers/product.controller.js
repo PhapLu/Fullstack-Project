@@ -43,6 +43,13 @@ class ProductController {
             metadata: await ProductService.deleteProduct(req)
         }).send(res)
     }
+
+    searchProducts = async (req, res, next) => {
+        return new SuccessResponse({
+            message: 'Search products successfully',
+            metadata: await ProductService.searchProducts(req)
+        }).send(res)
+    }
 }
 
 export default new ProductController()

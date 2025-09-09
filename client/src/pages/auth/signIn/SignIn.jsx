@@ -50,6 +50,7 @@ const SignIn = () => {
         const action = await dispatch(
             signIn({ username: inputs.username.trim(), password: inputs.password })
         );
+        console.log(action)
         if (action.meta.requestStatus === "fulfilled") {
             // Persist token then open socket
             localStorage.setItem("token", action.payload.token);
@@ -133,6 +134,12 @@ const SignIn = () => {
                                 {errors.password}
                             </span>
                         )}
+                        {errors.server && (
+                            <div className={styles["form-field__error"]}>
+                                {errors.server}
+                            </div>
+                        )}
+
                         <button
                             type="button"
                             className={styles.eye}

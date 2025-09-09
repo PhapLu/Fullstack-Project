@@ -56,6 +56,11 @@ class ReviewService {
             comment: body.comment,
         });
         await review.save();
+
+        // 4. Update order
+        order.isReviewed = true;
+        await order.save();
+        
         return {
             review
         };

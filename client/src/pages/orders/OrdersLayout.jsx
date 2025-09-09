@@ -121,7 +121,7 @@ export default function OrdersLayout() {
               <ul className="list-group list-group-flush">
                 {(order.items || []).map((item, idx) => {
                   const product = item.productId || {};
-                  const name = product.name || item.name || "Unnamed product";
+                  const name = product.title || item.title || "Unnamed product";
                   const img =
                     product.thumbnail ||
                     (Array.isArray(product.images) && product.images[0]) ||
@@ -170,7 +170,7 @@ export default function OrdersLayout() {
                                             </div>
 
                       <div className="d-flex align-items-center gap-2">
-                        {order.status === "delivered" && (
+                        {(order.status === "delivered" && !order.isReviewed) && (
                           <button
                             className="btn btn-sm btn-outline-primary fs-5"
                             onClick={() =>
