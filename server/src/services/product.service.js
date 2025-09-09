@@ -115,6 +115,26 @@ class ProductService {
         };
     };
 
+    static searchProducts = async (req) => {
+        const q = req.query;
+        const filters = {
+            ...((q.min || q.max) && {
+                price: { ...(q.min && { $gt: q.min }), ...(q.max && { $lt: q.max }) },
+            }),
+            ...(q.search && { title: { $regex: q.search, $options: "i" } }),
+        };
+        try {
+            const products = await Product.find(filters).lean();
+            return {
+                products,
+            };
+        } catch (error) {
+            console.error("Error parsing query parameters:", error);
+            throw new BadRequestError("Invalid query parameters");
+        }
+        
+    }
+
     static readProducts = async (req) => {
         const userId = req.userId;
 
