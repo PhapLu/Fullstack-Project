@@ -52,7 +52,7 @@ const AuthLayout = () => {
           <div className={styles["auth__img"]}>
             <img className={styles.img1} src={imgs[2]} alt={`${role}-1`} loading="eager" />
             <img className={styles.img2} src={imgs[1]} alt={`${role}-2`} loading="lazy" />
-            <img className={styles.img3} src={imgs[0]} alt={`${role}-3`} loading="lazy" />
+            {/* <img className={styles.img3} src={imgs[0]} alt={`${role}-3`} loading="lazy" /> */}
           </div>
         </aside>
 
