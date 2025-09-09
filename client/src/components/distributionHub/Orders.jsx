@@ -57,11 +57,9 @@ export default function Orders({
         `/order/updateOrderStatus/${order._id}`,
         { status: nextStatus }
       );
-      console.log(data);
       // BE returns the updated order (adjust path if yours differs)
       const updated = data?.metadata?.order;
-      console.log(updated);
-      // 🔁 update just that one order in the parent-owned array
+
       setOrders?.((prev) =>
         Array.isArray(prev)
           ? prev.map((o) => (o._id === updated._id ? { ...o, ...updated } : o))
