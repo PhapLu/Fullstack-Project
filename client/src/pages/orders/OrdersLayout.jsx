@@ -170,7 +170,7 @@ export default function OrdersLayout() {
                                             </div>
 
                       <div className="d-flex align-items-center gap-2">
-                        {order.status === "delivered" && (
+                        {(order.status === "delivered" && !order.isReviewed) && (
                           <button
                             className="btn btn-sm btn-outline-primary fs-5"
                             onClick={() =>

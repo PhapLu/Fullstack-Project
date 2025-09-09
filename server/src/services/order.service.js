@@ -82,7 +82,9 @@ class OrderService {
             .populate("distributionHubId", "name address")
             .populate("items.productId")
             .populate("deliveryInformationId")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .lean()
+        
         return {
             orders,
         };
