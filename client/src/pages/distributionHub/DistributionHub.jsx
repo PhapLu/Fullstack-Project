@@ -109,7 +109,7 @@ export default function DistributionHub() {
               Distibution Hub: {" "}
               {hub && (
                 <span className={styles.loc}>
-                  @ {hub.title || hub.name || hub._id}
+                  {hub.name}
                 </span>
               )}
             </h1>

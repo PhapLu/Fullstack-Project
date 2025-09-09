@@ -160,7 +160,7 @@ export default function Header() {
                     className={styles.menuItem}
                     role="menuitem"
                     onClick={() =>
-                      navigate("/distributionHub/${order.distributionHubId}")
+                      navigate(`/distributionHub/${user.shipperProfile.assignedHub._id}`)
                     }
                   >
                     <FontAwesomeIcon
