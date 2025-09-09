@@ -72,7 +72,7 @@ export default function OrderSuccess() {
       <div className="row g-3">
         <div className="col-12 col-lg-5">
           <div className="card shadow-sm mb-3">
-            <div className="card-body">
+            <div className="card-body p-4">
               <h4 className="fw-bold mb-2">Delivery Information</h4>
               {order.deliveryInformation && (
                 <div className="text-muted medium mt-2">
@@ -87,7 +87,7 @@ export default function OrderSuccess() {
           </div>
 
           <div className="card shadow-sm">
-            <div className="card-body">
+            <div className="card-body p-4">
               <h4 className="fw-bold mb-2">Payment Method</h4>
               <div>{paymentLabel}</div>
               {order.payment === "cash" && (
@@ -153,7 +153,7 @@ export default function OrderSuccess() {
           <div className="d-flex justify-content-end gap-2 mt-3 flex-wrap">
             <button
               className="btn btn-outline-secondary rounded px-4"
-              style={{ fontSize: "12px" }}
+              style={{ fontSize: "1.3rem" }}
               onClick={() => navigate("/")}
             >
               Continue shopping
@@ -161,7 +161,7 @@ export default function OrderSuccess() {
             <Link
               to={`/user/${user?._id}/order-history`}
               className="btn btn-primary rounded px-4"
-              style={{ fontSize: "12px" }}
+              style={{ fontSize: "1.3rem" }}
             >
               View my orders →
             </Link>
