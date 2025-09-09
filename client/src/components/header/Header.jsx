@@ -340,7 +340,7 @@ export default function Header() {
                                     fill="#0F172A"
                                 />
                             </svg>
-                            {itemCount > 0 && (
+                            {itemCount >= 0 && (
                                 <span
                                     className={styles.cartBadge}
                                     aria-label={`${itemCount} items in cart`}
