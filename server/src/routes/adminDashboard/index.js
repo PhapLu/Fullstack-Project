@@ -15,12 +15,12 @@ router.get(
 router.get("/readHubs", asyncHandler(AdminDashboardController.readHubs));
 
 router.patch(
-  "/updateHub/:id",
+  "/updateHub/:distributionHubId",
   asyncHandler(AdminDashboardController.updateHub)
 );
 
 router.delete(
-  "/deleteHub/:id",
+  "/deleteHub/:distributionHubId",
   asyncHandler(AdminDashboardController.deleteHub)
 );
 

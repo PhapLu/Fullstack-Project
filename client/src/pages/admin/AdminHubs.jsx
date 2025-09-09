@@ -59,36 +59,36 @@ export default function AdminHubs() {
   };
 
   async function update(id, patch) {
-    // try {
-    //   const res = await apiUtils.patch(
-    //     `/adminDashboard/updateHub/${id}`,
-    //     patch
-    //   );
-    //   const hub =
-    //     res?.data?.metadata?.hub || res?.data?.metadata?.distributionHub || {};
-    //   setRows((prev) =>
-    //     prev.map((h) =>
-    //       h._id === id
-    //         ? {
-    //             ...h,
-    //             name: hub.name ?? patch.name ?? h.name,
-    //             address: hub.address ?? patch.address ?? h.address,
-    //           }
-    //         : h
-    //     )
-    //   );
-    // } catch (e) {
-    //   console.log("Update failed:", e?.response?.data || e);
-    // }
+    try {
+      const res = await apiUtils.patch(
+        `/adminDashboard/updateHub/${id}`,
+        patch
+      );
+      const hub =
+        res?.data?.metadata?.hub || res?.data?.metadata?.distributionHub || {};
+      setRows((prev) =>
+        prev.map((h) =>
+          h._id === id
+            ? {
+                ...h,
+                name: hub.name ?? patch.name ?? h.name,
+                address: hub.address ?? patch.address ?? h.address,
+              }
+            : h
+        )
+      );
+    } catch (e) {
+      console.log("Update failed:", e?.response?.data || e);
+    }
   }
 
   async function remove(id) {
-    // try {
-    //   await apiUtils.delete(`/adminDashboard/deleteHub/${id}`);
-    //   setRows((prev) => prev.filter((h) => h._id !== id));
-    // } catch (e) {
-    //   console.log("Delete failed:", e?.response?.data || e);
-    // }
+    try {
+      await apiUtils.delete(`/adminDashboard/deleteHub/${id}`);
+      setRows((prev) => prev.filter((h) => h._id !== id));
+    } catch (e) {
+      console.log("Delete failed:", e?.response?.data || e);
+    }
   }
 
   const startEdit = (h) => {
