@@ -23,7 +23,7 @@ export default function ReviewForm({ productId, orderId = "" }) {
     {
       onSuccess: () => {
         setComment("");
-        setRating(40);
+        setRating(4);
         qc.invalidateQueries(["reviews", productId]);
       },
     }
@@ -64,6 +64,9 @@ export default function ReviewForm({ productId, orderId = "" }) {
             />
           </button>
         ))}
+
+        <span className="ms-1 fs-4">({rating}/5)</span>
+
       </div>
 
       <textarea

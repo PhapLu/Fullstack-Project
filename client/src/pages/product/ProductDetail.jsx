@@ -14,7 +14,6 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  // ✅ Lấy id từ route TRƯỚC khi dùng ở bất kỳ hook nào
   const { productId: routeProductId } = useParams();
 
   const [product, setProduct] = useState(null);

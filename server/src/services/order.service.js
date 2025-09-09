@@ -90,7 +90,7 @@ class OrderService {
         const orders = await Order.find({ customerId: userId })
             .populate("distributionHubId", "name address")
             .populate("items.productId")
-            .populate("deliveryInformationId");
+            .populate("deliveryInformationId")
         return {
             orders,
         };
