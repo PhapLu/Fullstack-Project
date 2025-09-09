@@ -9,7 +9,7 @@ import { usd } from "../../utils/currency";
 export default function PopularProducts() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(6);
+  const [productsPerPage, setProductsPerPage] = useState(18);
 
   useEffect(() => {
     const fetchProducts = async () => {
