@@ -137,7 +137,7 @@ class ProductService {
 
     static readProducts = async (req) => {
         const userId = req.userId;
-
+    
         const {
             q,
             minPrice,
@@ -146,30 +146,36 @@ class ProductService {
             page = "1",
             limit = "12",
         } = req.query;
-
+    
         let user = null;
         if (mine === "true") {
             user = await User.findById(userId);
             if (!user) throw new AuthFailureError("You are not authenticated!");
         }
+    
         // Build filter
         const filter = {};
         if (mine === "true") filter.vendor = user._id;
-
+    
         if (q && typeof q === "string" && q.trim()) {
             filter.name = { $regex: q.trim(), $options: "i" };
         }
+    
+        // ✅ Only add price conditions if provided
         const priceFilter = {};
-        const min = minPrice != null ? Number(minPrice) : null;
-        const max = maxPrice != null ? Number(maxPrice) : null;
-        if (min != null && Number.isFinite(min)) priceFilter.$gte = min;
-        if (max != null && Number.isFinite(max)) priceFilter.$lte = max;
-        if (Object.keys(priceFilter).length) filter.price = priceFilter;
-
-        // Pagination (limit still matters, page is ignored when randomizing)
+        if (minPrice !== undefined && !isNaN(Number(minPrice))) {
+            priceFilter.$gte = Number(minPrice);
+        }
+        if (maxPrice !== undefined && !isNaN(Number(maxPrice))) {
+            priceFilter.$lte = Number(maxPrice);
+        }
+        if (Object.keys(priceFilter).length > 0) {
+            filter.price = priceFilter;
+        }
+    
+        // Pagination / Randomization
         const limitNum = Math.min(100, Math.max(1, Number(limit) || 12));
-
-        // Randomized query via aggregation
+    
         const [items, total] = await Promise.all([
             Product.aggregate([
                 { $match: filter },
@@ -190,10 +196,10 @@ class ProductService {
             ]),
             Product.countDocuments(filter),
         ]);
-
+    
         return {
             pagination: {
-                page: 1, // random draw ignores traditional paging
+                page: 1,
                 limit: limitNum,
                 total,
                 totalPages: Math.ceil(total / limitNum),
@@ -201,6 +207,7 @@ class ProductService {
             products: items,
         };
     };
+    
 
     static deleteProduct = async (req) => {
         const userId = req.userId;
