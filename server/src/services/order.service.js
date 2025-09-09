@@ -142,7 +142,7 @@ class OrderService {
                 totalItem: 1,
                 returnUrl: process.env.ALEPAY_RETURN_URL,
                 cancelUrl: process.env.ALEPAY_CANCEL_URL,
-                buyerName: user.customerProfile.name,
+                buyerName: user.customerProfile.name || 'User',
                 buyerEmail: user.email,
                 buyerPhone: user.phone || "0988888888",
                 buyerAddress: "Ho Chi Minh",
