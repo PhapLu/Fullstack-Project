@@ -73,12 +73,31 @@
 .applyBtn, .clearBtn {
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
   cursor: pointer;
+  transition: 0.15s;
 }
 
-.applyBtn { font-weight: 500; }
+.applyBtn { 
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 400; 
+  background: #f0f7ff;
+}
+
+.applyBtn:hover {
+  background: var(--primary-color);
+  color: var(--surface);
+}
+
+.clearBtn {
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+.clearBtn:hover {
+  background: var(--danger);
+  color: var(--surface);
+}
 
 .actions {
   display: flex;
