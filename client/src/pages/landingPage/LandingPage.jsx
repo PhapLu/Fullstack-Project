@@ -17,14 +17,16 @@ export default function LandingPage() {
             <Banner />
             {/* Featured Categories */}
             <Categories />
+            {/* Popular Products */}
+            <PopularProducts />
             {/* Promo */}
             <Promo />
             {/* HotDeals */}
             <HotDeals />
             {/* Malls */}
             <Malls />
-            {/* Popular Products */}
-            <PopularProducts />
+            
+            
 
             <section className={styles.about} id="about">
                 <h2>About us</h2>
