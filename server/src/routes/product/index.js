@@ -9,11 +9,11 @@ const router = express.Router()
 router.get('/readProducts', asyncHandler(productController.readProducts))
 router.get('/readProfileProducts/:vendorId', asyncHandler(productController.readProfileProducts))
 router.get('/searchProducts', asyncHandler(productController.searchProducts))
+router.get('/readProduct/:productId', asyncHandler(productController.readProduct))
 
 //Authentication
 router.use(verifyToken)
 router.post('/createProduct', useUploadDir("products"), uploadDisk.array("files", 10) , asyncHandler(productController.createProduct))
-router.get('/readProduct/:productId', asyncHandler(productController.readProduct))
 router.patch('/updateProduct', asyncHandler(productController.updateProduct))
 router.delete('/deleteProduct/:productId', asyncHandler(productController.deleteProduct))
 

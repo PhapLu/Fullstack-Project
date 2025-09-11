@@ -75,9 +75,13 @@ export default function CreateProduct({ onCancel, onDone }) {
 
     useEffect(() => {
         return () => {
-            inputs.images?.forEach(
-                (img) => img?._preview && URL.revokeObjectURL(img.previewUrl)
-            );
+            inputs.images?.forEach((img) => {
+                if (img?._preview) {
+                    try {
+                        URL.revokeObjectURL(img.previewUrl);
+                    } catch {}
+                }
+            });
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -109,9 +113,8 @@ export default function CreateProduct({ onCancel, onDone }) {
                 return prev;
             }
 
-            const now = Date.now();
-            const newItems = take.map((file, idx) => ({
-                id: `${now}_${idx}`,
+            const newItems = take.map((file) => ({
+                id: crypto.randomUUID(), // safer unique id
                 file,
                 previewUrl: URL.createObjectURL(file),
                 _preview: true,
@@ -138,7 +141,10 @@ export default function CreateProduct({ onCancel, onDone }) {
     const removeImage = (idx) => {
         setInputs((prev) => {
             const item = prev.images[idx];
-            if (item?._preview) URL.revokeObjectURL(item.previewUrl);
+            if (item?._preview) {
+                // Defer revoke until after React unmounts <img>
+                setTimeout(() => URL.revokeObjectURL(item.previewUrl), 500);
+            }
             return { ...prev, images: prev.images.filter((_, i) => i !== idx) };
         });
     };
