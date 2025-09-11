@@ -70,6 +70,14 @@ class ProductService {
         );
 
         // 4. Create product
+        // Prevent accidental duplicate creation (double-submit in <5s)
+        const duplicate = await Product.findOne({
+            vendorId: userId,
+            title: title.trim(),
+            createdAt: { $gt: new Date(Date.now() - 5000) },
+        });
+        if (duplicate) return { product: duplicate };
+
         const product = await Product.create({
             vendorId: userId,
             title: title,
