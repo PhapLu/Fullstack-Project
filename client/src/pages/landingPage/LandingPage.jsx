@@ -25,8 +25,6 @@ export default function LandingPage() {
             <HotDeals />
             {/* Malls */}
             <Malls />
-            
-            
 
             <section className={styles.about} id="about">
                 <h2>About us</h2>

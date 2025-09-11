@@ -120,7 +120,7 @@ export function CartProvider({ children }) {
     }, [state]);
 
     const prevUserIdRef = useRef(userId);
-    const hydratedRef = useRef(false);
+    const hydratedKeysRef = useRef(new Set());
 
     // --- Auth transitions & hydration ---
     useEffect(() => {
@@ -128,23 +128,27 @@ export function CartProvider({ children }) {
 
         (async () => {
             const prevUserId = prevUserIdRef.current;
-            const isLogin = !prevUserId && !!userId; // guest -> logged in
-            const isLogout = !!prevUserId && !userId; // logged in -> guest
-            const bootLoggedIn = !!userId && !isLogin && !hydratedRef.current;
+            const isLogin = !prevUserId && !!userId;
+            const isLogout = !!prevUserId && !userId;
+            const bootLoggedIn =
+                !!userId &&
+                !isLogin &&
+                !hydratedKeysRef.current.has(storageKey);
 
-            // 1) Hydrate from local for current key (guest or per-user)
-            if (!hydratedRef.current) {
-                const parsed = readLocal(storageKey);
+            // 1) Hydrate from local for *this* key
+            if (!hydratedKeysRef.current.has(storageKey)) {
+                const parsed =
+                    readLocal(storageKey) || readLocal(makeKey(null));
                 if (!canceled) {
                     parsed.items = (parsed.items || []).filter(
                         (x) => x && x.id
                     );
                     dispatch({ type: "RESET", state: parsed });
-                    hydratedRef.current = true;
+                    hydratedKeysRef.current.add(storageKey);
                 }
             }
 
-            // 2) On logout: snapshot the cart ONCE to server (for the old user)
+            // 2) On logout → snapshot + switch to guest
             if (isLogout) {
                 try {
                     const payload = {
@@ -152,35 +156,55 @@ export function CartProvider({ children }) {
                     };
                     await apiUtils.put("/cart/snapshot", payload);
                 } catch (e) {
-                    // non-fatal: user is logging out anyway
                     console.warn("snapshot on logout failed", e);
                 } finally {
-                    // keep same items as guest copy
                     writeLocal(makeKey(null), {
                         items: stateRef.current.items,
                     });
-                    // force re-hydration for the new storageKey on next render
-                    hydratedRef.current = false;
+                    hydratedKeysRef.current.delete(makeKey(null)); // allow guest hydration
                 }
             }
 
-            // 3) On login: read cart from DB and REPLACE local
+            // 3) On login → replace with DB
+            // 3) On login or boot: always merge local + server
             if (isLogin || bootLoggedIn) {
                 try {
                     const res = await apiUtils.get("/cart/readCart");
                     const serverItems = mapServerItems(
                         res?.data?.metadata?.cart?.items ?? []
                     );
-                    if (!canceled) {
-                        dispatch({
-                            type: "REPLACE_FROM_SERVER",
-                            items: serverItems,
-                        });
-                        writeLocal(storageKey, { items: serverItems });
-                    }
+
+                    // IMPORTANT: read directly from localStorage, not stateRef
+                    const localItems = readLocal(storageKey)?.items || [];
+
+                    // merge by productId, keep latest quantity (local wins if changed)
+                    const map = new Map();
+                    [...serverItems, ...localItems].forEach((it) => {
+                        const prev = map.get(it.id);
+                        if (!prev) map.set(it.id, it);
+                        else {
+                            // if qty differs, prefer the larger one (or local)
+                            map.set(it.id, {
+                                ...it,
+                                qty: Math.max(prev.qty, it.qty),
+                            });
+                        }
+                    });
+
+                    const mergedItems = [...map.values()];
+
+                    dispatch({
+                        type: "REPLACE_FROM_SERVER",
+                        items: mergedItems,
+                    });
+                    writeLocal(storageKey, { items: mergedItems });
+
+                    // also push merged result to DB
+                    await apiUtils.put("/cart/snapshot", {
+                        items: toServerItems(mergedItems),
+                    });
                 } catch (e) {
                     console.warn("readCart on login/boot failed", e);
-                    // stay with local fallback
                 }
             }
 
@@ -190,13 +214,19 @@ export function CartProvider({ children }) {
         return () => {
             canceled = true;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [storageKey, userId]);
 
     // Persist to current localStorage key on every change
     useEffect(() => {
+        if (!hydratedKeysRef.current.has(storageKey)) return;
         writeLocal(storageKey, state);
-    }, [state, storageKey]);
+
+        if (userId) {
+            apiUtils
+                .put("/cart/snapshot", { items: toServerItems(state.items) })
+                .catch((e) => console.warn("auto snapshot failed", e));
+        }
+    }, [state, storageKey, userId]);
 
     // --- Public API: ONLY local updates during session ---
     const addItem = (item) => {
@@ -222,7 +252,23 @@ export function CartProvider({ children }) {
         subtotal,
         itemCount,
         addItem, // local only
-        setQty: (id, qty) => dispatch({ type: "SET_QTY", id, qty }), // local only
+        // in CartProvider's value:
+        setQty: (id, qty) => {
+            dispatch({ type: "SET_QTY", id, qty });
+            if (userId) {
+                // debounce/throttle if you want
+                apiUtils
+                    .put("/cart/snapshot", {
+                        items: toServerItems(
+                            stateRef.current.items.map((it) =>
+                                it.id === id ? { ...it, qty } : it
+                            )
+                        ),
+                    })
+                    .catch((e) => console.warn("snapshot failed", e));
+            }
+        },
+
         removeItem: (id) => dispatch({ type: "REMOVE", id }), // local only
         clear: () => dispatch({ type: "CLEAR" }), // local only
 

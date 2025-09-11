@@ -117,27 +117,62 @@ class ProductService {
 
     static searchProducts = async (req) => {
         const q = req.query;
-        const filters = {
-            ...((q.min || q.max) && {
-                price: { ...(q.min && { $gt: q.min }), ...(q.max && { $lt: q.max }) },
-            }),
-            ...(q.search && { title: { $regex: q.search, $options: "i" } }),
-        };
+
+        // --- Base filters ---
+        const filters = {};
+
+        // Title search
+        if (q.search) {
+            filters.title = { $regex: q.search, $options: "i" };
+        }
+
+        // Vendor filter
+        if (q.vendorId) {
+            filters.vendorId = q.vendorId;
+        }
+
+        // Price filters
+        if (q.min || q.max) {
+            filters.price = {};
+            if (q.min) filters.price.$gte = Number(q.min);
+            if (q.max) filters.price.$lte = Number(q.max);
+        }
+
+        // --- Sorting logic ---
+        let sort = {};
+        switch (q.sort) {
+            case "newest": // newest = most recently created
+                sort = { createdAt: -1 };
+                break;
+            case "latest": // latest = last updated
+                sort = { updatedAt: -1 };
+                break;
+            case "asc": // price low → high
+                sort = { price: 1 };
+                break;
+            case "desc": // price high → low
+                sort = { price: -1 };
+                break;
+            default:
+                sort = { createdAt: -1 }; // fallback: newest
+        }
+
         try {
-            const products = await Product.find(filters).lean();
-            return {
-                products,
-            };
+            const products = await Product.find(filters)
+                .sort(sort)
+                .populate("vendorId")
+                .lean();
+
+            return { products };
         } catch (error) {
-            console.error("Error parsing query parameters:", error);
+            console.error("Error in searchProducts:", error);
             throw new BadRequestError("Invalid query parameters");
         }
-        
-    }
+    };
 
     static readProducts = async (req) => {
         const userId = req.userId;
-    
+
         const {
             q,
             minPrice,
@@ -145,23 +180,24 @@ class ProductService {
             mine,
             page = "1",
             limit = "12",
+            sort, // "asc" | "desc" | undefined
         } = req.query;
-    
+
         let user = null;
         if (mine === "true") {
             user = await User.findById(userId);
             if (!user) throw new AuthFailureError("You are not authenticated!");
         }
-    
-        // Build filter
+
+        // --- Build filter ---
         const filter = {};
         if (mine === "true") filter.vendor = user._id;
-    
+
         if (q && typeof q === "string" && q.trim()) {
-            filter.name = { $regex: q.trim(), $options: "i" };
+            filter.title = { $regex: q.trim(), $options: "i" };
         }
-    
-        // ✅ Only add price conditions if provided
+
+        // ✅ Price range
         const priceFilter = {};
         if (minPrice !== undefined && !isNaN(Number(minPrice))) {
             priceFilter.$gte = Number(minPrice);
@@ -172,34 +208,54 @@ class ProductService {
         if (Object.keys(priceFilter).length > 0) {
             filter.price = priceFilter;
         }
-    
-        // Pagination / Randomization
+
+        // --- Pagination ---
+        const pageNum = Math.max(1, Number(page) || 1);
         const limitNum = Math.min(100, Math.max(1, Number(limit) || 12));
-    
-        const [items, total] = await Promise.all([
-            Product.aggregate([
-                { $match: filter },
-                { $sample: { size: limitNum } },
-                {
-                    $project: {
-                        _id: 1,
-                        name: 1,
-                        title: 1,
-                        status: 1,
-                        stock: 1,
-                        price: 1,
-                        images: 1,
-                        description: 1,
-                        vendorId: 1,
-                    },
+        const skipNum = (pageNum - 1) * limitNum;
+
+        // --- Sorting ---
+        let sortStage = {};
+        if (sort === "asc") sortStage.price = 1;
+        if (sort === "desc") sortStage.price = -1;
+
+        // --- Query pipeline ---
+        const pipeline = [{ $match: filter }];
+
+        if (Object.keys(sortStage).length > 0) {
+            pipeline.push({ $sort: sortStage });
+        } else {
+            // default: newest first
+            pipeline.push({ $sort: { createdAt: -1 } });
+        }
+
+        pipeline.push(
+            { $skip: skipNum },
+            { $limit: limitNum },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    title: 1,
+                    status: 1,
+                    stock: 1,
+                    price: 1,
+                    images: 1,
+                    description: 1,
+                    vendorId: 1,
+                    createdAt: 1,
                 },
-            ]),
+            }
+        );
+
+        const [items, total] = await Promise.all([
+            Product.aggregate(pipeline),
             Product.countDocuments(filter),
         ]);
-    
+
         return {
             pagination: {
-                page: 1,
+                page: pageNum,
                 limit: limitNum,
                 total,
                 totalPages: Math.ceil(total / limitNum),
@@ -207,7 +263,6 @@ class ProductService {
             products: items,
         };
     };
-    
 
     static deleteProduct = async (req) => {
         const userId = req.userId;

@@ -83,9 +83,11 @@
     display: grid;
     grid-template-rows: auto 1fr;
     min-height: 320px;
+    text-decoration: none;
 }
 
 .thumb {
+    text-decoration: none;
     position: relative;
     padding-top: 75%;
     border-bottom: var(--border);
@@ -121,6 +123,10 @@
     -webkit-box-orient: vertical;
 }
 
+.title a {
+    text-decoration: none;
+}
+
 .priceRow {
     display: flex;
     justify-content: space-between;
@@ -128,7 +134,7 @@
 }
 
 .price {
-    color: #0c7;
+    color: var(--primary-color);
     font-weight: 700;
 }
 

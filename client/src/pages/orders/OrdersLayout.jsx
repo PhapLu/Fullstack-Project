@@ -174,7 +174,7 @@ export default function OrdersLayout() {
                           <button
                             className="btn btn-sm btn-outline-primary fs-5"
                             onClick={() =>
-                              navigate(`/product/${product._id}`, {
+                              navigate(`/product/${product._id}#review`, {
                                 state: {
                                   orderId: order._id,
                                   productId: product._id,

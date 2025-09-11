@@ -99,7 +99,11 @@
 }
 
 .field .ico { left: 12px; }
-.field .eye { right: 10px; }
+.field .eye { 
+  border: none;
+  background: none;
+  right: 0px;
+}
 
 
 .btn.btn-primary {
@@ -185,12 +189,8 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(239, 68, 68, 0.06);  
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 4px 12px;
   color: #b91c1c;       
-  margin-top: 20px;         
   font-size: 1.3rem;               
   line-height: 1.35;
   animation: err-pop 0.18s ease-out;

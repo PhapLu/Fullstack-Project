@@ -56,7 +56,6 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-top: 50px;
 }
 
 .field {
@@ -66,7 +65,7 @@
 
 .field input, .field select {
   width: 100%;
-  height: 46px;
+  height: 35px;
   padding: 0 14px;
   border: 1px solid var(--border-color, #ced4da);
   border-radius: 12px;
@@ -103,7 +102,7 @@
   position: absolute;
   top: 0;                
   transform: none;        
-  height: 46px;            
+  height: 35px;            
   display: flex;
   align-items: center;   
   z-index: 2;       
@@ -111,11 +110,15 @@
 }
 
 .field .ico { left: 12px; }
-.field .eye { right: 10px; }
+.field .eye { 
+  border: none;
+  background: none;
+  right: 0px;
+}
 
 .btn.btn-primary {
     width: 100%;
-    height: 46px;
+    height: 35px;
     border-radius: 10px;
     background: var(--primary-color);
     color: #fff;
