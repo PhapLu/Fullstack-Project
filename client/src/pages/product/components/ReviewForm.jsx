@@ -53,7 +53,7 @@ export default function ReviewForm({ productId, orderId = "" }) {
   };
 
   return (
-    <form className="card p-4 mb-4" onSubmit={onSubmit}>
+    <form id="review" className="card p-4 mb-4" onSubmit={onSubmit}>
       <div className="mb-2 fs-2 fw-semibold">Write a review</div>
 
       <div className="mb-2 d-flex align-items-center gap-2">

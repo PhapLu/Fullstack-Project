@@ -68,6 +68,7 @@ const slice = createSlice({
         })
             .addCase(signIn.fulfilled, (s) => {
                 s.status = "succeeded";
+                s.payload = ""
             })
             .addCase(signIn.rejected, (s, a) => {
                 s.status = "failed";

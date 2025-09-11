@@ -168,12 +168,6 @@ export default function MyCart() {
                                             </button>
                                         </div>
                                     </div>
-
-                                    {p.stock && p.qty >= p.stock && (
-                                        <div className="text-danger small mt-2">
-                                            Out of stock limit.
-                                        </div>
-                                    )}
                                 </div>
                             ))}
                             <div>
@@ -214,6 +208,7 @@ export default function MyCart() {
                         <button
                             className={`btn btn-primary fs-4 w-100 mt-3 ${styles["checkout"]}`}
                             onClick={goCheckout}
+                            disabled={items.length === 0}
                         >
                             Proceed to checkout
                         </button>

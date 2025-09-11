@@ -103,7 +103,7 @@ const SignUp = () => {
             nextErrors.password = "Password is required";
         } else if (!isValidPassword(values.password)) {
             nextErrors.password =
-                "8–20 chars, include ≥1 uppercase, ≥1 lowercase, ≥1 digit, ≥1 special (!@#$%^&*), and only allowed characters.";
+            "Password must be 8–20 characters, with at least 1 uppercase, 1 lowercase, 1 number, and 1 special (!@#$%^&*). Only these are allowed."
         }
       
         // Confirm password
@@ -237,6 +237,7 @@ const SignUp = () => {
                             type="email"
                             id="email"
                             name="email"
+                            required
                             value={inputs.email || ""}
                             onChange={handleChange}
                             className="form-field__input"
@@ -336,6 +337,7 @@ const SignUp = () => {
                                     name={f.key}
                                     value={inputs[f.key] || ""}
                                     onChange={handleChange}
+                                    required
                                     placeholder={f.placeholder}
                                 />
                             )}

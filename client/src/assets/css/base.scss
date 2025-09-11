@@ -30,7 +30,6 @@ html {
     // font-family: "Roboto", sans-serif;
     box-sizing: border-box;
     scroll-behavior: smooth;
-    // scroll-padding-top: var(--sticky-offset, 150px);
 }
   
 html,
@@ -41,6 +40,11 @@ body {
 #about {
     scroll-margin-top: var(--sticky-offset, 150px);
 }
+
+#review {
+    scroll-margin-top: var(--sticky-offset, 0px);
+}
+
 
 #contact {
     scroll-margin-top: var(--sticky-offset, 150px);
@@ -118,14 +122,10 @@ body {
 }
 
 .form-field__error {
-    margin-top: 5px;
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding: 8px 12px;
-    border-radius: 10px;
-    background: rgba(239, 68, 68, 0.06);  
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: 4px 12px;
     color: #b91c1c;       
     font-size: 1.25rem;               
     line-height: 1.35;
