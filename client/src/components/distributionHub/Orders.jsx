@@ -20,6 +20,7 @@ export default function Orders({
 
   const filtered = useMemo(() => {
     let list = Array.isArray(orders) ? [...orders] : [];
+    console.log(orders)
     if (q.trim()) {
       const t = q.trim().toLowerCase();
       list = list.filter(
@@ -131,6 +132,7 @@ export default function Orders({
                   </div>
                 </li>
               ))}
+              
             </ul>
 
             <div className={styles.price}>
