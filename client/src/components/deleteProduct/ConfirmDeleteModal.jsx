@@ -1,15 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./ConfirmDeleteModal.module.scss";
+import { apiUtils } from "../../utils/newRequest";
 
 export default function ConfirmDeleteModal({
   open,
   product,
   onCancel,
-  onConfirm,
-  loading = false,
-  error = "",
+  onDeleted,
+  setProducts,
 }) {
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
   if (!open) return null;
+
+  const handleDelete = async (id) => {
+    if (!product?._id) {
+      setErr("Missing product id.");
+      return;
+    }
+    try {
+      setLoading(true);
+      setErr("");
+      setProducts((prev) => {
+        return prev.filter((p) => p._id !== id); 
+      });
+      const res = await apiUtils.delete(`/product/deleteProduct/${id}`);
+      onDeleted?.(id);
+      console.log(res);
+      if (res.data.status === 200) {
+        onCancel?.();
+      }
+    } catch (e) {
+      setErr(e?.message || "Delete failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.backdrop} onClick={onCancel} role="presentation">
@@ -26,11 +53,16 @@ export default function ConfirmDeleteModal({
           <b>{product?.title || product?.name || "—"}</b>
         </p>
 
-        {error ? <div className={styles.error}>{error}</div> : null}
+        {err ? (
+          <div className={styles.error} aria-live="assertive">
+            {err}
+          </div>
+        ) : null}
 
         <div className={styles.actions}>
           <button
-            onClick={onConfirm}
+            type="button"
+            onClick={() => handleDelete(product._id)}
             disabled={loading}
             className={styles.btnDelete}
           >
@@ -38,6 +70,7 @@ export default function ConfirmDeleteModal({
           </button>
 
           <button
+            type="button"
             onClick={onCancel}
             disabled={loading}
             className={styles.btnCancel}
