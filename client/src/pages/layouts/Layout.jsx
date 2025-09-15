@@ -6,6 +6,7 @@ import Filter from "../../components/filter/filter.jsx";
 import { useEffect } from "react";
 import "../../assets/css/base.scss";
 import styles from "./Layout.module.scss";
+import ChatToggle from "../../components/chatToggle/ChatToggle.jsx";
 
 export default function Layout({ withFilter = false }) {
     useEffect(() => {
@@ -47,6 +48,16 @@ export default function Layout({ withFilter = false }) {
                 <Outlet />
                 <Footer />
             </div>
+
+            {/* ✅ Floating Chat always visible */}
+            <ChatToggle
+                currentUserId="123" // replace with real logged-in user id
+                users={[
+                    { id: "123", name: "Me", role: "buyer" },
+                    { id: "456", name: "Vendor A", role: "seller" },
+                ]}
+                role="buyer"
+            />
         </div>
     );
 }
