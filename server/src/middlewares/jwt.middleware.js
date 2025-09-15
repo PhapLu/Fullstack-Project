@@ -17,7 +17,7 @@ import User from '../models/user.model.js';
 //         return next(new AuthFailureError("Please login to continue"));
 //     }
 
-//     // 3. Verify token
+//     // 3. Verify token 
 //     try {
 //         const payload = jwt.verify(token, process.env.JWT_SECRET);
 //         req.userId = payload.id;
