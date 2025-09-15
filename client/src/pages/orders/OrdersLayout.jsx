@@ -87,7 +87,15 @@ export default function OrdersLayout() {
                 }}
                 onClick={() => navigate(`/order/${order._id}`)}
               >
-                <h4 className="card-title mb-0 fs-4 ">
+                <h4
+                  className="card-title mb-0 fs-4 "
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.textDecoration = "underline")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.textDecoration = "none")
+                  }
+                >
                   View Detail Your Order: {order._id}
                 </h4>
                 <span
@@ -110,7 +118,7 @@ export default function OrdersLayout() {
               </div>
 
               {/* Address + Date */}
-              <p className="mb-2 mt-2">
+              <p className="mb-3 mt-3">
                 <strong>Address:</strong> {buildAddress(order)}
               </p>
               <p className="mb-3 mt-3">
@@ -129,48 +137,40 @@ export default function OrdersLayout() {
                   const price = Number(item.priceAtPurchase || 0);
                   const qty = Number(item.quantity || 0);
 
-                                    return (
-                                        <li
-                                            key={`${
-                                                product._id ||
-                                                item.productId ||
-                                                idx
-                                            }`}
-                                            className="list-group-item d-flex align-items-center justify-content-between"
-                                        >
-                                            <div className="d-flex align-items-center gap-3">
-                                                {img ? (
-                                                    <img
-                                                        src={getImageUrl(img)}
-                                                        alt={name}
-                                                        style={{
-                                                            width: 60,
-                                                            height: 60,
-                                                            objectFit: "cover",
-                                                        }}
-                                                        className="rounded me-2"
-                                                    />
-                                                ) : (
-                                                    <div
-                                                        className="me-2 bg-light border rounded"
-                                                        style={{
-                                                            width: 48,
-                                                            height: 48,
-                                                        }}
-                                                    />
-                                                )}
-                                                <div>
-                                                    <div className="fw-semibold">
-                                                        {name}
-                                                    </div>
-                                                    <small className="text-muted">
-                                                        × {qty}
-                                                    </small>
-                                                </div>
-                                            </div>
+                  return (
+                    <li
+                      key={`${product._id || item.productId || idx}`}
+                      className="list-group-item d-flex align-items-center justify-content-between"
+                    >
+                      <div className="d-flex align-items-center gap-3">
+                        {img ? (
+                          <img
+                            src={getImageUrl(img)}
+                            alt={name}
+                            style={{
+                              width: 60,
+                              height: 60,
+                              objectFit: "cover",
+                            }}
+                            className="rounded me-2"
+                          />
+                        ) : (
+                          <div
+                            className="me-2 bg-light border rounded"
+                            style={{
+                              width: 48,
+                              height: 48,
+                            }}
+                          />
+                        )}
+                        <div>
+                          <div className="fw-semibold">{name}</div>
+                          <small className="text-muted">× {qty}</small>
+                        </div>
+                      </div>
 
                       <div className="d-flex align-items-center gap-2">
-                        {(order.status === "delivered" && !order.isReviewed) && (
+                        {order.status === "delivered" && !order.isReviewed && (
                           <button
                             className="btn btn-sm btn-outline-primary fs-5"
                             onClick={() =>
