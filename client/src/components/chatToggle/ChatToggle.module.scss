@@ -32,17 +32,16 @@
 /* Panel container – bigger + responsive via CSS vars */
 .panel {
   z-index: 100000;
-  --w: 720px;     /* default if not passed from props */
-  --h: 640px;
+
   position: fixed;
   bottom: calc(var(--offset) + 62px);
   right: var(--offset);
-  width: min(96vw, var(--w));
-  height: min(86vh, var(--h));
+  width: 50%;
+  height: 70%;
   background: #ffffffcc; /* a little glass feel */
   backdrop-filter: blur(6px);
   border: 1px solid rgba(2, 6, 23, .08);
-  border-radius: 22px;
+  border-radius: 10px;
   overflow: clip;
   opacity: 0;
   transform: translateY(12px) scale(.98);
