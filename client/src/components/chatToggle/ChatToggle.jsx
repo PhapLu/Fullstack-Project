@@ -300,19 +300,14 @@ export default function ChatToggle({
 
         const now = Date.now();
 
-        const optimisticMessage = normalizeMsg(
-            {
-                id: now,
-                text: body,
-                from: currentUserId,
-                createdAt: now,
-                pending: true,
-            },
-            currentUserId
-        );
-
-        // Show pending message immediately
-        setActiveMessages((prev) => [...prev, optimisticMessage]);
+          const optimisticMessage = {
+            _id: now,
+            senderId: currentUserId,
+            content: body,
+            createdAt: now,
+            pending: true,
+          };
+          setActiveMessages((prev) => [...prev, optimisticMessage]);
 
         const isTemp = activeConvId?.startsWith("temp_");
 
@@ -506,14 +501,14 @@ export default function ChatToggle({
 
                                 <div className={styles.messages} ref={listRef}>
                                     {activeMessages.map((msg) => {
-                                        const normalized = normalizeMsg(msg);
-                                        const senderId =
-                                            typeof msg.senderId === "object"
-                                                ? msg.senderId?._id
-                                                : msg.senderId;
-
-                                        const isMine =
-                                            senderId === currentUserId;
+                                        const normalized = normalizeMsg(msg, currentUserId);
+                                        const myId = currentUserId?.toString?.() ?? String(currentUserId ?? "");
+                                        const fromRaw = normalized.from;
+                                        const fromId =
+                                          typeof fromRaw === "object"
+                                            ? fromRaw?._id?.toString?.() ?? ""
+                                            : fromRaw?.toString?.() ?? "";
+                                        const isMine = fromId === myId;
 
                                         return (
                                             <div
