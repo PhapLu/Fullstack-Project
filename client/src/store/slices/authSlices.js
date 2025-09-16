@@ -33,13 +33,14 @@ export const fetchMe = createAsyncThunk(
 export const openSocket = createAsyncThunk(
     "auth/openSocket",
     async (_, { getState }) => {
-        const s = connectSocket();
+        const userId = getState().auth.user?._id;
+        const s = connectSocket(userId); // ✅ pass Redux userId
         return new Promise((resolve) => {
-            if (s.connected) return resolve({ connected: true, id: s.id });
-            s.once("connect", () => resolve({ connected: true, id: s.id }));
-            s.once("connect_error", () =>
-                resolve({ connected: false, id: null })
-            );
+            if (s.readyState === WebSocket.OPEN) {
+                return resolve({ connected: true });
+            }
+            s.onopen = () => resolve({ connected: true });
+            s.onerror = () => resolve({ connected: false });
         });
     }
 );
@@ -60,15 +61,27 @@ const slice = createSlice({
             s.socket = { connected: false, id: null };
             disconnectSocket();
         },
+        incrementUnseen: (s, a) => {
+            if (s.user) {
+                s.user.unseenConversations =
+                    (s.user.unseenConversations || 0) + 1;
+            }
+        },
+        clearUnseen: (s) => {
+            if (s.user) s.user.unseenConversations = 0;
+        },
     },
     extraReducers: (b) => {
         b.addCase(signIn.pending, (s) => {
             s.status = "loading";
             s.error = null;
         })
-            .addCase(signIn.fulfilled, (s) => {
+            .addCase(signIn.fulfilled, (s, a) => {
                 s.status = "succeeded";
-                s.payload = ""
+                s.user = a.payload.user || a.payload; // depending on your API response
+                if (s.user && typeof s.user.unseenConversations !== "number") {
+                    s.user.unseenConversations = 0;
+                }
             })
             .addCase(signIn.rejected, (s, a) => {
                 s.status = "failed";
@@ -78,6 +91,10 @@ const slice = createSlice({
             .addCase(fetchMe.fulfilled, (s, a) => {
                 s.status = "succeeded";
                 s.user = a.payload;
+
+                if (typeof s.user.unseenConversations !== "number") {
+                    s.user.unseenConversations = 0;
+                }
             })
             .addCase(openSocket.fulfilled, (s, a) => {
                 s.socket = a.payload;
@@ -85,7 +102,7 @@ const slice = createSlice({
     },
 });
 
-export const { logout } = slice.actions;
+export const { logout, incrementUnseen, clearUnseen } = slice.actions;
 export const selectAuth = (st) => st.auth;
 export const selectUser = (st) => st.auth.user;
 export default slice.reducer;

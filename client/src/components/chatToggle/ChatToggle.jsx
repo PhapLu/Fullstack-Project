@@ -1,242 +1,573 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import styles from "./ChatToggle.module.scss";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, clearUnseen } from "../../store/slices/authSlices";
+import { getSocket } from "../../utils/socketClient";
+import { apiUtils } from "../../utils/newRequest";
+import { getImageUrl } from "../../utils/imageUrl";
 
 export default function ChatToggle({
-  currentUserId,
-  users = [],
-  role = "buyer",
-  defaultOpen = false,
-  position = "br",
-  panelWidth = 380,
-  panelHeight = 520,
-  persistKey = "chat_toggle_open",
+    currentUserId,
+    role = "buyer",
+    defaultOpen = false,
+    position = "br",
+    panelWidth = 380,
+    panelHeight = 520,
+    persistKey = "chat_toggle_open",
 }) {
-  // ====== UI open/close ======
-  const [isOpen, setIsOpen] = useState(() => {
-    try {
-      const saved = localStorage.getItem(persistKey);
-      return saved ? JSON.parse(saved) : defaultOpen;
-    } catch {
-      return defaultOpen;
-    }
-  });
-  useEffect(() => {
-    try {
-      localStorage.setItem(persistKey, JSON.stringify(isOpen));
-    } catch (e) {
-      console.log(e)
-    }
-  }, [isOpen]);
+    const userInfo = useSelector(selectUser);
+    const socket = getSocket();
+    const dispatch = useDispatch();
 
-  // ====== People list ======
-  const me = useMemo(() => users.find((u) => u.id === currentUserId), [users, currentUserId]);
-  const counterRole = role === "buyer" ? "seller" : "buyer";
-  const people = useMemo(() => users.filter((u) => u.role === counterRole), [users, counterRole]);
-
-  const [query, setQuery] = useState("");
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return q ? people.filter((p) => p.name.toLowerCase().includes(q)) : people;
-  }, [people, query]);
-
-  const [activeId, setActiveId] = useState(filtered[0]?.id || "");
-  useEffect(() => {
-    if (!filtered.find((p) => p.id === activeId)) setActiveId(filtered[0]?.id || "");
-  }, [filtered, activeId]);
-
-  // ====== Threads & messages in localStorage ======
-  const STORE = "bm_chat_threads_v1";
-  const loadThreads = () => {
-    try {
-      return JSON.parse(localStorage.getItem(STORE) || "{}");
-    } catch {
-      return {};
-    }
-  };
-  const saveThreads = (t) => {
-    try {
-      localStorage.setItem(STORE, JSON.stringify(t));
-    } catch (e) {
-      console.log(e)
-    }
-  };
-  const threadId = (a, b) => [a, b].sort().join("|");
-
-  const [threads, setThreads] = useState(loadThreads);
-  useEffect(() => saveThreads(threads), [threads]);
-
-  const activeThreadId = activeId ? threadId(currentUserId, activeId) : "";
-  const msgs = threads[activeThreadId]?.messages || [];
-
-  // ====== Send message ======
-  const [text, setText] = useState("");
-  const listRef = useRef(null);
-
-  const send = () => {
-    const body = text.trim();
-    if (!body || !activeId) return;
-    const now = Date.now();
-    setThreads((prev) => {
-      const next = { ...prev };
-      const tid = activeThreadId;
-      const cur = next[tid] || { participants: [currentUserId, activeId], messages: [] };
-      cur.messages = [...cur.messages, { id: now, from: currentUserId, text: body, ts: now }];
-      next[tid] = cur;
-      return next;
+    // ====== UI open/close ======
+    const [isOpen, setIsOpen] = useState(() => {
+        try {
+            const saved = localStorage.getItem(persistKey);
+            return saved ? JSON.parse(saved) : defaultOpen;
+        } catch {
+            return defaultOpen;
+        }
     });
-    setText("");
-    // scroll to bottom after short delay
-    setTimeout(() => {
-      listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-    }, 0);
-  };
 
-  const onKey = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send();
+    useEffect(() => {
+        try {
+            localStorage.setItem(persistKey, JSON.stringify(isOpen));
+        } catch (e) {
+            console.log(e);
+        }
+    }, [isOpen]);
+
+    // ====== Conversations ======
+    const [conversations, setConversations] = useState([]);
+    const [activeConvId, setActiveConvId] = useState(null);
+    const [activeMessages, setActiveMessages] = useState([]);
+
+    const conversationsRef = useRef(conversations);
+    useEffect(() => {
+        conversationsRef.current = conversations;
+    }, [conversations]);
+
+    useEffect(() => {
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
+    }, [activeMessages]);
+
+    useEffect(() => {
+        const handler = (e) => {
+            const other = e.detail?.otherUser;
+            console.log(
+                "🔥 [ChatToggle] openChatWith event received:",
+                e.detail
+            );
+            if (!other || !currentUserId) {
+                console.log(
+                    "❌ [ChatToggle] Missing 'otherUser' or 'currentUserId'"
+                );
+                return;
+            }
+
+            const currentConvos = conversationsRef.current;
+
+            const exists = currentConvos.find((c) =>
+                (c.members || [])
+                    .map((m) => m.user?._id?.toString() || m._id?.toString())
+                    .includes(other?._id?.toString())
+            );
+
+            if (exists) {
+                setActiveConvId(exists._id);
+            } else {
+                const tempId = `temp_${other._id}`;
+                const ghostConv = {
+                    _id: tempId,
+                    isTemp: true,
+                    lastMessage: null,
+                    members: [
+                        { user: { _id: currentUserId } },
+                        { user: other }, // full object, including role + profile
+                    ],
+                    thumbnail: other.avatar,
+                    title:
+                        (other.role === "vendor" &&
+                            other.vendorProfile?.businessName) ||
+                        (other.role === "customer" &&
+                            other.customerProfile?.name) ||
+                        other.domainName ||
+                        "Unknown",
+                };
+
+                setConversations((prev) => {
+                    if (prev.some((c) => c._id === tempId)) return prev;
+                    return [ghostConv, ...prev];
+                });
+
+                setActiveConvId(tempId);
+                setActiveMessages([]);
+            }
+
+            setIsOpen(true); // ✅ Open the panel
+        };
+
+        window.addEventListener("openChatWith", handler);
+        console.log("👂 [ChatToggle] Listening to openChatWith event");
+
+        return () => {
+            window.removeEventListener("openChatWith", handler);
+        };
+    }, [currentUserId]);
+
+    const fetchActiveConversation = async () => {
+        if (!activeConvId) return;
+        try {
+            const { data } = await apiUtils.get(
+                `/conversation/readConversation/${activeConvId}`
+            );
+            const conv = data?.metadata?.conversation;
+
+            if (!conv?._id) {
+                console.warn("Conversation not found in response:", data);
+                return;
+            }
+
+            setConversations((prev) =>
+                prev.map((c) => (c._id === conv._id ? { ...c, ...conv } : c))
+            );
+            setActiveMessages(conv.messages || []);
+        } catch (err) {
+            console.error("Failed to load full conversation:", err);
+        }
+    };
+
+    useEffect(() => {
+        if (!activeConvId?.startsWith("temp_")) {
+            fetchActiveConversation();
+        } else {
+            // temp conversation: no fetch, just clear messages
+            setActiveMessages([]);
+        }
+    }, [activeConvId]);
+
+    useEffect(() => {
+        if (isOpen) {
+            console.log("Chat panel opened, fetching conversations...");
+            const fetchConversations = async () => {
+                try {
+                    const { data } = await apiUtils.get(
+                        "/conversation/readConversations"
+                    );
+                    const fetched = data?.metadata?.conversations || [];
+
+                    setConversations((prev) => {
+                        const ghosts = prev.filter((c) => c.isTemp);
+                        const existingIds = new Set(fetched.map((c) => c._id));
+                        const merged = [
+                            ...ghosts.filter((g) => !existingIds.has(g._id)),
+                            ...fetched,
+                        ];
+                        return merged;
+                    });
+
+                    // Select first one if none selected
+                    if (fetched.length > 0 && !activeConvId) {
+                        setActiveConvId(fetched[0]._id);
+                    }
+                } catch (err) {
+                    console.error("Failed to load conversations:", err);
+                }
+            };
+
+            fetchConversations();
+        }
+    }, [currentUserId, isOpen]); // ✅ rerun every time panel opens
+
+    const activeConversation = conversations.find(
+        (c) => c._id === activeConvId
+    );
+
+    const listRef = useRef(null);
+    const [text, setText] = useState("");
+
+    // ====== Normalize message ======
+    const normalizeMsg = (m, fallbackFrom = null) => {
+        const ts = m?.createdAt
+            ? new Date(m.createdAt).getTime()
+            : m?.ts
+            ? m.ts
+            : Date.now();
+        return {
+            id: m?._id || m?.id || Date.now(),
+            from: m?.senderId || m?.from || fallbackFrom,
+            text: m?.content || m?.text || "",
+            ts,
+            pending: !!m?.pending,
+        };
+    };
+
+    // ====== Socket wiring ======
+    useEffect(() => {
+        if (!socket || !currentUserId) return;
+
+        socket.onmessage = (event) => {
+            try {
+                const { event: evt, data } = JSON.parse(event.data);
+
+                if (evt === "getMessage") {
+                    const { conversationId, message } = data;
+                    console.log("📥 [WS] getMessage received", data);
+
+                    // ✅ Update conversation list
+                    setConversations((prev) =>
+                        prev.map((c) => {
+                            if (c._id !== conversationId) return c;
+                            const updated = {
+                                ...c,
+                                lastMessage: normalizeMsg(message),
+                            };
+                            if (Array.isArray(c.messages)) {
+                                updated.messages = [
+                                    ...c.messages,
+                                    normalizeMsg(message),
+                                ];
+                            }
+                            return updated;
+                        })
+                    );
+
+                    // ✅ Also update activeMessages if this is the active conversation
+                    if (activeConvId === conversationId) {
+                        setActiveMessages((prev) => [
+                            ...prev,
+                            normalizeMsg(message),
+                        ]);
+                    }
+                }
+
+                if (evt === "messagesSeen") {
+                    console.log("✅ [WS] messagesSeen received:", data);
+                    // optionally update local seen state here
+                }
+            } catch (err) {
+                console.error("❌ [WS] Failed to parse incoming message:", err);
+            }
+        };
+
+        return () => {
+            socket.onmessage = null;
+        };
+    }, [socket, currentUserId]);
+
+    useEffect(() => {
+        if (activeConvId && socket) {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(
+                    JSON.stringify({
+                        event: "messageSeen",
+                        data: { conversationId: activeConvId },
+                    })
+                );
+            } else {
+                console.warn(
+                    "⛔ Tried to send messageSeen but socket is not OPEN"
+                );
+            }
+
+            dispatch(clearUnseen());
+        }
+    }, [activeConvId, socket, dispatch]);
+
+    function getDisplayName(conversation, currentUserId) {
+        const other = (conversation.members || [])
+            .map((m) => m.user || m)
+            .find((u) => u._id?.toString() !== currentUserId?.toString());
+
+        if (!other) return "Unknown";
+
+        if (other.role === "vendor") {
+            return other.vendorProfile?.businessName || "Vendor";
+        }
+        if (other.role === "customer") {
+            return other.customerProfile?.name || "Customer";
+        }
+        return other.domainName || "User";
     }
-  };
 
-  // ====== Helpers ======
-  const avatar = (u) =>
-    u?.avatar ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(u?.name || "U")}&background=0D8ABC&color=fff`;
+    // ====== Send message ======
+    const send = async () => {
+        const body = text.trim();
+        if (!body || !activeConvId) return;
+        setText("");
 
-  // ====== Render ======
-  return (
-    <>
-      {/* Floating button */}
-      <button
-        className={`${styles.fab} ${styles[position]} ${isOpen ? styles.fabOpen : ""}`}
-        onClick={() => setIsOpen((v) => !v)}
-        aria-expanded={isOpen}
-        aria-label="Toggle chat"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 4h16v12H7l-3 3V4z" fill="currentColor" />
-        </svg>
-        <span>Chat</span>
-      </button>
+        const now = Date.now();
 
-      {/* Panel */}
-      <div
-          className={`${styles.panel} ${styles[position]} ${isOpen ? styles.open : ""}`}
-          style={{ "--w": `${panelWidth}px`, "--h": `${panelHeight}px` }}
-          role="dialog"
-          aria-label="Chat panel"
-      >
-        <header className={styles.header}>
-          <div className={styles.title}>
-            <strong>Chat</strong>
-            <span className={styles.subtitle}>
-              {role === "buyer" ? "Chọn người bán để nhắn" : "Chọn khách hàng để nhắn"}
-            </span>
-          </div>
-          <button
-            className={styles.close}
-            aria-label="Close chat"
-            onClick={() => setIsOpen(false)}
-            title="Đóng"
-          >
-            ×
-          </button>
-        </header>
+        const optimisticMessage = normalizeMsg(
+            {
+                id: now,
+                text: body,
+                from: currentUserId,
+                createdAt: now,
+                pending: true,
+            },
+            currentUserId
+        );
 
-        <div className={styles.body}>
-          {/* Left: people list */}
-          <aside className={styles.sidebar}>
-            <div className={styles.search}>
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={role === "buyer" ? "Tìm người bán..." : "Tìm khách hàng..."}
-              />
-            </div>
-            <ul className={styles.people}>
-              {filtered.map((p) => (
-                <li
-                  key={p.id}
-                  className={`${styles.person} ${activeId === p.id ? styles.active : ""}`}
-                  onClick={() => setActiveId(p.id)}
+        // Show pending message immediately
+        setActiveMessages((prev) => [...prev, optimisticMessage]);
+
+        const isTemp = activeConvId?.startsWith("temp_");
+
+        try {
+            const { data } = await apiUtils.patch("/conversation/sendMessage", {
+                conversationId: isTemp ? null : activeConvId,
+                otherUserId: activeConversation?.otherMember?._id,
+                content: body,
+            });
+
+            const { conversationId, newMessage, conversation } = data.metadata;
+
+            if (isTemp) {
+                setConversations((prev) => {
+                    const filtered = prev.filter((c) => c._id !== activeConvId);
+                    return [
+                        {
+                            ...conversation,
+                            lastMessage: normalizeMsg(newMessage),
+                        },
+                        ...filtered,
+                    ];
+                });
+                setActiveConvId(conversationId);
+            } else {
+                setConversations((prev) =>
+                    prev.map((c) =>
+                        c._id === conversationId
+                            ? {
+                                  ...c,
+                                  lastMessage: normalizeMsg(newMessage),
+                                  messages: [
+                                      ...(c.messages || []),
+                                      normalizeMsg(newMessage),
+                                  ],
+                              }
+                            : c
+                    )
+                );
+            }
+
+            // Replace pending message
+            setActiveMessages((prev) => [
+                ...prev.filter((m) => !m.pending),
+                normalizeMsg(newMessage),
+            ]);
+
+            // ====== ✅ WebSocket Send (Native ws) ======
+            const receiverId = (activeConversation?.members || [])
+                .map((m) => m.user || m)
+                .find(
+                    (u) => u._id?.toString() !== currentUserId?.toString()
+                )?._id;
+
+            if (socket?.readyState === WebSocket.OPEN) {
+                socket.send(
+                    JSON.stringify({
+                        event: "sendMessage",
+                        data: {
+                            conversationId,
+                            receiverId,
+                            content: body,
+                        },
+                    })
+                );
+            } else {
+                console.warn("❌ Socket not open. Message not sent.");
+            }
+        } catch (err) {
+            console.error("❌ Send failed", err);
+            // Optionally rollback pending message
+        }
+    };
+
+    const onKey = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            send();
+        }
+    };
+
+    return (
+        <>
+            {/* Floating button */}
+            <button
+                className={`${styles.fab} ${styles[position]} ${
+                    isOpen ? styles.fabOpen : ""
+                }`}
+                onClick={() => setIsOpen((v) => !v)}
+                aria-expanded={isOpen}
+                aria-label="Toggle chat"
+            >
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
                 >
-                  <img src={avatar(p)} alt="" />
-                  <div className={styles.meta}>
-                    <div className={styles.name}>{p.name}</div>
-                    <div className={styles.roleLabel}>{p.role === "seller" ? "Người bán" : "Khách"}</div>
-                  </div>
-                </li>
-              ))}
-              {!filtered.length && <li className={styles.empty}>Không có kết quả</li>}
-            </ul>
-          </aside>
+                    <path d="M4 4h16v12H7l-3 3V4z" fill="currentColor" />
+                </svg>
+                <span>Chat</span>
+            </button>
 
-          {/* Right: conversation */}
-          <section className={styles.convo}>
-            {!activeId ? (
-              <div className={styles.placeholder}>Hãy chọn một người để bắt đầu trò chuyện.</div>
-            ) : (
-              <>
-                <div className={styles.threadHeader}>
-                  {(() => {
-                    const p = people.find((x) => x.id === activeId);
-                    return (
-                      <>
-                        <img src={avatar(p)} alt="" />
-                        <div>
-                          <div className={styles.name}>{p?.name}</div>
-                          <div className={styles.roleLabel}>
-                            {p?.role === "seller" ? "Người bán" : "Khách"}
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
-
-                <div className={styles.messages} ref={listRef}>
-                  {msgs.map((m) => {
-                    const mine = m.from === currentUserId;
-                    return (
-                      <div key={m.id} className={`${styles.msg} ${mine ? styles.mine : styles.their}`}>
-                        <div className={styles.bubble}>{m.text}</div>
-                        <div className={styles.time}>
-                          {new Date(m.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {!msgs.length && (
-                    <div className={styles.empty}>
-                      Hãy gửi tin nhắn đầu tiên cho{" "}
-                      {people.find((x) => x.id === activeId)?.name || "đối tác"}.
+            {/* Panel */}
+            <div
+                className={`${styles.panel} ${styles[position]} ${
+                    isOpen ? styles.open : ""
+                }`}
+                style={{ "--w": `${panelWidth}px`, "--h": `${panelHeight}px` }}
+                role="dialog"
+                aria-label="Chat panel"
+            >
+                <header className={styles.header}>
+                    <div className={styles.title}>
+                        <strong>Chat</strong>
+                        <span className={styles.subtitle}>
+                            {role === "customer"
+                                ? "Select a vendor to chat"
+                                : "Select a customer to chat"}
+                        </span>
                     </div>
-                  )}
-                </div>
+                    <button
+                        className={styles.close}
+                        aria-label="Close chat"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        ✕
+                    </button>
+                </header>
 
-                <form
-                  className={styles.inputRow}
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    send();
-                  }}
-                >
-                  <textarea
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    onKeyDown={onKey}
-                    placeholder="Nhập tin nhắn và nhấn Enter..."
-                    rows={1}
-                  />
-                  <button type="submit" disabled={!text.trim()}>
-                    Gửi
-                  </button>
-                </form>
-              </>
-            )}
-          </section>
-        </div>
-      </div>
-    </>
-  );
+                <div className={styles.body}>
+                    {/* Sidebar */}
+                    <aside className={styles.sidebar}>
+                        <ul className={styles.people}>
+                            {conversations.map((c) => (
+                                <li
+                                    key={c?._id}
+                                    className={`${styles.person} ${
+                                        activeConvId === c?._id
+                                            ? styles.active
+                                            : ""
+                                    }`}
+                                    onClick={() => setActiveConvId(c?._id)}
+                                >
+                                    <img
+                                        src={getImageUrl(c.thumbnail)}
+                                        alt=""
+                                    />
+                                    <div className={styles.meta}>
+                                        <div className={styles.name}>
+                                            {getDisplayName(c, currentUserId)}
+                                        </div>
+                                        <div className={styles.lastMessage}>
+                                            {c.lastMessage?.text ||
+                                                c.lastMessage?.content ||
+                                                "No messages yet"}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                            {!conversations.length && (
+                                <li className={styles.empty}>
+                                    No conversations
+                                </li>
+                            )}
+                        </ul>
+                    </aside>
+
+                    {/* Conversation */}
+                    <section className={styles.convo}>
+                        {!activeConversation ? (
+                            <div className={styles.placeholder}>
+                                Please select a conversation to start chatting.
+                            </div>
+                        ) : (
+                            <>
+                                <div className={styles.threadHeader}>
+                                    <img
+                                        src={getImageUrl(
+                                            activeConversation.thumbnail
+                                        )}
+                                        alt=""
+                                    />
+                                    <div>
+                                        <div className={styles.name}>
+                                            {activeConversation.title ||
+                                                "Unknown user"}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={styles.messages} ref={listRef}>
+                                    {activeMessages.map((msg) => {
+                                        const normalized = normalizeMsg(msg);
+                                        const senderId =
+                                            typeof msg.senderId === "object"
+                                                ? msg.senderId?._id
+                                                : msg.senderId;
+
+                                        const isMine =
+                                            senderId === currentUserId;
+
+                                        return (
+                                            <div
+                                                key={normalized.id}
+                                                className={`${styles.msg} ${
+                                                    isMine
+                                                        ? styles.mine
+                                                        : styles.their
+                                                }`}
+                                            >
+                                                <div className={styles.bubble}>
+                                                    {normalized.text}
+                                                </div>
+                                                <div className={styles.time}>
+                                                    {new Date(
+                                                        normalized.ts
+                                                    ).toLocaleTimeString([], {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                    })}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                <form
+                                    className={styles.inputRow}
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        send();
+                                    }}
+                                >
+                                    <textarea
+                                        value={text}
+                                        onChange={(e) =>
+                                            setText(e.target.value)
+                                        }
+                                        onKeyDown={onKey}
+                                        placeholder="Type a message and press Enter..."
+                                        rows={1}
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={!text.trim()}
+                                    >
+                                        Gửi
+                                    </button>
+                                </form>
+                            </>
+                        )}
+                    </section>
+                </div>
+            </div>
+        </>
+    );
 }

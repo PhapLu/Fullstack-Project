@@ -16,7 +16,6 @@ import { useCart } from "../../store/cart/CartContext";
 library.add(fas);
 
 export default function Header() {
-    console.log("Header rendered");
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
     const navigate = useNavigate();

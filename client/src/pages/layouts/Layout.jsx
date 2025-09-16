@@ -7,8 +7,20 @@ import { useEffect } from "react";
 import "../../assets/css/base.scss";
 import styles from "./Layout.module.scss";
 import ChatToggle from "../../components/chatToggle/ChatToggle.jsx";
+import { openSocket, selectUser } from "../../store/slices/authSlices.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getSocket } from "../../utils/socketClient.js";
 
 export default function Layout({ withFilter = false }) {
+    const user = useSelector(selectUser);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (user?._id) {
+            dispatch(openSocket()); // will pass userId automatically
+        }
+    }, [user, dispatch]);
+
     useEffect(() => {
         const header = document.getElementById("site-header");
         const filter = document.getElementById("filter-nav");
@@ -49,15 +61,7 @@ export default function Layout({ withFilter = false }) {
                 <Footer />
             </div>
 
-            {/* ✅ Floating Chat always visible */}
-            <ChatToggle
-                currentUserId="123" // replace with real logged-in user id
-                users={[
-                    { id: "123", name: "Me", role: "buyer" },
-                    { id: "456", name: "Vendor A", role: "seller" },
-                ]}
-                role="buyer"
-            />
+            {user?._id && <ChatToggle currentUserId={user._id} />}
         </div>
     );
 }

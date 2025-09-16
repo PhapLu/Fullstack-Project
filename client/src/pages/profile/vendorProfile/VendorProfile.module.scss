@@ -751,3 +751,22 @@
         font-size: 11px;
     }
 }
+
+.chatBtn {
+    display: flex;
+    align-items: center;
+    color: #000;
+    font-weight: 500;
+    justify-content: space-around;
+    width: 15%;
+    border: 1px solid var(--border-color);
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 6px 10px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+    }
+}

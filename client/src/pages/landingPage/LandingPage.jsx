@@ -1,14 +1,11 @@
 import React from "react";
 import styles from "./LandingPage.module.scss";
-
-import ChatToggle from "../../components/chatToggle/ChatToggle";
 import Banner from "../../components/banner/Banner";
 import Categories from "../../components/categories/Categories";
 import Promo from "../../components/promo/Promo";
 import HotDeals from "../../components/hot_deals/HotDeals";
 import Malls from "../../components/malls/Malls";
 import PopularProducts from "../../components/popularProduct/PopularProducts";
-import { Pagination } from "../../components/popularProduct/Pagination";
 
 export default function LandingPage() {
     return (
