@@ -1,5 +1,5 @@
 // pages/layouts/Layout.jsx
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "../../components/footer/Footer.jsx";
 import Header from "../../components/header/Header.jsx";
 import Filter from "../../components/filter/filter.jsx";
@@ -7,13 +7,20 @@ import { useEffect } from "react";
 import "../../assets/css/base.scss";
 import styles from "./Layout.module.scss";
 import ChatToggle from "../../components/chatToggle/ChatToggle.jsx";
-import { openSocket, selectUser } from "../../store/slices/authSlices.js";
+import { openSocket, selectAuth, selectUser } from "../../store/slices/authSlices.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getSocket } from "../../utils/socketClient.js";
 
 export default function Layout({ withFilter = false }) {
-    const user = useSelector(selectUser);
     const dispatch = useDispatch();
+    const { user, status } = useSelector(selectAuth);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if ((status === "succeeded" || status === "failed") && !user) {
+            navigate("/auth/signIn", { replace: true });
+        }
+    }, [user, status, navigate]);
 
     useEffect(() => {
         if (user?._id) {

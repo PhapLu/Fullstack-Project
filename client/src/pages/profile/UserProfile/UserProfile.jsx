@@ -1,29 +1,36 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./UserProfile.module.scss";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../../store/slices/authSlices";
+import { selectAuth, selectUser } from "../../../store/slices/authSlices";
 import { apiUtils } from "../../../utils/newRequest";
 import Avatar from "../../../components/profile/avatar/Avatar";
 import { getImageUrl } from "../../../utils/imageUrl";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { isFilled, isValidPhone, minLength } from "../../../utils/validator";
 
 export default function UserProfile() {
-    const user = useSelector(selectUser);
-    const {profileId} = useParams()
+    const { user, status } = useSelector(selectAuth);
+    const { profileId } = useParams();
     const [errors, setErrors] = useState({});
     const [previewAvatar, setPreviewAvatar] = useState(null);
     const [avatarFile, setAvatarFile] = useState(null);
-	const [avatarUrl, setAvatarUrl] = useState(getImageUrl(user?.avatar));
+    const [avatarUrl, setAvatarUrl] = useState(getImageUrl(user?.avatar));
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if ((status === "succeeded" || status === "failed") && !user) {
+            navigate("/signIn", { replace: true });
+        }
+    }, [user, status, navigate]);
 
     const isOwner = useMemo(() => {
         if (!user || !profileId) return false;
         return user._id === profileId || user.username === profileId;
     }, [user, profileId]);
 
-	useEffect(() => {
-		setAvatarUrl(getImageUrl(user?.avatar));
-	}, [user?.avatar]);
+    useEffect(() => {
+        setAvatarUrl(getImageUrl(user?.avatar));
+    }, [user?.avatar]);
 
     const toForm = (u) => ({
         username: u?.username || "",
@@ -57,17 +64,17 @@ export default function UserProfile() {
 
     if (!user) return <div className="container-xl py-4">Loading profile…</div>;
 
-const validateProfile = (f) => {
+    const validateProfile = (f) => {
         const e = {};
         const t = (s) => String(s ?? "").trim();
 
         // Phone (optional): if filled, must be a valid VN phone
         if (isFilled(f.phone) && !isValidPhone(t(f.phone)))
-            e["phone"] = "Invalid phone. Use VN format (0/ +84 + carrier + 8 digits).";
+            e["phone"] =
+                "Invalid phone. Use VN format (0/ +84 + carrier + 8 digits).";
 
         // Country: required
-        if (!isFilled(f.country))
-            e["country"] = "Country is required.";
+        if (!isFilled(f.country)) e["country"] = "Country is required.";
 
         // Bio: max 200 chars
         if (t(f.bio).length > 200)
@@ -76,10 +83,12 @@ const validateProfile = (f) => {
         // Role-specific
         if (user.role === "customer") {
             if (!minLength(f.customerProfile?.name, 5)) {
-                e["customerProfile.name"] = "Customer name is required (min 5 characters).";
+                e["customerProfile.name"] =
+                    "Customer name is required (min 5 characters).";
             }
             if (!minLength(f.customerProfile?.address, 5)) {
-                e["customerProfile.address"] = "Customer address is required (min 5 characters).";
+                e["customerProfile.address"] =
+                    "Customer address is required (min 5 characters).";
             }
         }
 
@@ -87,7 +96,7 @@ const validateProfile = (f) => {
             const hub =
                 typeof f.shipperProfile?.assignedHub === "object"
                     ? f.shipperProfile?.assignedHub?._id ||
-                        f.shipperProfile?.assignedHub?.name
+                      f.shipperProfile?.assignedHub?.name
                     : f.shipperProfile?.assignedHub;
             if (!isFilled(hub)) {
                 e["shipperProfile.assignedHub"] = "Assigned hub is required.";
@@ -135,19 +144,19 @@ const validateProfile = (f) => {
             <div className="container-xl py-4">
                 {/* Avatar */}
                 <div className="text-center mb-3 position-relative">
-					<section className={styles.profileHeader}>
-						<Avatar
+                    <section className={styles.profileHeader}>
+                        <Avatar
                             isOwner={isOwner}
-							url={avatarUrl}
-							className={styles.avatarWrap}
-							onSaveImage={(url) => setAvatarUrl(url)}
-						/>
-						<div className={styles["username-bar"]}>
-							<span className={styles["username-text"]}>
-								{form.username || "User"}
-							</span>
-						</div>
-					</section>
+                            url={avatarUrl}
+                            className={styles.avatarWrap}
+                            onSaveImage={(url) => setAvatarUrl(url)}
+                        />
+                        <div className={styles["username-bar"]}>
+                            <span className={styles["username-text"]}>
+                                {form.username || "User"}
+                            </span>
+                        </div>
+                    </section>
                 </div>
 
                 {/* Profile info */}
@@ -160,7 +169,9 @@ const validateProfile = (f) => {
                                 <button
                                     type="button"
                                     className={styles["edit-btn"]}
-                                    onClick={() => isOwner && setEditingProfile(true)}
+                                    onClick={() =>
+                                        isOwner && setEditingProfile(true)
+                                    }
                                     disabled={!isOwner}
                                 >
                                     Edit information
@@ -199,6 +210,28 @@ const validateProfile = (f) => {
                             type="email"
                             className="form-control form-control-sm"
                             value={user.email}
+                            readOnly
+                        />
+                    </div>
+
+                    {/* Role */}
+                    <div className={styles["sheet-row"]}>
+                        <label className={styles["label"]}>Role</label>
+                        <input
+                            type="text"
+                            className="form-control form-control-sm"
+                            value={user.role}
+                            readOnly
+                        />
+                    </div>
+
+                    {/* Member Since */}
+                    <div className={styles["sheet-row"]}>
+                        <label className={styles["label"]}>Member Since</label>
+                        <input
+                            type="text"
+                            className="form-control form-control-sm"
+                            value={new Date(user.createdAt).toLocaleDateString()}
                             readOnly
                         />
                     </div>

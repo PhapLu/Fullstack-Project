@@ -102,6 +102,11 @@ const slice = createSlice({
                     s.user.unseenConversations = 0;
                 }
             })
+            .addCase(fetchMe.rejected, (s, a) => {
+                s.status = "failed";
+                s.user = null;        // 👈 important: mark no user on error
+                s.error = a.payload;
+            })
             .addCase(openSocket.fulfilled, (s, a) => {
                 s.socket = a.payload;
             });

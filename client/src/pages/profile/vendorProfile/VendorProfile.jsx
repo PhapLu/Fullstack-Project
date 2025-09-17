@@ -4,7 +4,7 @@ import Avatar from "../../../components/profile/avatar/Avatar";
 import ProductCard from "../../../components/product/productCard/ProductCard";
 import CreateProduct from "../../../components/product/createProduct/CreateProduct";
 import { apiUtils } from "../../../utils/newRequest";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMe, selectUser } from "../../../store/slices/authSlices";
 import { getImageUrl } from "../../../utils/imageUrl";
@@ -13,10 +13,16 @@ import ConfirmDeleteModal from "../../../components/deleteProduct/ConfirmDeleteM
 
 export default function VendorProfile() {
     const { profileId } = useParams();
-    const user = useSelector(selectUser);
+    const { user, status } = useSelector((s) => s.auth);
     const [errors, setErrors] = useState({});
     const dispatch = useDispatch();
     const backupRef = useRef(null);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if ((status === "succeeded" || status === "failed") && !user) {
+            navigate("/signIn", { replace: true });
+        }
+    }, [user, status, navigate]);
 
     // Identify if the current viewer owns this profile
     const isOwner = useMemo(() => {
@@ -500,6 +506,76 @@ export default function VendorProfile() {
                                                         </div>
                                                     )}
                                                 </>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <hr className={styles.hr} />
+
+                                    {/* Username */}
+                                    <div className={styles.row}>
+                                        <div className={styles.label}>
+                                            Username:
+                                        </div>
+                                        <div className={styles.value}>
+                                            {profile?.username || (
+                                                <span className={styles.muted}>
+                                                    —
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <hr className={styles.hr} />
+
+                                    {/* Email */}
+                                    <div className={styles.row}>
+                                        <div className={styles.label}>
+                                            Email:
+                                        </div>
+                                        <div className={styles.value}>
+                                            {profile?.email || (
+                                                <span className={styles.muted}>
+                                                    —
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <hr className={styles.hr} />
+
+                                    <hr className={styles.hr} />
+
+                                    {/* Role */}
+                                    <div className={styles.row}>
+                                        <div className={styles.label}>
+                                            Role:
+                                        </div>
+                                        <div className={styles.value}>
+                                            {profile?.role || (
+                                                <span className={styles.muted}>
+                                                    —
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <hr className={styles.hr} />
+
+                                    {/* Member Since */}
+                                    <div className={styles.row}>
+                                        <div className={styles.label}>
+                                            Member Since:
+                                        </div>
+                                        <div className={styles.value}>
+                                            {profile?.createdAt ? (
+                                                new Date(
+                                                    profile.createdAt
+                                                ).toLocaleDateString()
+                                            ) : (
+                                                <span className={styles.muted}>
+                                                    —
+                                                </span>
                                             )}
                                         </div>
                                     </div>
