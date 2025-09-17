@@ -63,10 +63,6 @@ export default function ChatToggle({
     useEffect(() => {
         const handler = (e) => {
             const other = e.detail?.otherUser;
-            console.log(
-                "🔥 [ChatToggle] openChatWith event received:",
-                e.detail
-            );
             if (!other || !currentUserId) {
                 console.log(
                     "❌ [ChatToggle] Missing 'otherUser' or 'currentUserId'"
@@ -83,11 +79,8 @@ export default function ChatToggle({
             );
 
             if (exists) {
-                console.log('ALO')
                 setActiveConvId(exists._id);
             } else {
-                console.log('ALO2')
-                console.log(other)
                 const tempId = `temp_${other._id}`;
                 const ghostConv = {
                     _id: tempId,
@@ -99,11 +92,13 @@ export default function ChatToggle({
                     ],
                     thumbnail: other.avatar,
                     title:
-                        (other.role === "vendor" && (other.vendorProfile?.businessName || other.name)) ||
-                        (other.role === "customer" && (other.customerProfile?.name || other.name)) ||
+                        (other.role === "vendor" &&
+                            (other.vendorProfile?.businessName ||
+                                other.name)) ||
+                        (other.role === "customer" &&
+                            (other.customerProfile?.name || other.name)) ||
                         other.name ||
                         "Unknown",
-
                 };
                 setConversations((prev) => {
                     if (prev.some((c) => c._id === tempId)) return prev;
@@ -203,13 +198,16 @@ export default function ChatToggle({
             : m?.ts
             ? m.ts
             : Date.now();
-        return {
-            id: m?._id || m?.id || Date.now(),
+
+        const msg = {
+            id: m?._id || m?.id || `temp_${ts}`,
             from: m?.senderId || m?.from || fallbackFrom,
             text: m?.content || m?.text || "",
             ts,
             pending: !!m?.pending,
         };
+
+        return msg;
     };
 
     // ====== Socket wiring ======
@@ -219,30 +217,24 @@ export default function ChatToggle({
         socket.onmessage = (event) => {
             try {
                 const { event: evt, data } = JSON.parse(event.data);
-
                 if (evt === "getMessage") {
                     const { conversationId, message } = data;
-                    console.log("📥 [WS] getMessage received", data);
 
-                    // ✅ Update conversation list
                     setConversations((prev) =>
-                        prev.map((c) => {
-                            if (c._id !== conversationId) return c;
-                            const updated = {
-                                ...c,
-                                lastMessage: normalizeMsg(message),
-                            };
-                            if (Array.isArray(c.messages)) {
-                                updated.messages = [
-                                    ...c.messages,
-                                    normalizeMsg(message),
-                                ];
-                            }
-                            return updated;
-                        })
+                        prev.map((c) =>
+                            c._id === conversationId
+                                ? {
+                                      ...c,
+                                      lastMessage: normalizeMsg(message),
+                                      messages: [
+                                          ...(c.messages || []),
+                                          normalizeMsg(message),
+                                      ],
+                                  }
+                                : c
+                        )
                     );
 
-                    // ✅ Also update activeMessages if this is the active conversation
                     if (activeConvId === conversationId) {
                         setActiveMessages((prev) => [
                             ...prev,
@@ -250,20 +242,15 @@ export default function ChatToggle({
                         ]);
                     }
                 }
-
-                if (evt === "messagesSeen") {
-                    console.log("✅ [WS] messagesSeen received:", data);
-                    // optionally update local seen state here
-                }
             } catch (err) {
-                console.error("❌ [WS] Failed to parse incoming message:", err);
+                console.error("❌ [WS] parse error:", err);
             }
         };
 
         return () => {
             socket.onmessage = null;
         };
-    }, [socket, currentUserId]);
+    }, [socket, currentUserId, activeConvId]); // <-- include activeConvId
 
     useEffect(() => {
         if (activeConvId && socket) {
@@ -285,9 +272,12 @@ export default function ChatToggle({
     }, [activeConvId, socket, dispatch]);
 
     function getDisplayName(conversation, currentUserId) {
-        const other = (conversation.members || [])
+        if (!conversation || !Array.isArray(conversation.members)) {
+            return "Unknown";
+        }
+        const other = conversation.members
             .map((m) => m.user || m)
-            .find((u) => u._id?.toString() !== currentUserId?.toString());
+            .find((u) => u?._id?.toString() !== currentUserId?.toString());
         if (!other) return "Unknown";
 
         if (other.role === "vendor") {
@@ -299,6 +289,16 @@ export default function ChatToggle({
         return other.name || "User";
     }
 
+    function getAvatar(conversation, currentUserId) {
+        if (!conversation || !Array.isArray(conversation.members)) {
+            return "/images/default-avatar.png";
+        }
+        const other = conversation.members
+            .map((m) => m.user || m)
+            .find((u) => u?._id?.toString() !== currentUserId?.toString());
+        return other?.avatar || "/images/default-avatar.png";
+    }
+
     // ====== Send message ======
     const send = async () => {
         const body = text.trim();
@@ -307,36 +307,54 @@ export default function ChatToggle({
 
         const now = Date.now();
 
-          const optimisticMessage = {
+        const optimisticMessage = {
             _id: now,
             senderId: currentUserId,
             content: body,
             createdAt: now,
             pending: true,
-          };
-          setActiveMessages((prev) => [...prev, optimisticMessage]);
+        };
+        setActiveMessages((prev) => [...prev, optimisticMessage]);
 
         const isTemp = activeConvId?.startsWith("temp_");
 
         try {
             const { data } = await apiUtils.patch("/conversation/sendMessage", {
                 conversationId: isTemp ? null : activeConvId,
-                otherUserId: activeConversation?.otherMember?._id,
+                otherUserId: isTemp
+                    ? (activeConversation?.members || [])
+                          .map((m) => m.user || m)
+                          .find(
+                              (u) =>
+                                  u._id?.toString() !==
+                                  currentUserId?.toString()
+                          )?._id
+                    : activeConversation?.otherMember?._id,
                 content: body,
             });
 
             const { conversationId, newMessage, conversation } = data.metadata;
+            console.log(conversationId);
+            console.log(newMessage);
+            console.log(conversation);
 
             if (isTemp) {
                 setConversations((prev) => {
                     const filtered = prev.filter((c) => c._id !== activeConvId);
-                    return [
-                        {
-                            ...conversation,
-                            lastMessage: normalizeMsg(newMessage),
-                        },
-                        ...filtered,
-                    ];
+
+                    if (!conversation) {
+                        console.warn("⚠️ No conversation returned from server");
+                        return prev;
+                    }
+
+                    const normalized = {
+                        ...conversation,
+                        lastMessage: normalizeMsg(newMessage),
+                        title: getDisplayName(conversation, currentUserId),
+                        thumbnail: getAvatar(conversation, currentUserId),
+                    };
+
+                    return [normalized, ...filtered];
                 });
                 setActiveConvId(conversationId);
             } else {
@@ -460,7 +478,9 @@ export default function ChatToggle({
                                     onClick={() => setActiveConvId(c?._id)}
                                 >
                                     <img
-                                        src={getImageUrl(c.thumbnail)}
+                                        src={getImageUrl(
+                                            getAvatar(c, currentUserId)
+                                        )}
                                         alt=""
                                     />
                                     <div className={styles.meta}>
@@ -475,6 +495,7 @@ export default function ChatToggle({
                                     </div>
                                 </li>
                             ))}
+
                             {!conversations.length && (
                                 <li className={styles.empty}>
                                     No conversations
@@ -508,14 +529,22 @@ export default function ChatToggle({
 
                                 <div className={styles.messages} ref={listRef}>
                                     {activeMessages.map((msg) => {
-                                        const normalized = normalizeMsg(msg, currentUserId);
-                                        const myId = currentUserId?.toString?.() ?? String(currentUserId ?? "");
+                                        const normalized = normalizeMsg(
+                                            msg,
+                                            currentUserId
+                                        );
+                                        const myId =
+                                            currentUserId?.toString?.() ??
+                                            String(currentUserId ?? "");
                                         const fromRaw = normalized.from;
                                         const fromId =
-                                          typeof fromRaw === "object"
-                                            ? fromRaw?._id?.toString?.() ?? ""
-                                            : fromRaw?.toString?.() ?? "";
+                                            typeof fromRaw === "object"
+                                                ? fromRaw?._id?.toString?.() ??
+                                                  ""
+                                                : fromRaw?.toString?.() ?? "";
                                         const isMine = fromId === myId;
+                                        console.log(activeMessages);
+                                        console.log("Normalized", normalized);
 
                                         return (
                                             <div

@@ -634,18 +634,20 @@ export default function VendorProfile() {
                             </div>
                         )}
                     </section>
-                    <button
-                        type="button"
-                        className={`${styles.menuItem} ${styles.menuLogout}`}
-                        onClick={onLogout}
-                        disabled={isLoggingOut}
-                    >
-                        <FontAwesomeIcon
-                            icon={["fas", "right-from-bracket"]}
-                            className={styles.menuIcon}
-                        />
-                        <span>Logout</span>
-                    </button>
+                    {isOwner && (
+                        <button
+                            type="button"
+                            className={`${styles.menuItem} ${styles.menuLogout}`}
+                            onClick={onLogout}
+                            disabled={isLoggingOut}
+                        >
+                            <FontAwesomeIcon
+                                icon={["fas", "right-from-bracket"]}
+                                className={styles.menuIcon}
+                            />
+                            <span>Logout</span>
+                        </button>
+                    )}
                 </div>
             )}
 

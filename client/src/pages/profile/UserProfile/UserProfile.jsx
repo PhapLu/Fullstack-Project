@@ -8,7 +8,11 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./UserProfile.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, selectAuth, selectUser } from "../../../store/slices/authSlices";
+import {
+    logout,
+    selectAuth,
+    selectUser,
+} from "../../../store/slices/authSlices";
 import { apiUtils } from "../../../utils/newRequest";
 import Avatar from "../../../components/profile/avatar/Avatar";
 import { getImageUrl } from "../../../utils/imageUrl";
@@ -406,19 +410,20 @@ export default function UserProfile() {
                         )}
                     </div>
 
-                    <button
-                        type="button"
-                        className={`${styles.menuItem} ${styles.menuLogout}`}
-                        onClick={onLogout}
-                        disabled={isLoggingOut}
-                    >
-                        <FontAwesomeIcon
-                            icon={["fas", "right-from-bracket"]}
-                            className={styles.menuIcon}
-                        />
-                        <span>Logout</span>
-                    </button>
-
+                    {isOwner && (
+                        <button
+                            type="button"
+                            className={`${styles.menuItem} ${styles.menuLogout}`}
+                            onClick={onLogout}
+                            disabled={isLoggingOut}
+                        >
+                            <FontAwesomeIcon
+                                icon={["fas", "right-from-bracket"]}
+                                className={styles.menuIcon}
+                            />
+                            <span>Logout</span>
+                        </button>
+                    )}
                     {errors.__api && editingProfile && (
                         <div
                             className="alert alert-danger py-2 mt-2"
