@@ -76,8 +76,11 @@ export default function ChatToggle({
             );
 
             if (exists) {
+                console.log('ALO')
                 setActiveConvId(exists._id);
             } else {
+                console.log('ALO2')
+                console.log(other)
                 const tempId = `temp_${other._id}`;
                 const ghostConv = {
                     _id: tempId,
@@ -89,14 +92,12 @@ export default function ChatToggle({
                     ],
                     thumbnail: other.avatar,
                     title:
-                        (other.role === "vendor" &&
-                            other.vendorProfile?.businessName) ||
-                        (other.role === "customer" &&
-                            other.customerProfile?.name) ||
-                        other.domainName ||
+                        (other.role === "vendor" && (other.vendorProfile?.businessName || other.name)) ||
+                        (other.role === "customer" && (other.customerProfile?.name || other.name)) ||
+                        other.name ||
                         "Unknown",
-                };
 
+                };
                 setConversations((prev) => {
                     if (prev.some((c) => c._id === tempId)) return prev;
                     return [ghostConv, ...prev];
@@ -280,16 +281,15 @@ export default function ChatToggle({
         const other = (conversation.members || [])
             .map((m) => m.user || m)
             .find((u) => u._id?.toString() !== currentUserId?.toString());
-
         if (!other) return "Unknown";
 
         if (other.role === "vendor") {
-            return other.vendorProfile?.businessName || "Vendor";
+            return other.vendorProfile?.businessName || other.name || "Vendor";
         }
         if (other.role === "customer") {
-            return other.customerProfile?.name || "Customer";
+            return other.customerProfile?.name || other.name || "Customer";
         }
-        return other.domainName || "User";
+        return other.name || "User";
     }
 
     // ====== Send message ======

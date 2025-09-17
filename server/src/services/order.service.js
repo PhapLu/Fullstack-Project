@@ -18,7 +18,6 @@ class OrderService {
         // 1. Check user
         const user = await User.findById(userId);
         if (!user) throw new AuthFailureError("You are not authenticated!");
-        console.log("BODY", body);
         // 2. Validate inputs
         if (!body.items || body.items.length === 0)
             throw new BadRequestError("Order must have at least one item");

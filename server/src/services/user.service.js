@@ -79,8 +79,12 @@ class UserService {
         const filename = file.filename || path.basename(file.path);
         const url = publicUrlFor(filename);
 
-        // 3. Delete old avatar if exists and is not an external URL
-        if (user.avatar && !/^https?:\/\//i.test(user.avatar)) {
+        // 3. Delete old avatar if exists, is not an external URL, and not default avatar
+        if (
+            user.avatar &&
+            !/^https?:\/\//i.test(user.avatar) && // not external URL
+            !user.avatar.includes("default-avatar.png") // not default avatar
+        ) {
             try {
                 const oldBase = path.basename(user.avatar);
                 await fs.unlink(path.join(AVATARS_DIR, oldBase));
@@ -90,8 +94,10 @@ class UserService {
             }
         }
 
+        // 4. Save new avatar
         user.avatar = url;
         await user.save();
+
         return { avatar: url };
     };
 

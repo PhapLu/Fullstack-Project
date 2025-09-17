@@ -50,8 +50,11 @@ class SocketServices {
             if (event === "sendMessage") {
                 console.log("📨 Received sendMessage event:", data);
                 const { conversationId, content, receiverId } = data;
+                let conv = null;
 
-                let conv = await Conversation.findById(conversationId);
+                if (conversationId && mongoose.Types.ObjectId.isValid(conversationId)) {
+                    conv = await Conversation.findById(conversationId);
+                }
 
                 if (!conv) {
                     conv = new Conversation({
@@ -61,6 +64,7 @@ class SocketServices {
                         ],
                         messages: [],
                     });
+                    await conv.save();
                 }
 
                 const newMsg = {
@@ -70,8 +74,6 @@ class SocketServices {
                     isSeen: false,
                 };
 
-                conv.messages.push(newMsg);
-                await conv.save();
                 console.log("STAT SEND");
                 // notify receiver
                 sendToUser(receiverId, "getMessage", {
@@ -89,6 +91,12 @@ class SocketServices {
             // Mark messages as seen
             if (event === "messageSeen") {
                 const { conversationId } = data;
+
+                if (!conversationId || !mongoose.Types.ObjectId.isValid(conversationId)) {
+                    console.warn("⚠️ Ignoring messageSeen for invalid conversationId:", conversationId);
+                    return;
+                }
+
                 const conv = await Conversation.findById(conversationId);
                 if (!conv) return;
 
