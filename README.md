@@ -97,3 +97,13 @@ ALEPAY_LOCAL_BASE_URL=https://alepay-v3-sandbox.nganluong.vn/api/v3/checkout
 ALEPAY_CHECK_SUM_KEY=n2UvTjnFAj2JVWzzQ9NNBs7OKQ6Oh8
 ALEPAY_RETURN_URL=https://pastal-be-staging.onrender.com/v1/api/order/alepay_return
 ALEPAY_CANCEL_URL=https://pastal-be-staging.onrender.com/v1/api/order/alepay_cancel
+
+## 8. Team Contributions
+
+| Name                 | Role       | Key Contributions                               | Contribution |
+|----------------------|------------|--------------------------------------------------|--------------|
+| Luu Quoc Phap        | Backend    | Backend APIs & services                          | 25%          |
+| Truong Gia Hy        | Backend    | UX strategy, UI design, backend development      | 25%          |
+| Pham Tran Bao Tran   | Front-end  | UX/UI design, front-end implementation           | 25%          |
+| Le Khanh Huyen       | Front-end  | UX/UI design, front-end implementation           | 25%          |
+| **Total**            | —          | —                                                | **100%**     |
