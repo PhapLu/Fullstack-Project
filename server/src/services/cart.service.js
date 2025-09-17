@@ -89,7 +89,7 @@ class CartService {
     const customerId = req.userId;
 
     // 1. Check customer
-    const customer = await User.findById(customerId);
+    const customer = await User.findById(customerId).select('_id');
     if (!customer) throw new AuthFailureError("You are not authenticated!");
 
     // 2. Get cart items

@@ -272,10 +272,11 @@ class ProductService {
     const userId = req.userId;
     const { productId } = req.params;
 
-    // 1. Check user, product
-    const user = await User.findById(userId);
+    // 1. Check user, product (Adding select for optimization)
+    const user = await User.findById(userId).select("_id role");
     if (!user) throw new AuthFailureError("You are not authenticated!");
-    const product = await Product.findById(productId);
+
+    const product = await Product.findById(productId).select('vendorId images');
     if (!product) throw new NotFoundError("Product not found");
     if (product.vendorId.toString() !== String(userId))
       throw new AuthFailureError("You are not allowed to delete this product");
@@ -311,9 +312,9 @@ class ProductService {
     const newImageFile = req.file;
 
     // 1. Check user, product
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select('_id role');
     if (!user) throw new AuthFailureError("You are not authenticated!");
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).select('vendorId name price description images'); // Adding select to optimize
     if (!product) throw new NotFoundError("Product not found");
     if (String(product.vendorId) !== String(user._id))
       throw new AuthFailureError("You are not allowed to modify this product");
