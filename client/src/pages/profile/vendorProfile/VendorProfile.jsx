@@ -6,10 +6,11 @@ import CreateProduct from "../../../components/product/createProduct/CreateProdu
 import { apiUtils } from "../../../utils/newRequest";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMe, selectUser } from "../../../store/slices/authSlices";
+import { fetchMe, logout, selectUser } from "../../../store/slices/authSlices";
 import { getImageUrl } from "../../../utils/imageUrl";
 import { isFilled, isValidPhone, minLength } from "../../../utils/validator";
 import ConfirmDeleteModal from "../../../components/deleteProduct/ConfirmDeleteModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function VendorProfile() {
     const { profileId } = useParams();
@@ -18,6 +19,8 @@ export default function VendorProfile() {
     const dispatch = useDispatch();
     const backupRef = useRef(null);
     const navigate = useNavigate();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
     useEffect(() => {
         if ((status === "succeeded" || status === "failed") && !user) {
             navigate("/signIn", { replace: true });
@@ -29,6 +32,24 @@ export default function VendorProfile() {
         if (!user || !profileId) return false;
         return user._id === profileId || user.username === profileId;
     }, [user, profileId]);
+
+    const onLogout = async () => {
+        if (isLoggingOut) return;
+        setIsLoggingOut(true);
+        try {
+            await saveNow(); // snapshot cart one last time
+        } catch (e) {
+            console.warn("cart snapshot failed (continuing logout)", e);
+        }
+        try {
+            await apiUtils.post("/auth/logout");
+        } catch (e) {
+            console.warn("server logout failed (continuing client logout)", e);
+        }
+        dispatch(logout());
+        navigate("/auth/signIn");
+        setIsLoggingOut(false);
+    };
 
     // Products
     const [products, setProducts] = useState([]);
@@ -606,6 +627,18 @@ export default function VendorProfile() {
                             </div>
                         )}
                     </section>
+                    <button
+                        type="button"
+                        className={`${styles.menuItem} ${styles.menuLogout}`}
+                        onClick={onLogout}
+                        disabled={isLoggingOut}
+                    >
+                        <FontAwesomeIcon
+                            icon={["fas", "right-from-bracket"]}
+                            className={styles.menuIcon}
+                        />
+                        <span>Logout</span>
+                    </button>
                 </div>
             )}
 

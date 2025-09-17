@@ -147,7 +147,7 @@
         display: grid;
         place-items: center;
         background: #eef2ff;
-        box-shadow: 0 0 0 4px #fff, 0 8px 30px rgba(15, 23, 42, .12);
+        box-shadow: 0 0 0 4px #fff, 0 8px 30px rgba(15, 23, 42, 0.12);
 
         &:hover {
             box-shadow: 0 0 0 4px #fff, 0 10px 34px rgba(15, 23, 42, 0.16);
@@ -164,7 +164,11 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(120px 60px at 50% 100%, rgba(0, 0, 0, 0.25), transparent 70%);
+            background: radial-gradient(
+                120px 60px at 50% 100%,
+                rgba(0, 0, 0, 0.25),
+                transparent 70%
+            );
             opacity: 0;
             transition: opacity 0.2s;
             pointer-events: none;
@@ -183,12 +187,12 @@
             border-radius: 50%;
             background: #fff;
             border: 0;
-            box-shadow: 0 6px 18px rgba(15, 23, 42, .18);
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18);
             display: grid;
             place-items: center;
             z-index: 2;
             color: var(--text);
-            transition: transform .15s ease, background-color .2s, color .2s;
+            transition: transform 0.15s ease, background-color 0.2s, color 0.2s;
 
             &:hover {
                 transform: scale(1.06);
@@ -345,4 +349,23 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+.menuItem {
+    width: 100%;
+    font-size: 16px;
+    padding: 8px 14px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: inherit;
+    font-weight: 500;
+}
+
+.menuItem:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.menuLogout {
+    color: var(--danger);
 }

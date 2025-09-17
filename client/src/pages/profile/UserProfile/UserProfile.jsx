@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./UserProfile.module.scss";
-import { useSelector } from "react-redux";
-import { selectAuth, selectUser } from "../../../store/slices/authSlices";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectAuth, selectUser } from "../../../store/slices/authSlices";
 import { apiUtils } from "../../../utils/newRequest";
 import Avatar from "../../../components/profile/avatar/Avatar";
 import { getImageUrl } from "../../../utils/imageUrl";
 import { useNavigate, useParams } from "react-router-dom";
 import { isFilled, isValidPhone, minLength } from "../../../utils/validator";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function UserProfile() {
     const { user, status } = useSelector(selectAuth);
@@ -16,6 +17,8 @@ export default function UserProfile() {
     const [avatarFile, setAvatarFile] = useState(null);
     const [avatarUrl, setAvatarUrl] = useState(getImageUrl(user?.avatar));
     const navigate = useNavigate();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if ((status === "succeeded" || status === "failed") && !user) {
@@ -63,6 +66,24 @@ export default function UserProfile() {
     const err = (k) => errors[k];
 
     if (!user) return <div className="container-xl py-4">Loading profile…</div>;
+
+    const onLogout = async () => {
+        if (isLoggingOut) return;
+        setIsLoggingOut(true);
+        try {
+            await saveNow(); // snapshot cart one last time
+        } catch (e) {
+            console.warn("cart snapshot failed (continuing logout)", e);
+        }
+        try {
+            await apiUtils.post("/auth/logout");
+        } catch (e) {
+            console.warn("server logout failed (continuing client logout)", e);
+        }
+        dispatch(logout());
+        navigate("/auth/signIn");
+        setIsLoggingOut(false);
+    };
 
     const validateProfile = (f) => {
         const e = {};
@@ -231,7 +252,9 @@ export default function UserProfile() {
                         <input
                             type="text"
                             className="form-control form-control-sm"
-                            value={new Date(user.createdAt).toLocaleDateString()}
+                            value={new Date(
+                                user.createdAt
+                            ).toLocaleDateString()}
                             readOnly
                         />
                     </div>
@@ -375,6 +398,19 @@ export default function UserProfile() {
                             </div>
                         )}
                     </div>
+
+                    <button
+                        type="button"
+                        className={`${styles.menuItem} ${styles.menuLogout}`}
+                        onClick={onLogout}
+                        disabled={isLoggingOut}
+                    >
+                        <FontAwesomeIcon
+                            icon={["fas", "right-from-bracket"]}
+                            className={styles.menuIcon}
+                        />
+                        <span>Logout</span>
+                    </button>
 
                     {errors.__api && editingProfile && (
                         <div

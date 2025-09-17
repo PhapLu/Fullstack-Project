@@ -39,7 +39,7 @@ export default function Header() {
             console.warn("server logout failed (continuing client logout)", e);
         }
         dispatch(logout());
-        navigate("/");
+        navigate("/auth/signIn");
         setIsLoggingOut(false);
     };
 
