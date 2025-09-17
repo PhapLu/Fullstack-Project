@@ -8,20 +8,20 @@ https://github.com/PhapLu/Fullstack-Project.git
 
 ## 2. Website Test User Logins
 Admin User Login:
-Username: adminTest
-Password: Bloomart123@
+- Username: adminTest
+- Password: Bloomart123@
 
 Customer User Login:
-Username: customerTest
-Password: Bloomart123@
+- Username: customerTest
+- Password: Bloomart123@
 
 Vendor User Login:
-Username: vendorTest
-Password: Bloomart123@
+- Username: vendorTest
+- Password: Bloomart123@
 
 Shipper User Login:
-Username: shipperTest
-Password: Bloomart123@
+- Username: shipperTest
+- Password: Bloomart123@
 
 ## 3. MongoDB Atlas Database Connection URL
 For connecting to the database, use the following connection string:
