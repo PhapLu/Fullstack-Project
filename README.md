@@ -75,7 +75,10 @@ cd client
 npm install
 npm run dev
 
-## 6. File .env must be created before running the application
+## 6. Video Presentation and Demo Application
+https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4026707_rmit_edu_vn/EUkkWL5EOG9No1JocJhg6_wB5oz0xLxR734lcJZfG2Eosg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=cWLoxH
+
+## 7. File .env must be created before running the application
 NODE_ENV=development
 PORT=3000
 JWT_SECRET=GROUP3_FULLSTACK_PROJECT
