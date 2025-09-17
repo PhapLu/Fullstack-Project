@@ -64,13 +64,14 @@ Brevo (Sendinblue) handles:
 ### Install & Run
 1) **Clone**
 git clone https://github.com/PhapLu/Fullstack-Project.git
-cd Fullstack-Project
 2) **Server**
+cd Fullstack-Project
 cd server
 npm install
 Note: must create server/.env (Mongo URI, JWT, Brevo, AlePay)
 npm start
 3) **Client**
+cd Fullstack-Project
 cd client
 npm install
 npm run dev
