@@ -222,13 +222,8 @@ export function CartProvider({ children }) {
     useEffect(() => {
         if (!hydratedKeysRef.current.has(storageKey)) return;
         writeLocal(storageKey, state);
+    }, [state, storageKey]);
 
-        if (userId) {
-            apiUtils
-                .put("/cart/snapshot", { items: toServerItems(state.items) })
-                .catch((e) => console.warn("auto snapshot failed", e));
-        }
-    }, [state, storageKey, userId]);
 
     // --- Public API: ONLY local updates during session ---
     const addItem = (item) => {
