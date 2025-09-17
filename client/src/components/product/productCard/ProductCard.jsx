@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 import React from "react";
 import styles from "../../../pages/profile/vendorProfile/VendorProfile.module.scss";
 import { getImageUrl } from "../../../utils/imageUrl";
@@ -82,20 +89,6 @@ export default function ProductCard({ product, onDelete }) {
             {stock > 0 ? `In stock: ${formatStock(stock)}` : "Out of stock"}
           </span>
         </div>
-
-        {/* Block 3: Rating  */}
-        {/* <div className={styles.ratingRow}>
-                    <a
-                        className={styles.ratingLink}
-                        href={`/product/${id}#reviews`}
-                    >
-                        {ratingCount
-                            ? `${ratingCount} reviews`
-                            : ratingValue
-                            ? `Rating: ${ratingValue}/5`
-                            : "Rating →"}
-                    </a>
-                </div> */}
       </div>
     </Link>
   );

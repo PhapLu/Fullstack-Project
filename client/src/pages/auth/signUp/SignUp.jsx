@@ -1,4 +1,10 @@
-/* Gia Hy-s4053650 */
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Le Khanh Huyen
+// ID: S4026707
+
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import styles from "./SignUp.module.scss";

@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Luu Quoc Phap
+// ID: S4024611
+
 import {
   AuthFailureError,
   BadRequestError,
@@ -178,16 +185,16 @@ class AdminDashboardService {
         "You are not authorized to perform this action"
       );
 
-    //2. Find hub by id 
+    //2. Find hub by id
     const hub = await DistributionHub.findByIdAndUpdate(hubId);
 
     // 3. Update fields from req.body
-    const updates = req.body; 
+    const updates = req.body;
     Object.assign(hub, updates);
 
     // 4. Save updated hub
     await hub.save();
-    
+
     return {
       hub,
     };

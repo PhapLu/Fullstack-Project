@@ -1,62 +1,72 @@
-import { SuccessResponse } from "../core/success.response.js"
-import ConversationService from "../services/conversation.service.js"
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Luu Quoc Phap
+// ID: S4024611
 
-class ControllerController{
-    createConversation = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Create conversation success!',
-            metadata: await ConversationService.createConversation(req.userId, req)
-        }).send(res)
-    }
+import { SuccessResponse } from "../core/success.response.js";
+import ConversationService from "../services/conversation.service.js";
 
-    readConversationWithOtherMember = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Read conversation success!',
-            metadata: await ConversationService.readConversationWithOtherMember(req.userId, req.params.otherMemberId)
-        }).send(res)
-    }
+class ControllerController {
+  createConversation = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Create conversation success!",
+      metadata: await ConversationService.createConversation(req.userId, req),
+    }).send(res);
+  };
 
-    fetchOlderMessages = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Fetch older messages success!',
-            metadata: await ConversationService.fetchOlderMessages(req.userId, req)
-        }).send(res)
-    }
+  readConversationWithOtherMember = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Read conversation success!",
+      metadata: await ConversationService.readConversationWithOtherMember(
+        req.userId,
+        req.params.otherMemberId
+      ),
+    }).send(res);
+  };
 
-    readConversation = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Read conversation success!',
-            metadata: await ConversationService.readConversation(req)
-        }).send(res)
-    }
+  fetchOlderMessages = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Fetch older messages success!",
+      metadata: await ConversationService.fetchOlderMessages(req.userId, req),
+    }).send(res);
+  };
 
-    readMessages = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Read conversation messages success!',
-            metadata: await ConversationService.readMessages(req)
-        }).send(res)
-    }
-    
-    readConversations = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Read conversations success!',
-            metadata: await ConversationService.readConversations(req.userId)
-        }).send(res)
-    }
-    
-    sendMessage = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Send message success!',
-            metadata: await ConversationService.sendMessage(req)
-        }).send(res)
-    }
+  readConversation = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Read conversation success!",
+      metadata: await ConversationService.readConversation(req),
+    }).send(res);
+  };
 
-    toggleMuteConversation = async(req, res, next) => {
-        new SuccessResponse({
-            message: 'Read conversation success!',
-            metadata: await ConversationService.toggleMuteConversation(req)
-        }).send(res)
-    }
+  readMessages = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Read conversation messages success!",
+      metadata: await ConversationService.readMessages(req),
+    }).send(res);
+  };
+
+  readConversations = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Read conversations success!",
+      metadata: await ConversationService.readConversations(req.userId),
+    }).send(res);
+  };
+
+  sendMessage = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Send message success!",
+      metadata: await ConversationService.sendMessage(req),
+    }).send(res);
+  };
+
+  toggleMuteConversation = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Read conversation success!",
+      metadata: await ConversationService.toggleMuteConversation(req),
+    }).send(res);
+  };
 }
 
-export default new ControllerController()
+export default new ControllerController();

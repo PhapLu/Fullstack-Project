@@ -1,104 +1,127 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 .auth__wrap {
-    padding: 2% 4%;
-    display: flex;
-	width: 100%;
-    max-height: 100vh;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
+  padding: 2% 4%;
+  display: flex;
+  width: 100%;
+  max-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
 }
+
 .auth__left {
-    display: flex;
-    flex-direction: column;
-    flex: 6;
-    position: relative;
-    overflow: visible;
+  display: flex;
+  flex-direction: column;
+  flex: 6;
+  position: relative;
+  overflow: visible;
 }
+
 .auth__right {
-    flex: 4;
-    display: flex;
-    justify-content: center;
-    background-color: white;
-    border-radius: 20px;
-    z-index: 1;
-    box-shadow: 0px 0px 30px 15px rgba(0, 0, 0, 0.25);
+  flex: 4;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1;
+  box-shadow: 0px 0px 30px 15px rgba(0, 0, 0, 0.25);
 }
+
 .auth__brand {
-    z-index: 5;
-    display: flex;
-    align-items: center;
+  z-index: 5;
+  display: flex;
+  align-items: center;
 }
+
 .auth__logo {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
 }
+
 .auth__name {
-    font-size: 35px;
-    font-family: "Lobster Two", cursive;
-    color: var(--primary-color);
+  font-size: 35px;
+  font-family: "Lobster Two", cursive;
+  color: var(--primary-color);
 }
+
 .auth__tagline {
-    margin-top: 5%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 }
+
 .auth__tagline p {
-    font-size: 30px;
-    color: var(--text-color);
+  font-size: 30px;
+  color: var(--text-color);
 }
+
 .auth__tagline h2 {
-    font-size: 40px;
-    font-family: "Lobster Two", cursive;
-    color: var(--primary-color);
+  font-size: 40px;
+  font-family: "Lobster Two", cursive;
+  color: var(--primary-color);
 }
+
 .auth__img {
-    position: absolute;
-    inset: 0; /* top:0; right:0; bottom:0; left:0 */
-    pointer-events: none; /* tránh bắt click */
-    z-index: 2;
+  position: absolute;
+  inset: 0;
+  /* top:0; right:0; bottom:0; left:0 */
+  pointer-events: none;
+  /* tránh bắt click */
+  z-index: 2;
 }
+
 .auth__img img {
-    position: absolute; /* bây giờ top/left/bottom mới hoạt động đúng */
-    display: block;
-    max-width: none;
-    object-fit: cover; /* áp trên img mới có tác dụng */
+  position: absolute;
+  /* bây giờ top/left/bottom mới hoạt động đúng */
+  display: block;
+  max-width: none;
+  object-fit: cover;
+  /* áp trên img mới có tác dụng */
 }
+
 .auth__img .img1 {
-    width: 350px;
-    height: 350px;
-    left: 20%;
-    top: 40%;
-    transform: translate(-50%, -50%) rotate(-5deg);
+  width: 350px;
+  height: 350px;
+  left: 20%;
+  top: 40%;
+  transform: translate(-50%, -50%) rotate(-5deg);
 }
 
 /* Cụm icon/phụ kiện phía trên trái */
 .auth__img .img2 {
-    width: 350px;
-    height: 350px;
-    left: 16%;
-    top: 55%;
-    transform: rotate(-6deg);
+  width: 350px;
+  height: 350px;
+  left: 16%;
+  top: 55%;
+  transform: rotate(-6deg);
 }
 
 /* Cart + hộp quà ở dưới trái */
 .auth__img .img3 {
-    width: 350px;
-    height: 350px;
-    left: 65%;
-    top: 25%;
-    transform: rotate(3deg);
+  width: 350px;
+  height: 350px;
+  left: 65%;
+  top: 25%;
+  transform: rotate(3deg);
 }
 
 /* ===== Responsive ===== */
 @media (max-width: 992px) {
   .auth__wrap {
     height: auto;
-    min-height: 100svh; /* safe viewport for mobile browsers */
+    min-height: 100svh;
+    /* safe viewport for mobile browsers */
     max-height: none;
     overflow: visible;
     padding: 24px;
@@ -131,6 +154,7 @@
   .auth__tagline p {
     font-size: clamp(18px, 2.2vw, 22px);
   }
+
   .auth__tagline h2 {
     font-size: clamp(22px, 3vw, 28px);
   }
@@ -140,7 +164,7 @@
     width: 100%;
     border-radius: 16px;
     box-shadow: none;
-    padding: 12px; 
+    padding: 12px;
   }
 
   .auth__brand {
@@ -152,20 +176,27 @@
     width: 48px;
     height: 48px;
   }
+
   .auth__name {
     font-size: clamp(22px, 3vw, 26px);
   }
 }
 
 @media (max-width: 600px) {
-  .auth__wrap { padding: 16px; }
+  .auth__wrap {
+    padding: 16px;
+  }
 
   .auth__right {
     border-radius: 14px;
     box-shadow: none
   }
 
-  .auth__tagline p { font-size: 16px; }
-  .auth__tagline h2 { font-size: 22px; }
-}
+  .auth__tagline p {
+    font-size: 16px;
+  }
 
+  .auth__tagline h2 {
+    font-size: 22px;
+  }
+}

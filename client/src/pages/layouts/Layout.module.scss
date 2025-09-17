@@ -1,5 +1,12 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Truong Gia Hy
+// ID: S4053650
+
 .without-sidebar {
-    padding: 0 4%;
+  padding: 0 4%;
 }
 
 #deals,
@@ -9,5 +16,5 @@
 #popular,
 #about,
 #contact {
-  scroll-margin-top: var(--sticky-offset, 150px); /* fallback 120px */
+  scroll-margin-top: var(--sticky-offset, 150px);
 }

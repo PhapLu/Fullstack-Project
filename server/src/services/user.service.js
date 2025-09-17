@@ -1,11 +1,18 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Truong Gia Hy
+// ID: S4053650
+
 import dotenv from "dotenv";
 dotenv.config();
 
 import User from "../models/user.model.js";
 import {
-    AuthFailureError,
-    BadRequestError,
-    NotFoundError,
+  AuthFailureError,
+  BadRequestError,
+  NotFoundError,
 } from "../core/error.response.js";
 import jwt from "jsonwebtoken";
 import fs from "fs/promises";
@@ -18,169 +25,162 @@ const AVATARS_DIR = path.join(UPLOADS_DIR, "avatars");
 const publicUrlFor = (filename) => `/public/avatars/${filename}`;
 
 class UserService {
-    //-------------------CRUD----------------------------------------------------
-    static readUserProfile = async (req) => {
-        const userProfileId = req.params.userId;
+  //-------------------CRUD----------------------------------------------------
+  static readUserProfile = async (req) => {
+    const userProfileId = req.params.userId;
 
-        // 1. Check user profile
-        const userProfile = await User.findById(userProfileId);
-        if (!userProfile) throw new AuthFailureError("User profile not found");
+    // 1. Check user profile
+    const userProfile = await User.findById(userProfileId);
+    if (!userProfile) throw new AuthFailureError("User profile not found");
 
-        // 2. Return user profile data
-        return {
-            user: userProfile,
-        };
+    // 2. Return user profile data
+    return {
+      user: userProfile,
+    };
+  };
+
+  static me = async (accessToken) => {
+    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+    if (!decoded?.id) throw new AuthFailureError("Invalid token");
+
+    const userId = decoded.id;
+
+    const user = await User.findById(userId)
+      .select("-password -accessToken")
+      .populate("shipperProfile.assignedHub", "name address")
+      .lean();
+
+    if (!user) throw new NotFoundError("User not found");
+
+    // 🔥 Helper: compute unseen conversations
+    const convs = await Conversation.find({ "members.user": userId })
+      .select("messages members")
+      .lean();
+
+    let unseenCount = 0;
+    convs.forEach((c) => {
+      const unread = c.messages.filter(
+        (m) => m.senderId.toString() !== userId.toString() && !m.isSeen
+      ).length;
+      if (unread > 0) unseenCount++;
+    });
+
+    return {
+      user: {
+        ...user,
+        unseenConversations: unseenCount, // 👈 include in response
+      },
+    };
+  };
+
+  static uploadAvatar = async (req) => {
+    const userId = req.userId;
+    const file = req.file;
+    if (!file) throw new BadRequestError("Avatar image is required");
+
+    // 1. Check user
+    const user = await User.findById(userId);
+    if (!user) throw new NotFoundError("User not found");
+
+    // 2. Process the uploaded file
+    const filename = file.filename || path.basename(file.path);
+    const url = publicUrlFor(filename);
+
+    // 3. Delete old avatar if exists, is not an external URL, and not default avatar
+    if (
+      user.avatar &&
+      !/^https?:\/\//i.test(user.avatar) && // not external URL
+      !user.avatar.includes("default-avatar.png") // not default avatar
+    ) {
+      try {
+        const oldBase = path.basename(user.avatar);
+        await fs.unlink(path.join(AVATARS_DIR, oldBase));
+      } catch (err) {
+        if (err.code !== "ENOENT")
+          console.warn("delete old avatar failed:", err);
+      }
+    }
+
+    // 4. Save new avatar
+    user.avatar = url;
+    await user.save();
+
+    return { avatar: url };
+  };
+
+  static updateUserProfile = async (req) => {
+    const userId = req.userId;
+    const body = req.body || {};
+
+    // 1. Check user
+    const user = await User.findById(userId);
+    if (!user) throw new AuthFailureError("User not found");
+
+    // 2. Validate and prepare update document
+    const baseFields = ["bio", "phone", "country"];
+    const roleFields = {
+      customer: ["customerProfile.name", "customerProfile.address"],
+      vendor: ["vendorProfile.businessName", "vendorProfile.businessAddress"],
+      shipper: [],
     };
 
-    static me = async (accessToken) => {
-        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-        if (!decoded?.id) throw new AuthFailureError("Invalid token");
+    const allowed = [...baseFields, ...(roleFields[user.role] || [])];
 
-        const userId = decoded.id;
+    const updateDoc = {};
+    for (const f of allowed) {
+      const parts = f.split(".");
+      if (parts.length === 1) {
+        updateDoc[parts[0]] = body[parts[0]];
+      } else {
+        const [outer, inner] = parts;
+        updateDoc[outer] = { ...(updateDoc[outer] || {}) };
+        updateDoc[outer][inner] = body[outer]?.[inner];
+      }
+    }
 
-        const user = await User.findById(userId)
-            .select("-password -accessToken")
-            .populate("shipperProfile.assignedHub", "name address")
-            .lean();
+    if (isFilled(updateDoc.phone) && !isValidPhone(updateDoc.phone))
+      throw new BadRequestError("Invalid phone format");
+    if ((updateDoc.bio || "").length > 200)
+      throw new BadRequestError("Bio max 200 chars");
 
-        if (!user) throw new NotFoundError("User not found");
-
-        // 🔥 Helper: compute unseen conversations
-        const convs = await Conversation.find({ "members.user": userId })
-            .select("messages members")
-            .lean();
-
-        let unseenCount = 0;
-        convs.forEach((c) => {
-            const unread = c.messages.filter(
-                (m) => m.senderId.toString() !== userId.toString() && !m.isSeen
-            ).length;
-            if (unread > 0) unseenCount++;
-        });
-
-        return {
-            user: {
-                ...user,
-                unseenConversations: unseenCount, // 👈 include in response
-            },
-        };
-    };
-
-    static uploadAvatar = async (req) => {
-        const userId = req.userId;
-        const file = req.file;
-        if (!file) throw new BadRequestError("Avatar image is required");
-
-        // 1. Check user
-        const user = await User.findById(userId);
-        if (!user) throw new NotFoundError("User not found");
-
-        // 2. Process the uploaded file
-        const filename = file.filename || path.basename(file.path);
-        const url = publicUrlFor(filename);
-
-        // 3. Delete old avatar if exists, is not an external URL, and not default avatar
-        if (
-            user.avatar &&
-            !/^https?:\/\//i.test(user.avatar) && // not external URL
-            !user.avatar.includes("default-avatar.png") // not default avatar
-        ) {
-            try {
-                const oldBase = path.basename(user.avatar);
-                await fs.unlink(path.join(AVATARS_DIR, oldBase));
-            } catch (err) {
-                if (err.code !== "ENOENT")
-                    console.warn("delete old avatar failed:", err);
-            }
-        }
-
-        // 4. Save new avatar
-        user.avatar = url;
-        await user.save();
-
-        return { avatar: url };
-    };
-
-    static updateUserProfile = async (req) => {
-        const userId = req.userId;
-        const body = req.body || {};
-
-        // 1. Check user
-        const user = await User.findById(userId);
-        if (!user) throw new AuthFailureError("User not found");
-
-        // 2. Validate and prepare update document
-        const baseFields = ["bio", "phone", "country"];
-        const roleFields = {
-            customer: ["customerProfile.name", "customerProfile.address"],
-            vendor: [
-                "vendorProfile.businessName",
-                "vendorProfile.businessAddress",
-            ],
-            shipper: [],
-        };
-
-        const allowed = [...baseFields, ...(roleFields[user.role] || [])];
-
-        const updateDoc = {};
-        for (const f of allowed) {
-            const parts = f.split(".");
-            if (parts.length === 1) {
-                updateDoc[parts[0]] = body[parts[0]];
-            } else {
-                const [outer, inner] = parts;
-                updateDoc[outer] = { ...(updateDoc[outer] || {}) };
-                updateDoc[outer][inner] = body[outer]?.[inner];
-            }
-        }
-
-        if (isFilled(updateDoc.phone) && !isValidPhone(updateDoc.phone))
-            throw new BadRequestError("Invalid phone format");
-        if ((updateDoc.bio || "").length > 200)
-            throw new BadRequestError("Bio max 200 chars");
-
-        if (user.role === "customer") {
-            if (!minLength(updateDoc.customerProfile?.name, 5))
-                throw new BadRequestError(
-                    "The minimum name length is 5 characters"
-                );
-            if (!minLength(updateDoc.customerProfile?.address, 5))
-                throw new BadRequestError(
-                    "The minimum address length is 5 characters"
-                );
-        }
-        if (user.role === "vendor") {
-            if (!minLength(updateDoc.vendorProfile?.businessName, 5))
-                throw new BadRequestError(
-                    "The minimum business name length is 5 characters"
-                );
-            if (!minLength(updateDoc.vendorProfile?.businessAddress, 5))
-                throw new BadRequestError(
-                    "The minimum business address length is 5 characters"
-                );
-        }
-
-        // 3. Update user profile
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { $set: updateDoc },
-            { new: true }
+    if (user.role === "customer") {
+      if (!minLength(updateDoc.customerProfile?.name, 5))
+        throw new BadRequestError("The minimum name length is 5 characters");
+      if (!minLength(updateDoc.customerProfile?.address, 5))
+        throw new BadRequestError("The minimum address length is 5 characters");
+    }
+    if (user.role === "vendor") {
+      if (!minLength(updateDoc.vendorProfile?.businessName, 5))
+        throw new BadRequestError(
+          "The minimum business name length is 5 characters"
         );
+      if (!minLength(updateDoc.vendorProfile?.businessAddress, 5))
+        throw new BadRequestError(
+          "The minimum business address length is 5 characters"
+        );
+    }
 
-        return { user: updatedUser };
+    // 3. Update user profile
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateDoc },
+      { new: true }
+    );
+
+    return { user: updatedUser };
+  };
+
+  static readBrands = async (req) => {
+    // 1. Read brands - which are vendors started selling more than 1 year ago
+    const brands = await User.find({
+      role: "vendor",
+      // createdAt: { $lte: new Date(Date.now() - 365*24*60*60*1000) }
+    });
+
+    return {
+      users: brands,
     };
-
-    static readBrands = async (req) => {
-        // 1. Read brands - which are vendors started selling more than 1 year ago
-        const brands = await User.find({
-            role: "vendor",
-            // createdAt: { $lte: new Date(Date.now() - 365*24*60*60*1000) }
-        });
-
-        return {
-            users: brands,
-        };
-    };
+  };
 }
 
 export default UserService;

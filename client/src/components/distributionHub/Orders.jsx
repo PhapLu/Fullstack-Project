@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 import React, { useMemo, useState } from "react";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -20,7 +27,7 @@ export default function Orders({
 
   const filtered = useMemo(() => {
     let list = Array.isArray(orders) ? [...orders] : [];
-    console.log(orders)
+    console.log(orders);
     if (q.trim()) {
       const t = q.trim().toLowerCase();
       list = list.filter(
@@ -51,7 +58,6 @@ export default function Orders({
   }, [orders, filter, q, sort]);
 
   const handleSubmit = async (order, nextStatus) => {
-
     try {
       const { data } = await apiUtils.patch(
         `/order/updateOrderStatus/${order._id}`,
@@ -132,7 +138,6 @@ export default function Orders({
                   </div>
                 </li>
               ))}
-              
             </ul>
 
             <div className={styles.price}>

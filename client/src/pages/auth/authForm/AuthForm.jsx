@@ -1,4 +1,10 @@
-// /* Gia Hy-s4053650 */
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 // import React, { use, useEffect } from "react";
 // import { useParams, Link } from "react-router-dom";
 // import { useState } from "react";

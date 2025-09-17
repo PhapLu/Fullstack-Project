@@ -1,15 +1,26 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 /* ===== Categories ===== */
-.categories{ padding: 28px 0 36px; }
-#categories h2{
-    margin: 20px 0;
+.categories {
+  padding: 28px 0 36px;
 }
-.categories-grid{
+
+#categories h2 {
+  margin: 20px 0;
+}
+
+.categories-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 20px;
 }
 
-.cat-card{
+.cat-card {
   position: relative;
   display: grid;
   place-items: center;
@@ -21,51 +32,107 @@
   transition: transform .15s ease, box-shadow .2s ease;
   overflow: hidden;
 }
-.cat-card:hover{ transform: translateY(-2px); box-shadow: 0 16px 38px rgba(0,0,0,.10); }
 
-.cat-thumb{
+.cat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, .10);
+}
+
+.cat-thumb {
   width: 70%;
   height: 70%;
   display: grid;
   place-items: center;
 }
-.cat-thumb img{
+
+.cat-thumb img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   transition: transform .2s ease;
 }
-.cat-card:hover .cat-thumb img{ transform: scale(1.04); }
 
-.cat-title{
+.cat-card:hover .cat-thumb img {
+  transform: scale(1.04);
+}
+
+.cat-title {
   position: absolute;
-  left: 10px; bottom: 10px;
+  left: 10px;
+  bottom: 10px;
   font-size: 12px;
   font-weight: 600;
   color: #34495e;
-  background: rgba(255,255,255,.7);
+  background: rgba(255, 255, 255, .7);
   padding: 4px 8px;
   border-radius: 999px;
   backdrop-filter: blur(2px);
 }
 
 /* Pastel tones (nhẹ nhàng như mockup) */
-.tone-1 { background: #eaf2ff; }
-.tone-2 { background: #efe9ff; }
-.tone-3 { background: #ffece6; }
-.tone-4 { background: #e7f7ef; }
-.tone-5 { background: #fff4e6; }
-.tone-6 { background: #e8f3ff; }
-.tone-7 { background: #ece9f6; }
-.tone-8 { background: #fff5e9; }
-.tone-9 { background: #e8f7ff; }
-.tone-10{ background: #eef5ff; }
-.tone-11{ background: #fff1e8; }
-.tone-12{ background: #fff7ed; }
-.tone-13{ background: #ffeef4; }
-.tone-14{ background: #ffeede; }
-.tone-15{ background: #fff0f4; }
-.tone-16{ background: #edf5ff; }
+.tone-1 {
+  background: #eaf2ff;
+}
+
+.tone-2 {
+  background: #efe9ff;
+}
+
+.tone-3 {
+  background: #ffece6;
+}
+
+.tone-4 {
+  background: #e7f7ef;
+}
+
+.tone-5 {
+  background: #fff4e6;
+}
+
+.tone-6 {
+  background: #e8f3ff;
+}
+
+.tone-7 {
+  background: #ece9f6;
+}
+
+.tone-8 {
+  background: #fff5e9;
+}
+
+.tone-9 {
+  background: #e8f7ff;
+}
+
+.tone-10 {
+  background: #eef5ff;
+}
+
+.tone-11 {
+  background: #fff1e8;
+}
+
+.tone-12 {
+  background: #fff7ed;
+}
+
+.tone-13 {
+  background: #ffeef4;
+}
+
+.tone-14 {
+  background: #ffeede;
+}
+
+.tone-15 {
+  background: #fff0f4;
+}
+
+.tone-16 {
+  background: #edf5ff;
+}
 
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
@@ -74,11 +141,11 @@
     overflow-x: auto;
     gap: 16px;
     padding-bottom: 10px;
-    scroll-snap-type: x mandatory;   
+    scroll-snap-type: x mandatory;
   }
 
   .cat-card {
-    flex: 0 0 120px;   
+    flex: 0 0 120px;
     scroll-snap-align: start;
   }
 
@@ -86,9 +153,10 @@
   .categories-grid::-webkit-scrollbar {
     display: none;
   }
+
   .categories-grid {
-    -ms-overflow-style: none;  
-    scrollbar-width: none;    
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 

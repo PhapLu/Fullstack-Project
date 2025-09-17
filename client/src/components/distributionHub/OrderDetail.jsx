@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../../pages/distributionHub/DistributionHub.module.scss";

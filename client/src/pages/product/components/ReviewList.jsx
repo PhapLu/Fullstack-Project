@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Le Khanh Huyen
+// ID: S4026707
+
 import { useQuery } from "react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as faStarSolid } from "@fortawesome/free-solid-svg-icons";
@@ -18,7 +25,7 @@ export default function ReviewList({ productId }) {
     const fetchReviews = async () => {
       try {
         const response = await apiUtils.get(`/review/readReviews/${pid}`);
-        console.log(response)
+        console.log(response);
         serReviews(response.data.metadata.reviews || []);
       } catch (error) {
         console.error("Failed to fetch reviews:", error);
@@ -48,7 +55,10 @@ export default function ReviewList({ productId }) {
               className="d-flex align-items-center"
               style={{ minHeight: "40px" }}
             >
-              <span className="fw-bold fs-3">{review.customerId.customerProfile.name || review.customerId.username}</span>
+              <span className="fw-bold fs-3">
+                {review.customerId.customerProfile.name ||
+                  review.customerId.username}
+              </span>
             </div>
 
             {/* Rating + Comment */}
@@ -62,7 +72,9 @@ export default function ReviewList({ productId }) {
                   <FontAwesomeIcon
                     key={n}
                     icon={n <= review.rating ? faStarSolid : faStarRegular}
-                    className={n <= review.rating ? "text-warning" : "text-muted"}
+                    className={
+                      n <= review.rating ? "text-warning" : "text-muted"
+                    }
                     size="sm"
                   />
                 ))}

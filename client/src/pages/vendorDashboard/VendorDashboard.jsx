@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Le Khanh Huyen
+// ID: S4026707
+
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./VendorDashboard.module.scss";
 import { usd } from "../../utils/currency";
@@ -7,7 +14,7 @@ import { selectUser } from "../../store/slices/authSlices";
 import { useSelector } from "react-redux";
 
 /* ================= Status → Badge ================= */
-// Match your Order.status enum: placed, paid, at_hub, out_for_delivery, delivered, cancelled
+// Match Order.status enum: placed, paid, at_hub, out_for_delivery, delivered, cancelled
 const statusMeta = {
     placed: { text: "Placed", cls: "badgeNeutral" },
     paid: { text: "Paid", cls: "badgePaid" },

@@ -1,11 +1,18 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 /* ===== Banner ===== */
-.banner{
+.banner {
   height: 65vh;
   position: relative;
   margin-top: 20px;
 }
 
-.banner-card{
+.banner-card {
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -19,68 +26,86 @@
   box-shadow: var(--shadow);
 }
 
-.banner-copy p{
+.banner-copy p {
   color: var(--muted);
   margin: 14px 0 22px;
   font-size: 2rem;
 }
 
-.banner-media{
+.banner-media {
   display: grid;
   align-items: center;
   justify-content: center;
 }
-.banner-media img{
+
+.banner-media img {
   text-align: center;
   width: auto;
   height: 400px;
   object-fit: contain;
-  object-position: center center;   
-  filter: drop-shadow(0 18px 30px rgba(0,0,0,.18));
+  object-position: center center;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .18));
 }
 
 /* Banner arrows */
-.banner-arrow{
+.banner-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 36px; height: 36px;
-  border: 0; border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
   background: #fff;
   box-shadow: var(--shadow);
   cursor: pointer;
   font-size: 22px;
   line-height: 1;
 }
-.banner-arrow.left{ left: 14px; }
-.banner-arrow.right{ right: 14px; }
+
+.banner-arrow.left {
+  left: 14px;
+}
+
+.banner-arrow.right {
+  right: 14px;
+}
 
 
 /* ===== Responsive ===== */
 /* Tablet (<= 1024px) */
 @media (max-width: 1024px) {
-  .banner { height: 52vh; }
-  .banner-card { 
-    gap: 16px; 
-    padding-left: 36px; 
+  .banner {
+    height: 52vh;
   }
-  .banner-media img { height: 320px; }
-  .banner-arrow { 
-    width: 34px; 
-    height: 34px; 
-    font-size: 20px; 
+
+  .banner-card {
+    gap: 16px;
+    padding-left: 36px;
+  }
+
+  .banner-media img {
+    height: 320px;
+  }
+
+  .banner-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
   }
 }
 
 /* Mobile (<= 768px): stack, smaller type, tighter padding */
 @media (max-width: 768px) {
   .banner {
-    height: auto;                 /* let content define height */
+    height: auto;
+    /* let content define height */
     margin-top: 14px;
   }
 
   .banner-card {
-    grid-template-columns: 1fr;   /* stack: one column */
+    grid-template-columns: 1fr;
+    /* stack: one column */
     gap: 12px;
     padding: 18px;
     padding-left: 18px;
@@ -88,47 +113,72 @@
   }
 
   /* Show product image first on mobile for visual impact */
-  .banner-media { 
-    order: -1; 
-    justify-content: center; 
+  .banner-media {
+    order: -1;
+    justify-content: center;
   }
-  .banner-media img { height: 260px; }
 
-  .banner-copy h1 { 
-    font-size: clamp(20px, 5vw, 28px); 
-    line-height: 1.15; 
+  .banner-media img {
+    height: 260px;
   }
-  .banner-copy p  { 
-    font-size: 0.95rem; 
-    margin: 10px 0 16px; 
+
+  .banner-copy h1 {
+    font-size: clamp(20px, 5vw, 28px);
+    line-height: 1.15;
+  }
+
+  .banner-copy p {
+    font-size: 0.95rem;
+    margin: 10px 0 16px;
   }
 
   .banner-arrow {
-    top: auto; 
-    bottom: 10px; 
+    top: auto;
+    bottom: 10px;
     transform: none;
-    width: 32px; 
-    height: 32px; 
+    width: 32px;
+    height: 32px;
     font-size: 18px;
   }
-  .banner-arrow.left  { left: 10px; }
-  .banner-arrow.right { right: 10px; }
 
-  .banner-dots { margin-top: 6px; }
-  .dot { 
-    width: 8px; 
-    height: 8px; 
+  .banner-arrow.left {
+    left: 10px;
+  }
+
+  .banner-arrow.right {
+    right: 10px;
+  }
+
+  .banner-dots {
+    margin-top: 6px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
   }
 }
 
 /* Small mobile (<= 480px) */
 @media (max-width: 480px) {
-  .banner-card      { padding: 14px; }
-  .banner-media img { height: 210px; }
+  .banner-card {
+    padding: 14px;
+  }
 
-  .banner-copy h1 { font-size: clamp(18px, 6vw, 24px); }
-  .banner-copy p  { font-size: 0.9rem; }
+  .banner-media img {
+    height: 210px;
+  }
+
+  .banner-copy h1 {
+    font-size: clamp(18px, 6vw, 24px);
+  }
+
+  .banner-copy p {
+    font-size: 0.9rem;
+  }
 
   /* hide arrows on very small screens*/
-  .banner-arrow { display: none; }
+  .banner-arrow {
+    display: none;
+  }
 }

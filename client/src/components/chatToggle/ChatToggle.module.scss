@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Truong Gia Hy
+// ID: S4053650
+
 /* ==== Modern Chat Widget – bigger, glossy, friendly ==== */
 
 :root {
@@ -24,14 +31,17 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
     z-index: 1000;
 }
+
 .fab span {
     letter-spacing: 0.2px;
 }
+
 .fab:hover {
     transform: translateY(-1px);
     box-shadow: 0 18px 44px rgba(0, 123, 255, 0.28),
         0 4px 10px rgba(2, 6, 23, 0.18);
 }
+
 .fabOpen {
     opacity: 0.92;
 }
@@ -40,6 +50,7 @@
 .br {
     right: var(--offset);
 }
+
 .bl {
     left: var(--offset);
     right: auto;
@@ -54,7 +65,8 @@
     right: var(--offset);
     width: 50%;
     height: 70%;
-    background: #ffffffcc; /* a little glass feel */
+    background: #ffffffcc;
+    /* a little glass feel */
     backdrop-filter: blur(6px);
     border: 1px solid rgba(2, 6, 23, 0.08);
     border-radius: 10px;
@@ -67,10 +79,12 @@
     flex-direction: column;
     box-shadow: 0 26px 70px rgba(2, 6, 23, 0.2), 0 2px 12px rgba(2, 6, 23, 0.12);
 }
+
 .panel.bl {
     left: var(--offset);
     right: auto;
 }
+
 .open {
     opacity: 1;
     transform: none;
@@ -86,19 +100,23 @@
     background: linear-gradient(135deg, #f8fbff, #eef5ff);
     border-bottom: 1px solid rgba(2, 6, 23, 0.06);
 }
+
 .title {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
+
 .title strong {
     font-size: 16px;
     color: var(--text-color);
 }
+
 .subtitle {
     font-size: 12px;
     color: var(--muted);
 }
+
 .close {
     border: none;
     background: #ffffff;
@@ -109,6 +127,7 @@
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(2, 6, 23, 0.08);
 }
+
 .close:hover {
     color: var(--text-color);
 }
@@ -129,9 +148,11 @@
     flex-direction: column;
     min-width: 260px;
 }
+
 .search {
     padding: 12px;
 }
+
 .search input {
     width: 100%;
     padding: 10px 12px;
@@ -140,12 +161,14 @@
     outline: none;
     background: #f9fbff;
 }
+
 .people {
     list-style: none;
     margin: 0;
     padding: 6px 8px 12px;
     overflow: auto;
 }
+
 .person {
     display: grid;
     grid-template-columns: 40px 1fr;
@@ -156,21 +179,26 @@
     cursor: pointer;
     transition: background 0.15s ease, transform 0.05s ease;
 }
+
 .person:hover {
     background: #f5f8ff;
 }
+
 .person:active {
     transform: scale(0.996);
 }
+
 .person img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
+
 .meta {
     min-width: 0;
 }
+
 .name {
     font-weight: 700;
     font-size: 14px;
@@ -179,13 +207,16 @@
     text-overflow: ellipsis;
     color: var(--text-color);
 }
+
 .roleLabel {
     color: var(--muted);
     font-size: 12px;
 }
+
 .active {
     background: #eef4ff;
 }
+
 .empty {
     padding: 16px;
     color: var(--muted);
@@ -218,6 +249,7 @@
     border-bottom: 1px solid rgba(2, 6, 23, 0.06);
     background: #fff;
 }
+
 .threadHeader img {
     width: 40px;
     height: 40px;
@@ -236,10 +268,12 @@
 .msg {
     margin: 8px 0;
 }
+
 .mine {
     align-self: flex-end;
     text-align: right;
 }
+
 .their {
     align-self: flex-start;
 }
@@ -250,13 +284,16 @@
     padding: 10px 12px;
     border-radius: 16px;
     line-height: 1.35;
-    background: #edf2ff; /* default (their) */
+    background: #edf2ff;
+    /* default (their) */
     color: #0f172a;
     box-shadow: 0 2px 10px rgba(2, 6, 23, 0.08);
 }
+
 .mine .bubble {
     background: #dcfce7;
 }
+
 .mine .bubble::after,
 .their .bubble::after {
     content: "";
@@ -266,11 +303,13 @@
     height: 12px;
     background: inherit;
 }
+
 .mine .bubble::after {
     right: -4px;
     border-bottom-left-radius: 10px;
     transform: translateY(-2px) rotate(45deg);
 }
+
 .their .bubble::after {
     left: -4px;
     border-bottom-right-radius: 10px;
@@ -292,6 +331,7 @@
     border-top: 1px solid rgba(2, 6, 23, 0.06);
     background: #fff;
 }
+
 .inputRow textarea {
     resize: none;
     max-height: 140px;
@@ -302,10 +342,12 @@
     outline: none;
     background: #f9fbff;
 }
+
 .inputRow textarea:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
 }
+
 .inputRow button {
     padding: 0 18px;
     border-radius: 14px;
@@ -317,10 +359,12 @@
     cursor: pointer;
     box-shadow: 0 10px 24px rgba(245, 158, 11, 0.25);
 }
+
 .inputRow button:hover {
     transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(245, 158, 11, 0.32);
 }
+
 .inputRow button:disabled {
     opacity: 0.65;
     cursor: not-allowed;
@@ -333,6 +377,7 @@
     .body {
         grid-template-columns: 42% 58%;
     }
+
     .panel {
         width: 96vw;
         height: 78vh;

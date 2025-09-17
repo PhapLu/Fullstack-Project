@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Truong Gia Hy
+// ID: S4053650
+
 import multer from "multer";
 import path from "path";
 import fs from "fs/promises";
@@ -16,32 +23,32 @@ export const PRODUCTS_DIR = path.join(UPLOADS_DIR, "products");
 const ensureDir = (dir) => fs.mkdir(dir, { recursive: true });
 
 export const useUploadDir =
-    (subdir = "") =>
-    (req, _res, next) => {
-        req._uploadSubdir = subdir;
-        next();
-    };
+  (subdir = "") =>
+  (req, _res, next) => {
+    req._uploadSubdir = subdir;
+    next();
+  };
 
 const storage = multer.diskStorage({
-    async destination(req, _file, cb) {
-        try {
-            const sub = req._uploadSubdir || "misc";
-            const dir = path.join(UPLOADS_DIR, sub);
-            await ensureDir(dir);
-            cb(null, dir);
-        } catch (err) {
-            cb(err);
-        }
-    },
-    filename(req, file, cb) {
-        const ext = path.extname(file.originalname).toLowerCase();
-        const uid = req.userId || "anon";
-        cb(null, `${uid}-${Date.now()}${ext}`);
-    },
+  async destination(req, _file, cb) {
+    try {
+      const sub = req._uploadSubdir || "misc";
+      const dir = path.join(UPLOADS_DIR, sub);
+      await ensureDir(dir);
+      cb(null, dir);
+    } catch (err) {
+      cb(err);
+    }
+  },
+  filename(req, file, cb) {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const uid = req.userId || "anon";
+    cb(null, `${uid}-${Date.now()}${ext}`);
+  },
 });
 
 // ✅ Base uploader (disk only, no fileFilter)
 export const uploadDisk = multer({
-    storage,
-    limits: { fileSize: MAX_FILE_SIZE - 1 },
+  storage,
+  limits: { fileSize: MAX_FILE_SIZE - 1 },
 });
