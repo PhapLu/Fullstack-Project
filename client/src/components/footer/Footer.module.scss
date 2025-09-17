@@ -1,4 +1,10 @@
-/* Footer.css */
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 .footer {
   background-color: #fff;
   padding: 40px 20px;
@@ -7,19 +13,21 @@
   border-top: 1px solid #eee;
 }
 
-.auth__brand{
-    display: flex;
-    align-items: center;
+.auth__brand {
+  display: flex;
+  align-items: center;
 }
+
 .auth__logo {
-   width: 60px;
-    height: 60px;
-    object-fit: cover
+  width: 60px;
+  height: 60px;
+  object-fit: cover
 }
+
 .auth__name {
   font-size: 35px;
-    font-family: "Lobster Two", cursive;
-    color: var(--primary-color)
+  font-family: "Lobster Two", cursive;
+  color: var(--primary-color)
 }
 
 .footer__grid {
@@ -146,15 +154,18 @@
   color: #007bff;
   font-size: 1.4rem;
 }
+
 .footer__small {
   font-size: 1.2rem;
 }
+
 .footer__social {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
 }
+
 .footer__social span {
   display: flex;
   align-items: center;

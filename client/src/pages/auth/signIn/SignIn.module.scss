@@ -1,70 +1,81 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Le Khanh Huyen
+// ID: S4026707
+
 .auth__name {
-    font-size: 35px;
-    font-family: "Lobster Two", cursive;
-    color: var(--primary-color);
+  font-size: 35px;
+  font-family: "Lobster Two", cursive;
+  color: var(--primary-color);
 }
 
 .auth__card {
-    max-width: 100%;
-    border-radius: 18px;
-    padding: 45px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
+  max-width: 100%;
+  border-radius: 18px;
+  padding: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
 }
+
 .auth__panel {
-    width: 550px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 .auth__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 8px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
 }
 
 .auth__name {
-    font-size: 35px;
-    font-family: "Lobster Two", cursive;
-    color: var(--primary-color);
+  font-size: 35px;
+  font-family: "Lobster Two", cursive;
+  color: var(--primary-color);
 }
 
 .auth__header h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-color);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-color);
 }
+
 .auth__text {
-    color: var(--text-color);
-    margin: 6px 0 16px;
-    text-align: center;
+  color: var(--text-color);
+  margin: 6px 0 16px;
+  text-align: center;
 }
 
 .auth__logo-form {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .auth__form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 50px;
 }
 
 .field {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
-.field input, .field select {
+.field input,
+.field select {
   width: 100%;
   height: 46px;
   padding: 0 14px;
@@ -81,25 +92,28 @@
 }
 
 .field input:focus {
-    outline: none;
-    border-color: var(--primary-color, #007bff);
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+  outline: none;
+  border-color: var(--primary-color, #007bff);
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
 }
 
 .field .ico,
 .field .eye {
   position: absolute;
-  top: 0;                
-  transform: none;        
-  height: 46px;            
+  top: 0;
+  transform: none;
+  height: 46px;
   display: flex;
-  align-items: center;   
-  z-index: 2;       
-  font-size: 20px; 
+  align-items: center;
+  z-index: 2;
+  font-size: 20px;
 }
 
-.field .ico { left: 12px; }
-.field .eye { 
+.field .ico {
+  left: 12px;
+}
+
+.field .eye {
   border: none;
   background: none;
   right: 0px;
@@ -107,62 +121,68 @@
 
 
 .btn.btn-primary {
-    width: 100%;
-    height: 46px;
-    border-radius: 10px;
-    background: var(--primary-color);
-    color: #fff;
-    border: none;
-    font-weight: 600;
-    transition: 0.25s;
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  transition: 0.25s;
 }
 
 .btn.btn-primary:hover {
-    background-color: var(--hover-btn);
+  background-color: var(--hover-btn);
 }
 
 .help {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    color: var(--text-color);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--text-color);
 }
 
 .link {
-    font-size: larger;
-    font-family: "Lobster Two", cursive;
-    color: var(--primary-color);
-    text-align: right;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s;
+  font-size: larger;
+  font-family: "Lobster Two", cursive;
+  color: var(--primary-color);
+  text-align: right;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
 }
 
 .link-mode {
-    text-decoration: none;
-    color: var(--accent);
-    transition: 0.25s;
+  text-decoration: none;
+  color: var(--accent);
+  transition: 0.25s;
 }
+
 .link-mode:hover {
-    color: var(--hover-accent);
+  color: var(--hover-accent);
 }
+
 .link:hover {
-    color: var(--hover-btn);
+  color: var(--hover-btn);
 }
+
 .help__role-selection {
-    font-family: "Lobster Two", cursive;
-    font-size: larger;
+  font-family: "Lobster Two", cursive;
+  font-size: larger;
 }
 
 /* Responsive */
 @media (max-width: 992px) {
   .auth__card {
-    padding: 0; /* bỏ padding trên mobile/tablet */
+    padding: 0;
+    /* bỏ padding trên mobile/tablet */
   }
 
   .auth__panel {
-    width: 100%;       /* full width cho chắc */
-    max-width: 400px;  /* nhỏ hơn desktop */
+    width: 100%;
+    /* full width cho chắc */
+    max-width: 400px;
+    /* nhỏ hơn desktop */
   }
 }
 
@@ -170,18 +190,18 @@
 @media (max-width: 992px) {
   .auth__card {
     width: 100%;
-    padding: 0; 
+    padding: 0;
   }
 
   .auth__panel {
-    width: 100%;      
-    max-width: 600px;  
+    width: 100%;
+    max-width: 600px;
   }
 }
 
 @media (max-width: 600px) {
   .auth__panel {
-    max-width: 100%; 
+    max-width: 100%;
   }
 }
 
@@ -190,8 +210,8 @@
   align-items: flex-start;
   gap: 8px;
   padding: 4px 12px;
-  color: #b91c1c;       
-  font-size: 1.3rem;               
+  color: #b91c1c;
+  font-size: 1.3rem;
   line-height: 1.35;
   animation: err-pop 0.18s ease-out;
   word-break: break-word;
@@ -207,6 +227,13 @@
 
 /* effect */
 @keyframes err-pop {
-  from { transform: translateY(-2px); opacity: 0; }
-  to   { transform: translateY(0);     opacity: 1; }
+  from {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

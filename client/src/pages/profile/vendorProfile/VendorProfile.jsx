@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Le Khanh Huyen
+// ID: S4026707
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./VendorProfile.module.scss";
 import Avatar from "../../../components/profile/avatar/Avatar";

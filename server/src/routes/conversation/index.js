@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Luu Quoc Phap
+// ID: S4024611
+
 import express from "express";
 import { asyncHandler } from "../../auth/checkAuth.js";
 import conversationController from "../../controllers/conversation.controller.js";
@@ -32,10 +39,7 @@ router.get(
   "/readConversations",
   asyncHandler(conversationController.readConversations)
 );
-router.patch(
-  "/sendMessage",
-  asyncHandler(conversationController.sendMessage)
-);
+router.patch("/sendMessage", asyncHandler(conversationController.sendMessage));
 router.get(
   "/fetchOlderMessages",
   asyncHandler(conversationController.fetchOlderMessages)

@@ -1,12 +1,33 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 /* ===== Base & Container ===== */
-.container{
- width: 100%;;
- margin-inline: auto;
+.container {
+  width: 100%;
+  ;
+  margin-inline: auto;
 }
 
-h1,h2{ color: var(--text); font-family: 'Poppins', system-ui, sans-serif; }
-h1{ font-size: clamp(28px, 4vw, 48px); line-height: 1.1; font-weight: 700; }
-h2{ font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; }
+h1,
+h2 {
+  color: var(--text);
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+
+h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 700;
+}
 
 .about {
   margin: 40px 0;
@@ -22,8 +43,8 @@ h2{ font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; }
 .about-card {
   padding: 100px;
   border-radius: 12px;
-   background: linear-gradient(135deg, #f0f7ff, #d0e8ff, #d8f4f5);
-  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #f0f7ff, #d0e8ff, #d8f4f5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
 
@@ -42,10 +63,10 @@ h2{ font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; }
   margin: 0 auto;
 }
 
-/*===== Responsive ===== */ 
+/*===== Responsive ===== */
 /* Tablet (<= 1024px) */
 @media (max-width: 1024px) {
   .about {
     display: none;
-  }  
+  }
 }

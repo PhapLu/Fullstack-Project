@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Luu Quoc Phap
+// ID: S4024611
+
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
@@ -5,16 +12,24 @@ const DOCUMENT_NAME = "DeliveryInformation";
 const COLLECTION_NAME = "DeliveryInformations";
 
 const DeliveryInformationSchema = new Schema(
-    {
-        customerId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-        name: { type: String, required: true, trim: true },
-        phoneNumber: { type: String, required: true, trim: true },
-        address: { type: String, required: true, trim: true },
-        isDefault: { type: Boolean, default: false },
-        distributionHubId: { type: Schema.Types.ObjectId, ref: "DistributionHub" }
+  {
+    customerId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
     },
-    { timestamps: true, collection: COLLECTION_NAME }
+    name: { type: String, required: true, trim: true },
+    phoneNumber: { type: String, required: true, trim: true },
+    address: { type: String, required: true, trim: true },
+    isDefault: { type: Boolean, default: false },
+    distributionHubId: { type: Schema.Types.ObjectId, ref: "DistributionHub" },
+  },
+  { timestamps: true, collection: COLLECTION_NAME }
 );
 
-const DeliveryInformation = mongoose.model(DOCUMENT_NAME, DeliveryInformationSchema);
+const DeliveryInformation = mongoose.model(
+  DOCUMENT_NAME,
+  DeliveryInformationSchema
+);
 export default DeliveryInformation;

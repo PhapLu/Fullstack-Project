@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 import React from "react";
 import styles from "../../../pages/profile/vendorProfile/VendorProfile.module.scss";
 import { getImageUrl } from "../../../utils/imageUrl";
@@ -80,18 +87,14 @@ export default function ProductCard({ product, onDelete }) {
                     <p className={styles.desc}>{description}</p>
                 </div>
 
-                {/* Block 2: Price + Stock */}
-                <div className={styles.metaRow}>
-                    <span className={styles.price}>
-                        {formatPrice(price, currency)}
-                    </span>
-                    <span className={styles.stock}>
-                        {stock > 0
-                            ? `In stock: ${formatStock(stock)}`
-                            : "Out of stock"}
-                    </span>
-                </div>
-            </div>
-        </Link>
-    );
+        {/* Block 2: Price + Stock */}
+        <div className={styles.metaRow}>
+          <span className={styles.price}>{formatPrice(price, currency)}</span>
+          <span className={styles.stock}>
+            {stock > 0 ? `In stock: ${formatStock(stock)}` : "Out of stock"}
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
 }

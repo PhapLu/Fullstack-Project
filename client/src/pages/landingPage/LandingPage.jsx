@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 import React from "react";
 import styles from "./LandingPage.module.scss";
 import Banner from "../../components/banner/Banner";
@@ -8,35 +15,34 @@ import Malls from "../../components/malls/Malls";
 import PopularProducts from "../../components/popularProduct/PopularProducts";
 
 export default function LandingPage() {
-    return (
-        <div id="top">
-            {/* Banner */}
-            <Banner />
-            {/* Featured Categories */}
-            <Categories />
-            {/* Popular Products */}
-            <PopularProducts />
-            {/* Promo */}
-            <Promo />
-            {/* HotDeals */}
-            <HotDeals />
-            {/* Malls */}
-            <Malls />
+  return (
+    <div id="top">
+      {/* Banner */}
+      <Banner />
+      {/* Featured Categories */}
+      <Categories />
+      {/* Popular Products */}
+      <PopularProducts />
+      {/* Promo */}
+      <Promo />
+      {/* HotDeals */}
+      <HotDeals />
+      {/* Malls */}
+      <Malls />
 
-            <section className={styles.about} id="about">
-                <h2>About us</h2>
-                <div className={styles["about-card"]}>
-                    <h3>Bloomart</h3>
-                    <p>
-                        Your friendly online marketplace for everything you
-                        love. Our mission is to bring you a wide variety of
-                        quality products at great prices, delivered with care.
-                        We are committed to creating a shopping experience
-                        that’s fast, friendly, and trustworthy — because your
-                        satisfaction is our priority.
-                    </p>
-                </div>
-            </section>
+      <section className={styles.about} id="about">
+        <h2>About us</h2>
+        <div className={styles["about-card"]}>
+          <h3>Bloomart</h3>
+          <p>
+            Your friendly online marketplace for everything you love. Our
+            mission is to bring you a wide variety of quality products at great
+            prices, delivered with care. We are committed to creating a shopping
+            experience that’s fast, friendly, and trustworthy — because your
+            satisfaction is our priority.
+          </p>
         </div>
-    );
+      </section>
+    </div>
+  );
 }

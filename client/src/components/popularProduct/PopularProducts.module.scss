@@ -1,7 +1,15 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 .popular.container {
   margin: 3% 0;
   margin-inline: auto;
 }
+
 .popular__header {
   align-items: center;
   display: flex;
@@ -42,7 +50,9 @@
   z-index: 5;
 }
 
-.option { margin-bottom: 10px; }
+.option {
+  margin-bottom: 10px;
+}
 
 .radio {
   display: flex;
@@ -52,7 +62,9 @@
   margin: 8px 0;
   cursor: pointer;
 
-  input { cursor: pointer; }
+  input {
+    cursor: pointer;
+  }
 }
 
 .rangeRow {
@@ -70,17 +82,18 @@
   outline: none;
 }
 
-.applyBtn, .clearBtn {
+.applyBtn,
+.clearBtn {
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.15s;
 }
 
-.applyBtn { 
+.applyBtn {
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
-  font-weight: 400; 
+  font-weight: 400;
   background: #f0f7ff;
 }
 
@@ -94,6 +107,7 @@
   color: var(--danger);
   background: var(--danger-bg);
 }
+
 .clearBtn:hover {
   background: var(--danger);
   color: var(--surface);
@@ -111,12 +125,15 @@
   margin: 10px 0;
 }
 
-.dash { opacity: 0.6; }
+.dash {
+  opacity: 0.6;
+}
 
 .popular__header h4 {
   display: flex;
   justify-content: flex-end;
 }
+
 .popular__header h2 {
   display: flex;
   justify-content: flex-start;

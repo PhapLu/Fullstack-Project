@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 import React, { useState } from "react";
 import styles from "./ConfirmDeleteModal.module.scss";
 import { apiUtils } from "../../utils/newRequest";
@@ -23,7 +30,7 @@ export default function ConfirmDeleteModal({
       setLoading(true);
       setErr("");
       setProducts((prev) => {
-        return prev.filter((p) => p._id !== id); 
+        return prev.filter((p) => p._id !== id);
       });
       const res = await apiUtils.delete(`/product/deleteProduct/${id}`);
       onDeleted?.(id);

@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Le Khanh Huyen
+// ID: S4026707
+
 import { useEffect, useMemo, useState } from "react";
 import styles from "./AdminOverview.module.scss";
 import { apiUtils } from "../../utils/newRequest";
@@ -92,7 +99,8 @@ export default function AdminOverview() {
           <div className={styles.cardTitle}>Users</div>
           <div className={styles.cardValue}>{users.total}</div>
           <div className={styles.cardSub}>
-            Ven: {users.vendors} / Cus: {users.customers} / Ship: {users.shippers}
+            Ven: {users.vendors} / Cus: {users.customers} / Ship:{" "}
+            {users.shippers}
           </div>
         </div>
         <div className={styles.card}>

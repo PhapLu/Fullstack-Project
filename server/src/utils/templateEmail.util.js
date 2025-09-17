@@ -1,5 +1,12 @@
-const otpTemplate = (toEmail, message="", verificationCode) => {
-    return `
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Truong Gia Hy
+// ID: S4053650
+
+const otpTemplate = (toEmail, message = "", verificationCode) => {
+  return `
         <!DOCTYPE html>
         <html>
         <head>
@@ -115,8 +122,8 @@ const otpTemplate = (toEmail, message="", verificationCode) => {
     `;
 };
 
-const announcementTemplate = (subSubject="", message="", orderId) => {
-    return `
+const announcementTemplate = (subSubject = "", message = "", orderId) => {
+  return `
     <!DOCTYPE html>
     <html lang="vi">
     <head>
@@ -186,8 +193,14 @@ const announcementTemplate = (subSubject="", message="", orderId) => {
     `;
 };
 
-const commissionTemplate = (user, message="", subSubject="", orderCode, price) => {
-    return `
+const commissionTemplate = (
+  user,
+  message = "",
+  subSubject = "",
+  orderCode,
+  price
+) => {
+  return `
     <!DOCTYPE html>
     <html lang="vi">
     <head>
@@ -351,7 +364,9 @@ const commissionTemplate = (user, message="", subSubject="", orderCode, price) =
                 <div class="profile-card" style="display: flex; flex-direction: column; flex-direction: column !important; display: block;">
                     <div class="profile-card-head">
                         <span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>
-                        <img src="https://d20udoy3ljlo2e.cloudfront.net/${user.avatar}" alt="Artist Avatar">
+                        <img src="https://d20udoy3ljlo2e.cloudfront.net/${
+                          user.avatar
+                        }" alt="Artist Avatar">
                         <div class="artist-info">
                             <h2>${user.fullName}</h2>
                             <p>@${user.stageName}</p>
@@ -359,13 +374,25 @@ const commissionTemplate = (user, message="", subSubject="", orderCode, price) =
                         </div>
                     </div>
                     <!-- Order Details -->
-                    ${price ? `<p class="order-details"><span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>${price}<br></p>` : ''}
+                    ${
+                      price
+                        ? `<p class="order-details"><span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>${price}<br></p>`
+                        : ""
+                    }
 
                     <!-- Order Scope -->
-                    ${message ? `<p class="order_scope"><span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>${message}<br></p>` : ''}
+                    ${
+                      message
+                        ? `<p class="order_scope"><span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>${message}<br></p>`
+                        : ""
+                    }
 
                     <!-- Order Code -->
-                    ${orderCode ? `<p class="order_code"><span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>${orderCode}</p>` : ''}
+                    ${
+                      orderCode
+                        ? `<p class="order_code"><span aria-hidden="true" style="display:none;">${new Date().getTime()}</span>${orderCode}</p>`
+                        : ""
+                    }
                 </div>
                 <p class="pastal_note">We hope you have a great experience commissioning on Pastal.</p>
                 
@@ -390,11 +417,11 @@ const commissionTemplate = (user, message="", subSubject="", orderCode, price) =
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
     </body>
     </html>
-    `
-}
+    `;
+};
 
-const reportTemplate = (subSubject="", reason) => {
-    return `
+const reportTemplate = (subSubject = "", reason) => {
+  return `
     <!DOCTYPE html>
     <html lang="vi">
     <head>
@@ -431,8 +458,8 @@ const reportTemplate = (subSubject="", reason) => {
     `;
 };
 
-const announcementTemplateType2 = (subSubject="", message="", url) => {
-    return `
+const announcementTemplateType2 = (subSubject = "", message = "", url) => {
+  return `
     <!DOCTYPE html>
     <html lang="vi">
     <head>
@@ -500,4 +527,10 @@ const announcementTemplateType2 = (subSubject="", message="", url) => {
 };
 
 // Export or use these functions as needed
-export { otpTemplate, announcementTemplate, announcementTemplateType2, commissionTemplate, reportTemplate };
+export {
+  otpTemplate,
+  announcementTemplate,
+  announcementTemplateType2,
+  commissionTemplate,
+  reportTemplate,
+};

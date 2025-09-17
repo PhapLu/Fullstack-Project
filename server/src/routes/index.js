@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Truong Gia Hy
+// ID: S4053650
+
 import express from "express";
 import authRoute from "./auth/index.js";
 import userRoute from "./user/index.js";
@@ -8,8 +15,8 @@ import conversationRoute from "./conversation/index.js";
 import productRoute from "./product/index.js";
 import reviewRoute from "./review/index.js";
 import deliveryInformationRoute from "./deliveryInformation/index.js";
-import adminDashboardRoute from "./adminDashboard/index.js"
-import vendorDashboardRoute from "./vendorDashboard/index.js"
+import adminDashboardRoute from "./adminDashboard/index.js";
+import vendorDashboardRoute from "./vendorDashboard/index.js";
 
 const router = express.Router();
 

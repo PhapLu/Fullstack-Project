@@ -1,7 +1,13 @@
-// Imports
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 import { useEffect, useRef, useState } from "react";
 import styles from "../../../pages/profile/vendorProfile/VendorProfile.module.scss";
-import { apiUtils } from "../../../utils/newRequest"; // <-- use this here
+import { apiUtils } from "../../../utils/newRequest";
 
 const MAX_IMAGES = 10;
 const MAX_IMAGE_MB = 15;

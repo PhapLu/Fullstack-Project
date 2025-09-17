@@ -1,3 +1,10 @@
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Pham Tran Bao Tran
+// ID: S3975175
+
 .header {
     padding: 10px 4%;
     background: var(--bg-color);
@@ -61,16 +68,19 @@
     display: flex;
     align-items: center;
 }
+
 .auth__logo {
     width: 60px;
     height: 60px;
     object-fit: cover;
 }
+
 .auth__name {
     font-size: 35px;
     font-family: "Lobster Two", cursive;
     color: var(--primary-color);
 }
+
 .header__auth {
     display: flex;
     align-items: center;
@@ -113,7 +123,8 @@
 .header__search {
     display: flex;
     flex: 1;
-    min-width: 0; /* allow shrinking without overflow */
+    min-width: 0;
+    /* allow shrinking without overflow */
     max-width: 860px;
     border: 1px solid var(--border-color);
     border-radius: 5px;
@@ -164,7 +175,8 @@
     padding: 0 5px;
     border: 2px solid white;
     border-radius: 10px;
-    background: var(--primary-color); /* red */
+    background: var(--primary-color);
+    /* red */
     color: #fff;
     font-size: 12px;
     line-height: 16px;
@@ -178,20 +190,21 @@
 
 /* ==== User Box ==== */
 .userBox {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 /* link bọc avatar + tên */
 .userLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;          /* bỏ gạch chân */
-  color: var(--text-color, #253d4e);
-  border-radius: 10px;
-  transition: background 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    /* bỏ gạch chân */
+    color: var(--text-color, #253d4e);
+    border-radius: 10px;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .userLink:focus-visible {
@@ -200,36 +213,36 @@
 }
 
 .avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid var(--border-color);
-  flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .userName {
-  font-weight: 500;
-  font-size: 1.5rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text-color);
-  transition: 0.15s;
+    font-weight: 500;
+    font-size: 1.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-color);
+    transition: 0.15s;
 }
 
 .userName:hover {
-  color: #d4d4d4;
+    color: #d4d4d4;
 }
 
-.logoutBtn {          
-  color: var(--text-color);
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s;
+.logoutBtn {
+    color: var(--text-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s;
 }
 
 .logoutBtn:hover {
-  color: #d4d4d4 ;
+    color: #d4d4d4;
 }
 
 .logoutBtn:active {
@@ -238,116 +251,118 @@
 
 /* ==== user dropdown ==== */
 .userBox {
-  position: relative; 
+    position: relative;
 }
 
 .menuBar {
-  position: absolute;
-  top: calc(100% + 2px);
-  right: 20px;
-  width: 300px;
-  background: var(--surface);    
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  padding: 8px 0;
-  z-index: 2000;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(6px) scale(0.98);
-  transition: opacity .18s ease, transform .18s ease, visibility .3s;
+    position: absolute;
+    top: calc(100% + 2px);
+    right: 20px;
+    width: 300px;
+    background: var(--surface);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 8px 0;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(6px) scale(0.98);
+    transition: opacity .18s ease, transform .18s ease, visibility .3s;
 }
 
 .userBox:hover .menuBar,
 .userBox:focus-within .menuBar {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
 }
+
 .menuHeader {
-  padding: 14px 16px 10px;
+    padding: 14px 16px 10px;
 }
 
 .menuItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  padding: 8px 14px;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  text-align: left;
-  color: inherit;
-  font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 8px 14px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    font-weight: 500;
 }
 
 .menuItem:hover {
-  background: rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.04);
 }
 
 .menuIcon {
-  font-size: 18px;
-  line-height: 1;
-  width: 24px;
-  text-align: center;
-  opacity: .95;
+    font-size: 18px;
+    line-height: 1;
+    width: 24px;
+    text-align: center;
+    opacity: .95;
 }
 
 .menuDivider {
-  height: 1px;
-  margin: 6px 0;
-  background: rgba(0, 0, 0, 0.08);
+    height: 1px;
+    margin: 6px 0;
+    background: rgba(0, 0, 0, 0.08);
 }
 
 .menuLogout {
-  color: var(--danger);
+    color: var(--danger);
 }
 
 .menuTitle {
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--text-color);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-color);
 }
 
 .menuEmail {
-  margin-top: 2px;
-  font-size: 13px;
-  color: var(--muted);
-  word-break: break-all; /* tránh tràn */
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--muted);
+    word-break: break-all;
+    /* tránh tràn */
 }
 
 .menuFooter {
-  padding: 10px 16px 12px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--muted);
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+    padding: 10px 16px 12px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
 }
 
 .menuTermsLink {
-  text-decoration: none;
-  color: var(--text-color);
+    text-decoration: none;
+    color: var(--text-color);
 }
 
 .menuBar::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  right: 20px;
-  width: 10px;
-  height: 10px;
-  background: var(--surface);
-  border-left: 1px solid var(--border-color);
-  border-top: 1px solid var(--border-color);
-  transform: rotate(45deg);
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 10px;
+    height: 10px;
+    background: var(--surface);
+    border-left: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
+    transform: rotate(45deg);
 }
 
 
@@ -399,7 +414,8 @@
         padding: 0 5px;
         border: 2px solid white;
         border-radius: 10px;
-        background: var(--primary-color); /* red */
+        background: var(--primary-color);
+        /* red */
         color: #fff;
         font-size: 12px;
         line-height: 16px;
@@ -410,6 +426,7 @@
 
 /* ====== Mobile (<= 768px) ====== */
 @media (max-width: 768px) {
+
     /* Hide brand (logo + name) */
     .auth__brand {
         display: none !important;
@@ -420,6 +437,7 @@
         gap: 8px;
         padding: 6px 0;
     }
+
     /* (Optional) hide the top bar entirely on mobile — uncomment if desired */
     /* .header__top { display: none; } */
 
@@ -472,7 +490,8 @@
         padding: 0 5px;
         border: 2px solid white;
         border-radius: 10px;
-        background: var(--primary-color); /* red */
+        background: var(--primary-color);
+        /* red */
         color: #fff;
         font-size: 12px;
         line-height: 16px;
@@ -483,6 +502,7 @@
 
 /* ====== Small Mobile (<= 480px) ====== */
 @media (max-width: 480px) {
+
     /* Recommend hiding the entire top row for clarity on very small phones */
     .header__top {
         display: none;

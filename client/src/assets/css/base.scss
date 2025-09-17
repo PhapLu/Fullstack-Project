@@ -1,4 +1,9 @@
-/* Gia Hy-s4053650 */
+// RMIT University Vietnam
+// Course: COSC2769 - Full Stack Development
+// Semester: 2025B
+// Assessment: Assignment 02
+// Author: Le Khanh Huyen
+// ID: S4026707
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&display=swap");
@@ -16,14 +21,15 @@
     --placeholder: var(--muted);
     --surface: #ffffff;
     --shadow: 0 10px 30px #F0F7FF;
-    --card:#ffffff;
-    --text:#0f172a;
-    --radius:16px;
+    --card: #ffffff;
+    --text: #0f172a;
+    --radius: 16px;
     --danger: #ef4444;
     --red-1-color: #ff3e3e;
     --red-2-color: #e45454;
     --danger-bg: #ffe5e5;
 }
+
 html {
     font-size: 62.5%;
     line-height: 1.6rem;
@@ -31,13 +37,19 @@ html {
     box-sizing: border-box;
     scroll-behavior: smooth;
 }
-  
+
 html,
 body {
     height: 100vh;
 }
 
-#about, #deals, #mall, #contact, #top, #categories, #popular {
+#about,
+#deals,
+#mall,
+#contact,
+#top,
+#categories,
+#popular {
     scroll-margin-top: var(--sticky-offset, 180px);
 }
 
@@ -50,11 +62,13 @@ body {
 *:after {
     box-sizing: border-box;
 }
+
 * {
     margin: 0;
     padding: 0;
     font: inherit;
 }
+
 img,
 picture,
 svg,
@@ -62,12 +76,14 @@ video {
     display: block;
     max-width: 100%;
 }
+
 input,
 select,
 textarea {
     background-color: transparent;
     outline: none;
 }
+
 button {
     cursor: pointer;
     background-color: transparent;
@@ -101,19 +117,19 @@ body {
 }
 
 .select {
-	width: 100%;
-	padding: 10px 12px;
-	border: 1px solid var(--border-color);
-	border-radius: 8px;
-	background: var(--surface);
-	font-size: 14px;
-	color: var(--text);
-	appearance: none;
-	background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-	background-repeat: no-repeat;
-	background-position: right 10px center;
-	background-size: 16px;
-	cursor: pointer;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface);
+    font-size: 14px;
+    color: var(--text);
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    cursor: pointer;
 }
 
 .form-field__error {
@@ -121,8 +137,8 @@ body {
     align-items: flex-start;
     gap: 8px;
     padding: 4px 12px;
-    color: #b91c1c;       
-    font-size: 1.25rem;               
+    color: #b91c1c;
+    font-size: 1.25rem;
     line-height: 1.35;
     animation: err-pop 0.18s ease-out;
     word-break: break-word;
