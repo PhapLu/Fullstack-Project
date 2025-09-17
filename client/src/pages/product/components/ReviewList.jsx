@@ -35,7 +35,7 @@ export default function ReviewList({ productId }) {
           <img
             src={
               getImageUrl(review.customerId.avatar) ||
-              "/uploads/pastal_system_default_avatar.png"
+              "/public/default_avatar.png"
             }
             alt="avatar"
             className="rounded-circle"

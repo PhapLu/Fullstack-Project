@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const MAX_FILE_SIZE = 15 * 1024 * 1024;
 
 const ROOT_DIR = path.resolve(__dirname, "..", ".."); // -> server/
-export const UPLOADS_DIR = path.join(ROOT_DIR, "uploads"); // -> server/uploads
+export const UPLOADS_DIR = path.join(ROOT_DIR, "public"); // -> server/uploads
 export const AVATARS_DIR = path.join(UPLOADS_DIR, "avatars");
 export const PRODUCTS_DIR = path.join(UPLOADS_DIR, "products");
 

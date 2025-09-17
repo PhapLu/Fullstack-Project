@@ -1,49 +1,61 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import styles from "./AdminLayout.module.scss";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../store/slices/authSlices";
+import { useEffect } from "react";
 
 export default function AdminLayout() {
-  const { pathname } = useLocation();
+    const { pathname } = useLocation();
+	const navigate = useNavigate()
+    const titleMap = [
+        { path: "/admin/hubs", label: "Hubs" },
+        { path: "/admin", label: "Overview" },
+    ];
 
-  const titleMap = [
-    { path: "/admin/hubs", label: "Hubs" },
-    { path: "/admin", label: "Overview" },
-  ];
+	const user = useSelector(selectUser);
+	const role = user?.role?.toLowerCase() || "";
 
-  const activeTitle =
-    titleMap.find(
-      ({ path }) => pathname === path || pathname.startsWith(path + "/")
-    )?.label || "Dashboard";
+	useEffect(() => {
+		if (role !== "admin") {
+			navigate("/", { replace: true });
+		}
+	}, [role, navigate]);
 
-  const Item = ({ to, label, end = false }) => (
-    <NavLink
-      to={to}
-      end={end}
-      className={({ isActive }) =>
-        `${styles.navItem} ${isActive ? styles.active : ""}`
-      }
-    >
-      {label}
-    </NavLink>
-  );
+    const activeTitle =
+        titleMap.find(
+            ({ path }) => pathname === path || pathname.startsWith(path + "/")
+        )?.label || "Dashboard";
 
-  return (
-    <div className={styles.wrap}>
-      <aside className={styles.sidebar}>
-        <div className={styles.brand}>Admin Dashboard</div>
-        <nav className={styles.nav}>
-          <Item to="/admin" label="Overview" end />
-          <Item to="/admin/hubs" label="Hubs" />
-        </nav>
-      </aside>
+    const Item = ({ to, label, end = false }) => (
+        <NavLink
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+                `${styles.navItem} ${isActive ? styles.active : ""}`
+            }
+        >
+            {label}
+        </NavLink>
+    );
 
-      <main className={styles.main}>
-        <header className={styles.topbar}>
-          <h2>{activeTitle}</h2>
-        </header>
-        <section className={styles.content}>
-          <Outlet />
-        </section>
-      </main>
-    </div>
-  );
+    return (
+        <div className={styles.wrap}>
+            <aside className={styles.sidebar}>
+                <div className={styles.brand}>Admin Dashboard</div>
+                <nav className={styles.nav}>
+                    <Item to="/admin" label="Overview" end />
+                    <Item to="/admin/hubs" label="Hubs" />
+                </nav>
+            </aside>
+
+            <main className={styles.main}>
+                <header className={styles.topbar}>
+                    <h2>{activeTitle}</h2>
+                </header>
+                <section className={styles.content}>
+                    <Outlet />
+                </section>
+            </main>
+        </div>
+    );
 }

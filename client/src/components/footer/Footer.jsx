@@ -48,7 +48,7 @@ export default function Footer() {
                     <h4>Company</h4>
                     <ul>
                         <li>
-                            <Link to="/about">About Us</Link>
+                            <a href="/#about">About Us</a>
                         </li>
                         <li>
                             <Link to="/">Delivery Information</Link>
@@ -60,7 +60,7 @@ export default function Footer() {
                             <Link to="/">Terms & Conditions</Link>
                         </li>
                         <li>
-                            <Link to="/contact">Contact Us</Link>
+                            <a href="/#contact">Contact</a>
                         </li>
                         <li>
                             <Link to="/">Support Center</Link>
@@ -84,7 +84,7 @@ export default function Footer() {
                             <Link to="/">My Wishlist</Link>
                         </li>
                         <li>
-                            <Link to="/orders">Track My Order</Link>
+                            <Link to="/">Track My Order</Link>
                         </li>
                         <li>
                             <Link to="/">Help Ticket</Link>

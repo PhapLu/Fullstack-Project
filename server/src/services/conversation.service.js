@@ -6,7 +6,7 @@ import {
     NotFoundError,
 } from "../core/error.response.js";
 
-const DEFAULT_THUMB = "/uploads/default-bg.png";
+const DEFAULT_THUMB = "/public/default-bg.png";
 
 class ConversationService {
     static createConversation = async (userId, req) => {

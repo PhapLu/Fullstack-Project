@@ -27,7 +27,7 @@ const app = express();
 
 // Trust proxy
 app.set("trust proxy", 1);
-app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
+app.use("/public", express.static(path.resolve(__dirname, "..", "public")));
 // Rate Limit
 // app.use(blockChecker);
 // app.use(globalLimiter);

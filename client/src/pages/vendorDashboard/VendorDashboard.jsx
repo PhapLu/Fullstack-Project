@@ -2,7 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import styles from "./VendorDashboard.module.scss";
 import { usd } from "../../utils/currency";
 import { apiUtils } from "../../utils/newRequest";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { selectUser } from "../../store/slices/authSlices";
+import { useSelector } from "react-redux";
 
 /* ================= Status → Badge ================= */
 // Match your Order.status enum: placed, paid, at_hub, out_for_delivery, delivered, cancelled
@@ -73,6 +75,16 @@ export default function VendorDashboard() {
     const [activeTab, setActiveTab] = useState("all");
     const [expanded, setExpanded] = useState({});
     const [orders, setOrders] = useState([]);
+    const navigate = useNavigate()
+    
+    const user = useSelector(selectUser);
+	const role = user?.role?.toLowerCase() || "";
+
+	useEffect(() => {
+		if (role !== "vendor") {
+			navigate("/", { replace: true });
+		}
+	}, [role, navigate]);
 
     // Fetch orders (make sure your backend populates needed refs)
     useEffect(() => {

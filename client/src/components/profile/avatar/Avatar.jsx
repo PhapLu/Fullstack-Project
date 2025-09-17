@@ -64,7 +64,7 @@ export default function Avatar({ isOwner, url, onSaveImage }) {
     const handleImgError = (e) => {
         // Image load failed: print the exact broken URL and who initiated it
         const broken = e?.currentTarget?.src;
-        const fallback = getImageUrl("/uploads/avatars/default-avatar.png");
+        const fallback = getImageUrl("/public/avatars/default-avatar.png");
         if (broken !== fallback) setImgSrc(fallback);
     };
 

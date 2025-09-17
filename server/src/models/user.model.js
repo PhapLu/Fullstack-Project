@@ -49,7 +49,7 @@ const UserSchema = new Schema(
         avatar: {
             type: String,
             required: true,
-            default: "/uploads/avatars/default-avatar.png",
+            default: "/public/avatars/default-avatar.png",
         },
         email: { type: String, trim: true, lowercase: true },
         phone: { type: String },

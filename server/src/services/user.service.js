@@ -15,7 +15,7 @@ import { isFilled, isValidPhone, minLength } from "../utils/validator.js";
 import Conversation from "../models/conversation.model.js";
 
 const AVATARS_DIR = path.join(UPLOADS_DIR, "avatars");
-const publicUrlFor = (filename) => `/uploads/avatars/${filename}`;
+const publicUrlFor = (filename) => `/public/avatars/${filename}`;
 
 class UserService {
     //-------------------CRUD----------------------------------------------------

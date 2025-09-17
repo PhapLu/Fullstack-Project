@@ -10,7 +10,7 @@ import fs from "fs/promises";
 import { PRODUCTS_DIR, UPLOADS_DIR } from "../configs/multer.config.js";
 
 export const productPublicUrlFor = (filename) =>
-    `/uploads/products/${filename}`;
+    `/public/products/${filename}`;
 
 class ProductService {
     //-------------------CRUD----------------------------------------------------
@@ -187,7 +187,7 @@ class ProductService {
             maxPrice,
             mine,
             page = "1",
-            limit = "12",
+            limit = "30",
             sort, // "asc" | "desc" | undefined
         } = req.query;
 
@@ -295,8 +295,8 @@ class ProductService {
         await Promise.allSettled(
             imgs.flatMap((u) => {
                 const clean = String(u || "").split(/[?#]/)[0];
-                const rel = clean.startsWith("/uploads/")
-                    ? clean.replace(/^\/uploads\//, "").replace(/^\//, "")
+                const rel = clean.startsWith("/public/")
+                    ? clean.replace(/^\/public\//, "").replace(/^\//, "")
                     : null;
                 const base = path.basename(clean || "");
                 const p1 = rel ? path.join(UPLOADS_DIR, rel) : null;

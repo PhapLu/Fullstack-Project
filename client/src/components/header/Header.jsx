@@ -123,7 +123,7 @@ export default function Header() {
                                     className={styles.avatar}
                                     src={
                                         getImageUrl(user.avatar) ||
-                                        "/uploads/pastal_system_default_avatar.png"
+                                        "/public/default_avatar.png"
                                     }
                                     alt="avatar"
                                 />
