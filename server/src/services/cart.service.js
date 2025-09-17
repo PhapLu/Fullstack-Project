@@ -96,7 +96,6 @@ class CartService {
     let cart = await Cart.findOne({ customerId })
       .populate("items.productId", "title price images")
       .lean();
-    console.log("CART", cart);
     if (!cart) {
       // Create cart for customer
       cart = await Cart.create({

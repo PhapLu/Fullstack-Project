@@ -131,7 +131,6 @@ class OrderService {
 
     // 3. Prepare payment data for AlePay
     const amount = order.pricing.total;
-    console.log(amount.toString());
 
     try {
       const paymentDetails = {

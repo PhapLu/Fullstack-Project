@@ -56,7 +56,6 @@ export default function CheckoutPage() {
   // Create new address
   const onCreateSubmit = async (e) => {
     e.preventDefault();
-    console.log(createInputs);
     if (
       !createInputs.name.trim() ||
       !createInputs.phoneNumber.trim() ||
@@ -133,9 +132,6 @@ export default function CheckoutPage() {
         );
         const shippingFee = 2.0;
         const total = subtotal + shippingFee;
-        console.log(subtotal);
-        console.log(shippingFee);
-        console.log(total);
         setItems(fallbackItems);
         setPricing({
           subtotal,
@@ -202,7 +198,6 @@ export default function CheckoutPage() {
       );
       const list = res?.data?.metadata?.deliveryInformations || [];
       const arr = Array.isArray(list) ? list : [];
-      console.log(arr);
       setDeliveryInfos(arr);
 
       if (arr.length > 0) {

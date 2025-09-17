@@ -34,7 +34,6 @@ export default function MyCart() {
     const next = (current || 0) + 1;
     setQty(id, stock ? Math.min(next, stock) : next);
   };
-  console.log("Items", items);
   const goCheckout = async () => {
     const itemsForPayload = items.map(({ id, qty, price, name, image }) => ({
       id,

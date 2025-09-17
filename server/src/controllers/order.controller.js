@@ -31,7 +31,6 @@ class OrderController {
   };
 
   updateOrderStatus = async (req, res, next) => {
-    console.log("Helo");
     return new SuccessResponse({
       message: "Update order status successfully",
       metadata: await OrderService.updateOrderStatus(req),

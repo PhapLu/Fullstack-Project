@@ -23,7 +23,6 @@ export default function HotDeals() {
     const fetchHotDealProducts = async () => {
       try {
         const response = await apiUtils.get("/product/readProducts");
-        console.log(response.data.metadata.products);
         setHotDealProducts(response.data.metadata.products);
       } catch (error) {
         console.error("Error fetching hot deal products:", error);

@@ -25,7 +25,6 @@ export default function ReviewList({ productId }) {
     const fetchReviews = async () => {
       try {
         const response = await apiUtils.get(`/review/readReviews/${pid}`);
-        console.log(response);
         serReviews(response.data.metadata.reviews || []);
       } catch (error) {
         console.error("Failed to fetch reviews:", error);

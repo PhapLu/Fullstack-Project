@@ -60,11 +60,9 @@ export default function DistributionHub() {
       setLoading((s) => ({ ...s, orders: true }));
       setError((e) => ({ ...e, orders: "" }));
       try {
-        console.log(distributionHubId);
         const response = await apiUtils.get(
           `/order/readOrdersByHub/${distributionHubId}`
         );
-        console.log(response.data.metadata.orders);
         const raw = response?.data?.metadata?.orders;
         const orders = Array.isArray(raw) ? raw : [];
         if (alive) setOrders(orders);

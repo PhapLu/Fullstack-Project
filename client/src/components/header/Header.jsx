@@ -52,7 +52,6 @@ export default function Header() {
     const handleSearch = (e) => {
         e?.preventDefault?.();
         const value = searchInputRef.current?.value.trim();
-        console.log("handleSearch triggered:", value);
         if (!value) return;
         navigate(`/searching?query=${encodeURIComponent(value)}`);
     };

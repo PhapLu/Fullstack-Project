@@ -88,7 +88,6 @@ class ReviewService {
     const reviews = await Review.find({ productId })
       .populate("customerId", "customerProfile avatar email")
       .populate("productId", "status createdAt");
-    console.log(reviews[0]);
     return {
       reviews,
     };

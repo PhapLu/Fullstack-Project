@@ -101,7 +101,6 @@ export default function VendorDashboard() {
                     "/vendorDashboard/readVendorOrders"
                 );
                 const raw = res?.data?.metadata?.orders ?? [];
-                console.log(raw);
                 setOrders(raw);
             } catch (error) {
                 console.error("Failed to fetch orders:", error);

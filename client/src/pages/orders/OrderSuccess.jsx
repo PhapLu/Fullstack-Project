@@ -16,7 +16,6 @@ export default function OrderSuccess() {
   const state = location.state || {};
 
   const user = useSelector(selectUser);
-  console.log(user);
 
   const order = {
     orderId: state.orderId,

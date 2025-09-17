@@ -34,7 +34,6 @@ export default function ConfirmDeleteModal({
       });
       const res = await apiUtils.delete(`/product/deleteProduct/${id}`);
       onDeleted?.(id);
-      console.log(res);
       if (res.data.status === 200) {
         onCancel?.();
       }

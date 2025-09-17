@@ -61,7 +61,6 @@ const SignIn = () => {
     const action = await dispatch(
       signIn({ username: inputs.username.trim(), password: inputs.password })
     );
-    console.log(action);
     if (action.meta.requestStatus === "fulfilled") {
       // Persist token then open socket
       localStorage.setItem("token", action.payload.token);

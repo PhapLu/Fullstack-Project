@@ -19,7 +19,6 @@ export default function AdminOverview() {
       try {
         const res = await apiUtils.get("/adminDashboard/readOverview");
         const overviewData = res.data.metadata.adminDashboard;
-        console.log(overviewData);
 
         if (!alive) return;
 

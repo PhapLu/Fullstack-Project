@@ -27,7 +27,6 @@ export default function ReviewForm({ productId, orderId = "" }) {
 
   const { mutate, isLoading, error } = useMutation(
     async (payload) => {
-      console.log(payload);
       const res = await apiUtils.post("/review/createReview", payload);
       return res.data;
     },

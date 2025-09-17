@@ -64,9 +64,6 @@ export default function ChatToggle({
         const handler = (e) => {
             const other = e.detail?.otherUser;
             if (!other || !currentUserId) {
-                console.log(
-                    "❌ [ChatToggle] Missing 'otherUser' or 'currentUserId'"
-                );
                 return;
             }
 
@@ -113,7 +110,6 @@ export default function ChatToggle({
         };
 
         window.addEventListener("openChatWith", handler);
-        console.log("👂 [ChatToggle] Listening to openChatWith event");
 
         return () => {
             window.removeEventListener("openChatWith", handler);
@@ -153,7 +149,6 @@ export default function ChatToggle({
 
     useEffect(() => {
         if (isOpen) {
-            console.log("Chat panel opened, fetching conversations...");
             const fetchConversations = async () => {
                 try {
                     const { data } = await apiUtils.get(
@@ -334,9 +329,6 @@ export default function ChatToggle({
             });
 
             const { conversationId, newMessage, conversation } = data.metadata;
-            console.log(conversationId);
-            console.log(newMessage);
-            console.log(conversation);
 
             if (isTemp) {
                 setConversations((prev) => {
@@ -543,8 +535,6 @@ export default function ChatToggle({
                                                   ""
                                                 : fromRaw?.toString?.() ?? "";
                                         const isMine = fromId === myId;
-                                        console.log(activeMessages);
-                                        console.log("Normalized", normalized);
 
                                         return (
                                             <div

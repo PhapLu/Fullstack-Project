@@ -439,8 +439,6 @@ class ConversationService {
     static sendMessage = async (req) => {
         const userId = req.userId;
         const { conversationId, otherUserId, content } = req.body;
-        console.log(conversationId)
-        console.log(otherUserId)
 
         if (!otherUserId && !conversationId) {
             throw new BadRequestError(

@@ -27,7 +27,6 @@ export default function Orders({
 
   const filtered = useMemo(() => {
     let list = Array.isArray(orders) ? [...orders] : [];
-    console.log(orders);
     if (q.trim()) {
       const t = q.trim().toLowerCase();
       list = list.filter(

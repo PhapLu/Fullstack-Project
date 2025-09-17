@@ -39,7 +39,6 @@ export default function OrderDetail({
       try {
         const response = await apiUtils.get(`/order/readOrder/${orderId}`);
         if (alive) setDetail(response.data.metadata.order);
-        console.log(response.data.metadata.order);
       } catch (e) {
         if (alive) setErr(e?.response?.data?.message || "Failed to load order");
       } finally {

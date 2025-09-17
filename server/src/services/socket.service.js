@@ -85,7 +85,6 @@ class SocketServices {
           isSeen: false,
         };
 
-        console.log("STAT SEND");
         // notify receiver
         sendToUser(receiverId, "getMessage", {
           conversationId: conv._id,
