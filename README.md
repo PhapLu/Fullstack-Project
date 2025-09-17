@@ -68,7 +68,7 @@ cd Fullstack-Project
 2) **Server**
 cd server
 npm install
-# create server/.env (Mongo URI, JWT, Brevo, AlePay)
+Note: must create server/.env (Mongo URI, JWT, Brevo, AlePay)
 npm start
 3) **Client**
 cd client
