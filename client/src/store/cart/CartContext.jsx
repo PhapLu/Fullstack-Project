@@ -161,12 +161,14 @@ export function CartProvider({ children }) {
                     writeLocal(makeKey(null), {
                         items: stateRef.current.items,
                     });
-                    hydratedKeysRef.current.delete(makeKey(null)); // allow guest hydration
+                    dispatch({ type: "CLEAR" });
+                    localStorage.removeItem(makeKey(prevUserId)); // remove old user’s cart
+                    localStorage.removeItem(makeKey(null));       // remove guest cart too
+                    hydratedKeysRef.current.delete(makeKey(null));
                 }
             }
 
             // 3) On login → replace with DB
-            // 3) On login or boot: always merge local + server
             if (isLogin || bootLoggedIn) {
                 try {
                     const res = await apiUtils.get("/cart/readCart");
@@ -268,6 +270,18 @@ export function CartProvider({ children }) {
                     .catch((e) => console.warn("snapshot failed", e));
             }
         },
+
+        resetOnLogout: async () => {
+            try {
+                await apiUtils.put("/cart/snapshot", {
+                    items: toServerItems(stateRef.current.items),
+                });
+            } catch (e) {
+                console.warn("snapshot before reset failed", e);
+            }
+            dispatch({ type: "CLEAR" });
+            localStorage.removeItem(storageKey);
+        },        
 
         removeItem: (id) => dispatch({ type: "REMOVE", id }), // local only
         clear: () => dispatch({ type: "CLEAR" }), // local only

@@ -60,7 +60,13 @@ const slice = createSlice({
             s.error = null;
             s.socket = { connected: false, id: null };
             disconnectSocket();
+
+            // Clear cart storage for all cases
+            Object.keys(localStorage)
+                .filter((k) => k.startsWith("bm_cart_v1"))
+                .forEach((k) => localStorage.removeItem(k));
         },
+
         incrementUnseen: (s, a) => {
             if (s.user) {
                 s.user.unseenConversations =
